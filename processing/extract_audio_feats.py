@@ -16,12 +16,6 @@ def load_features_from_csv(feature_paths):
         feat_dict[songurl] = pd.read_csv(fpath).to_numpy()[:, 1:]
     return feat_dict
 
-def count_timestep_feat_dict(feat_dict):
-    feat_len_dict = {}
-    for key, val in feat_dict.items():
-        feat_len_dict[key] = len(val)
-    return feat_len_dict
-
 def main():
 
     feat_dict = load_features_from_csv(featurepaths)

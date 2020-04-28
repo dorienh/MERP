@@ -8,23 +8,29 @@ import glob
 import pandas as pd
 import numpy as np
 import sys
-sys.path.append(os.path.abspath(''))
+sys.path.append(os.path.abspath('..'))
 
-import processing_feature as fp
+import util
 #%%
 '''
 loading files
 '''
 ## 1) load feat_dict
-featurepaths = glob.glob(os.path.join(os.path.abspath('..'), 'data', '500ms_100hop', '*.csv'))
-feat_dict = fp.load_features_from_csv(featurepaths)
+feat_dict = util.load_pickle('../data/feat_dict.pkl')
 
 ## 2) use feat_dict to find number of timesteps in each song, store in feat_len_dict
-feat_len_dict = fp.count_timestep_feat_dict(feat_dict)
+def count_timestep_feat_dict(feat_dict):
+    feat_len_dict = {}
+    for key, val in feat_dict.items():
+        feat_len_dict[key] = len(val)
+    return feat_len_dict
+
+feat_len_dict = count_timestep_feat_dict(feat_dict)
 
 ## 3) load the amazon data
 exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'mediumrare', 'unpruned_exps.pkl'))
 pinfo = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'mediumrare', 'unpruned_pinfo.pkl'))
+
 #%%
 '''
 1) remove trials that are too short or too long (remove by index)
@@ -98,7 +104,7 @@ exps3 = remove_training_conflicting_profiles(pinfo, exps3)
 '''
 3) remove trials that have long plateaus (remove by index)
 '''
-def check_for_plateau(temp, timestep_threshold=2000):
+def check_for_plateau(temp, timestep_threshold=1200):
     
     if all(e == temp[0] for e in temp):
         return True # stagnant throughout.
@@ -110,7 +116,7 @@ def check_for_plateau(temp, timestep_threshold=2000):
             return True
     return False
 
-def remove_stagnant(exps, timestep_threshold=2000):
+def remove_stagnant(exps, timestep_threshold=1200):
     qualified_indexes = []
     for idx, exp in exps.iterrows():
         if (not check_for_plateau(exp['arousals'], timestep_threshold)) or (not check_for_plateau(exp['valences'], timestep_threshold)):
