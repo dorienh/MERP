@@ -5,4 +5,4 @@
 /analysis/plots
 
 # Byte-compiled files
-__pycache__/
+**/__pycache__
