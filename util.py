@@ -2,6 +2,10 @@
 global variables and functions
 '''
 
+#########################################
+############    Smoothing    ############
+#########################################
+
 # signal processing variables
 
 order = 6,
@@ -30,3 +34,17 @@ def smoothing(self, data, winlen=None):
 def cl_output_smoothing(self, data, winlen=None):
     data = butter_lowpass_filter(data)
     return smoothing(data, winlen)
+
+
+
+#########################################
+########    Load Pickle File    #########
+#########################################
+import pickle
+
+def load_pickle(filepath):
+    # path = os.path.join(os.path.abspath('..'), 'data', filename)
+    with open(filepath, 'rb') as handle:
+        unpickled = pickle.load(handle)
+    return unpickled
+
