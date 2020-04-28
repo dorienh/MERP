@@ -4,5 +4,5 @@
 /data
 /analysis/plots
 
-
-# processing folder is not necessary 
+# Byte-compiled files
+/__pycache__
