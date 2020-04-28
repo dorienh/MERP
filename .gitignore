@@ -1,4 +1,7 @@
 
+# Mac
+.DS_Store
+
 # data files that are too large to put on github
 
 /data
