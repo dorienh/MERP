@@ -1,0 +1,8 @@
+
+# data files that are too large to put on github
+
+/data
+/analysis/plots
+
+
+# processing folder is not necessary 
