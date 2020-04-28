@@ -42,7 +42,7 @@ def collate_all_batches_participant_info():
 def main():
     participant_info = collate_all_batches_participant_info()
     print(participant_info.head())
-    participant_info.to_csv('data/mediumrare/unpruned_pinfo.csv')
+    participant_info.to_pickle('data/mediumrare/unpruned_pinfo.pkl')
 
 
 if __name__ == '__main__':

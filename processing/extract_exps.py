@@ -8,13 +8,6 @@ import os
 
 from processing_util import batch_names, filepath_dict, csv2df
 
-# import sys
-print(sys.path)
-# import os
-# print(os.path.abspath(''))
-print('meow: ', os.path.isfile('../data/results_mTurk/batch_5_US_master.csv'))
-
-
 ## start for loop here. 
 def process_single_experiment(single_row, deam_dict, song_dict, batchnum):
     """
@@ -94,44 +87,10 @@ def collate_all_batches_experiments(filepath_dict=filepath_dict):
     
     return pd.concat(experiment_df_list,ignore_index=True)
 
-####################################################
-###################### PINFO  ######################
-####################################################
-
-def participant_info_df_creation(df, batchnum):
-    """
-    extracts personal information from DataFrame of amazon turk data and outputs a DataFrame, one row for one participant.
-    """
-    template = {
-        'workerid': df['WorkerId'],
-        'batch': batchnum,#'{}'.format(batchnum),
-        'age': df['Answer.age'],
-        'country_enculturation': df['Answer.country-enculturation'],
-        'country_live': df['Answer.country-live'],
-        'fav_music_lang': df['Answer.fav-music-language'],
-        'gender': df['Answer.gender'],
-        'fav_genre': df['Answer.genre'],
-        'play_instrument': df['Answer.play-instrument'],
-        'training': df['Answer.training'],
-        'training_duration': df['Answer.training-duration'].replace('{}', 0)
-    }
-    return pd.DataFrame(template)
-
-def collate_all_batches_participant_info():
-    participant_info_df_list = []
-    for batchname in filepath_dict.keys():
-        # print(csv_path)
-        df = csv2df(filepath_dict[batchname])
-        '''
-        TO DO: select only those that belong in the namelist!
-        '''
-        participant_info_df_list.append(participant_info_df_creation(df, batch_names[batchname]))
-
-    return pd.concat(participant_info_df_list, ignore_index=True)
-
 
 def main():
-    collate_all_batches_experiments(filepath_dict)
+    experiments_dataframe = collate_all_batches_experiments(filepath_dict)
+    experiments_dataframe.to_pickle("data/mediumrare/unpruned_exps.pkl")
 
 
 if __name__ == "__main__":
