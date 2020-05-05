@@ -90,7 +90,7 @@ exps3 = remove_duplicate_conflicting_profiles(pinfo, exps3)
 #%%
 # training 'No' but training_duration > 0 (3 workerids)
 def remove_training_conflicting_profiles(pinfo, exps):
-    err_p = pinfo.loc[(pinfo['training_duration']>0) & (pinfo['training']=='No')]
+    err_p = pinfo.loc[(pinfo['training_duration'].astype(int)>0) & (pinfo['training']=='No')]
     to_delete = err_p['workerid'].tolist()
 
     for wid in to_delete:
@@ -300,7 +300,7 @@ exps8 = remove_duplicate_trials(exps7)
 '''
 8) export to hdf...
 '''
-exps8.to_hdf(os.path.join(os.path.abspath('..'), 'data', 'exps3.h5'), key='exps', mode='w')
+exps8.to_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps.pkl'))
 
 #%%
 '''
@@ -360,7 +360,7 @@ check_minmax_per_workerid(exps9)
 '''
 export scaled data to h5 file
 '''
-exps9.to_hdf(os.path.join(os.path.abspath('..'), 'data', 'exps3_scaled.h5'), key='exps', mode='w')
+exps9.to_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_rescaled.pkl'))
 
 
 #%%
@@ -378,8 +378,8 @@ def smoothen(labelarray):
     smoothlabels = [1 if e > 1 else -1 if e < -1 else e for e in smoothlabels]
     return smoothlabels
 
-exps_path = os.path.join(os.path.abspath('..'), 'data', 'exps3_scaled.h5')
-exps_scaled = pd.read_hdf(exps_path)
+exps_path = os.path.join(os.path.abspath('..'), 'data', 'exps_rescaled.pkl')
+exps_scaled = pd.read_pickle(exps_path)
 a_smoothed_dict = {} # {index:[arousal]}
 v_smoothed_dict = {} # {index:[valence]}
 for ind in exps_scaled.index:
@@ -391,7 +391,7 @@ for ind in exps_scaled.index:
     exps_scaled.at[ind, 'arousals'] = a_smoothed_dict[ind]
     exps_scaled.at[ind, 'valences'] = v_smoothed_dict[ind]
 
-exps_scaled.to_hdf(os.path.join(os.path.abspath('..'), 'data', 'exps3_scaled_smoothed.h5'), key='exps', mode='w')
+exps_scaled.to_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_rescaled_smoothed.pkl'))
 
 # tempidx = 7
 # temp = smoothen(exps_scaled.at[tempidx, 'arousals'])
@@ -448,8 +448,8 @@ prune pinfo according to pruned exps!
 import util
 import numpy as np
 import pandas as pd
-exps = load_h5file('exps3_scaled_smoothed_headless.h5')
-pinfo = pd.read_csv('../data/unpruned_pinfo.csv', index_col=0)
+exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps.pkl'))
+pinfo = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'mediumrare', 'unpruned_pinfo.pkl'))
 pinfo = pinfo.drop(columns='batch')
 
 #%%
@@ -462,7 +462,7 @@ pruned_pinfo2 = pruned_pinfo.drop_duplicates().reset_index(drop=True)
 
 
 # %%
-pruned_pinfo2.to_hdf(os.path.join(os.path.abspath('..'), 'data', 'pinfo.h5'), key='pinfo', mode='w')
+pruned_pinfo2.to_pickle(os.path.join(os.path.abspath('..'), 'data', 'pinfo.pkl'))
 
 
 # %%
