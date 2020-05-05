@@ -98,7 +98,7 @@ actual_songlen = gen_actual_songlen_dict()
 #feat_len_dict vs actual_songlen...
 ####
 
-len_discrepancy_dict = {key: round(actual_songlen[key] - feat_len_dict.get(key, 0),2) for key in actual_songlen}
+len_discrepancy_dict = {key: actual_songlen[key] - feat_len_dict.get(key, 0) for key in actual_songlen}
 
 
 # %%
