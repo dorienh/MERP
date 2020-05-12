@@ -199,3 +199,35 @@ for songurl, trials in deamtrials.groupby('songurl'):
     plt.close()
 
 # %%
+'''
+MSE and PEARSON table participant against 4 deam songs. 
+save in csv
+'''
+from scipy.stats import pearsonr
+
+deamtrials = exps3[exps3['songurl'].str.contains('deam')]
+stat_dict = {}
+
+# for deamsong, song_exps in deamtrials.groupby('songurl'):
+    
+#     for idx in song_exps.index:
+#         label_list = song_exps.l
+
+for workerid, p_exps in deamtrials.groupby('workerid'):
+    worker_stat_dict = {}
+    for idx in p_exps.index:
+        label_list = p_exps.loc[idx, datatype]
+        label_list = average_1D(label_list,5)
+        songurl = p_exps.loc[idx, 'songurl']
+        tobecompared = deamstats[songurl]['ave']
+        lendiff = len(label_list)-len(tobecompared)
+        label_list = label_list[lendiff::]
+        mse = np.square(np.subtract(tobecompared,label_list)).mean()
+        corr_coeff, p_value = pearsonr(tobecompared, label_list)
+        worker_stat_dict[songurl] = (round(mse,4), round(corr_coeff,4), round(p_value,4))
+
+    stat_dict[workerid] = worker_stat_dict
+
+stat_df = pd.DataFrame(stat_dict).transpose()
+stat_df.to_csv('../analysis/plots/mse_pearson_vs_deam.csv')
+# %%
