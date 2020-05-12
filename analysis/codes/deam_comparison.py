@@ -155,10 +155,10 @@ for idx in deamtrials.index:
     # plt.savefig(f'../analysis/plots/deam_comparison/{songurl}/{datatype[:-1]}/{idx}.png')
     # plt.close()
 
-    plt.show()
+    # plt.show()
     
-    if idx > 30:
-        break
+    # if idx > 30:
+    #     break
 #%%
 '''
 plot histogram of percentage_match_list
