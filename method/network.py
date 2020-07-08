@@ -4,6 +4,7 @@ from torch.nn import functional as F
 import torch
 
 
+
 ##############################################################
 ####                  1) Fully Connected                  ####
 ##############################################################
@@ -22,6 +23,30 @@ class Two_FC_layer(torch.nn.Module):
     def forward(self, x):
         out = self.class_dim(self.lr2(self.fc2(self.lr1(self.fc1(self.reduced_rgb(x))))))
         return out
+
+class Mult_FC_layer(torch.nn.Module):
+    def __init__(self, input_dim = 1582, reduced_dim_power_2=9):
+        super(Mult_FC_layer, self).__init__()
+        # add more gradual change in dim. 
+
+        self.hidden = nn.ModuleList()
+
+        self.hidden.append(nn.Linear(input_dim, 2**reduced_dim_power_2, bias=False))
+
+        power_2 = reduced_dim_power_2 - 1
+        while power_2 >= 4:
+            self.hidden.append(nn.Linear(2**(power_2+1), 2**power_2, bias=False))
+            self.hidden.append(nn.LeakyReLU(0.1))
+            self.hidden.append(nn.Dropout(p=0.5))
+            power_2 -= 1
+
+        self.hidden.append(nn.Linear(2**(power_2+1), out_features=1, bias=False)) # output
+
+    def forward(self, x):
+        for i, l in enumerate(self.hidden):
+            # x = self.hidden[i // 2](x) + l(x)
+            x = l(x)
+        return x
 
 ##############################################################
 ####            2) Convolutional Neural Network           ####

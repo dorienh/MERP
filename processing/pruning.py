@@ -8,8 +8,8 @@ import glob
 import pandas as pd
 import numpy as np
 import sys
+sys.path.append(os.path.abspath('../..'))
 sys.path.append(os.path.abspath('..'))
-
 import util
 #%%
 '''
@@ -104,7 +104,7 @@ exps3 = remove_training_conflicting_profiles(pinfo, exps3)
 '''
 3) remove trials that have long plateaus (remove by index)
 '''
-def check_for_plateau(temp, timestep_threshold=1200):
+def check_for_plateau(temp, timestep_threshold=300):
     
     if all(e == temp[0] for e in temp):
         return True # stagnant throughout.
@@ -116,7 +116,7 @@ def check_for_plateau(temp, timestep_threshold=1200):
             return True
     return False
 
-def remove_stagnant(exps, timestep_threshold=1200):
+def remove_stagnant(exps, timestep_threshold=300):
     qualified_indexes = []
     for idx, exp in exps.iterrows():
         if (not check_for_plateau(exp['arousals'], timestep_threshold)) or (not check_for_plateau(exp['valences'], timestep_threshold)):
@@ -448,7 +448,7 @@ prune pinfo according to pruned exps!
 import util
 import numpy as np
 import pandas as pd
-exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps.pkl'))
+exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_ready.pkl'))
 pinfo = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'mediumrare', 'unpruned_pinfo.pkl'))
 pinfo = pinfo.drop(columns='batch')
 

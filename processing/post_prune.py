@@ -17,7 +17,7 @@ import util
 #%%
 # load data
 feat_dict = util.load_pickle('../data/feat_dict.pkl')
-exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_rescaled_smoothed.pkl'))
+# exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_rescaled_smoothed.pkl'))
 
 #%%
 ###################################################
@@ -49,29 +49,22 @@ check_lens_feat_dict(feat_dict_headless)
 #%%
 ###################################################
 # exps: remove head
+'''SHIFTED TO pruning_deam.py'''
 ###################################################
 
 
-for rowidx in exps.index:
-    exps.at[rowidx, 'arousals'] = exps.at[rowidx, 'arousals'][head_cutoff:]
-    exps.at[rowidx, 'valences'] = exps.at[rowidx, 'valences'][head_cutoff:]
+# for rowidx in exps.index:
+#     exps.at[rowidx, 'arousals'] = exps.at[rowidx, 'arousals'][head_cutoff:]
+#     exps.at[rowidx, 'valences'] = exps.at[rowidx, 'valences'][head_cutoff:]
 
-
-# %%
-temp = exps.loc[0]
-
-# %%
-print(np.shape(temp['arousals']))
-print(temp['songurl'])
-
-
-
-# %%
-count = 0
-for idx in exps.index:
-    row = exps.loc[idx]
-    count += len(row['arousals'])
-print(count)
+# temp = exps.loc[0]
+# print(np.shape(temp['arousals']))
+# print(temp['songurl'])
+# count = 0
+# for idx in exps.index:
+#     row = exps.loc[idx]
+#     count += len(row['arousals'])
+# print(count)
 
 
 
@@ -85,12 +78,12 @@ sample_factor = 5
 
 #%%
 ## print stuff to check
-temp = exps.loc[0]
-songurl = temp['songurl']
-print('songurl: ', songurl)
-print('feature shape: ', np.shape(feat_dict[songurl]))
-print('a label shape: ', np.shape(temp['arousals']))
-print('v label shape: ', np.shape(temp['valences']))
+# temp = exps.loc[0]
+# songurl = temp['songurl']
+# print('songurl: ', songurl)
+# print('feature shape: ', np.shape(feat_dict[songurl]))
+# print('a label shape: ', np.shape(temp['arousals']))
+# print('v label shape: ', np.shape(temp['valences']))
 
 
 # %%
@@ -120,32 +113,43 @@ for key, value in feat_dict_headless.items():
 temp = feat_dict_headless_rescaled['10_828']
 print(np.shape(temp))
 
+
+#%%
+###################################################
+# NORMALIZE FEAT_DICT
+###################################################
+
+# normalization by column ()
+
+maximum = np.amax([i for v in feat_dict_headless_rescaled.values() for i in v], axis=0)
+minimum = np.amin([i for v in feat_dict_headless_rescaled.values() for i in v], axis=0)
+norm_feat_dict = {key: util.normalize(value, minimum, maximum) for key, value in feat_dict_headless_rescaled.items()}
+
 # %%
 ###################################################
 # SAVE FEAT_DICT
 ###################################################
 
-#%%
 with open('../data/feat_dict_ready.pkl', 'wb') as handle:
-    pickle.dump(feat_dict_headless_rescaled, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    pickle.dump(norm_feat_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 # %%
 ###################################################
 # exps: rescale from 0.1s to 0.5s per label
+'''SHIFTED TO pruning_deam.py'''
 ###################################################
-# %%
-for rowidx in exps.index:
-    exps.at[rowidx, 'arousals'] = average_1D(np.array(exps.at[rowidx, 'arousals']), sample_factor)
-    exps.at[rowidx, 'valences'] = average_1D(np.array(exps.at[rowidx, 'valences']), sample_factor)
 
+# for rowidx in exps.index:
+#     exps.at[rowidx, 'arousals'] = average_1D(np.array(exps.at[rowidx, 'arousals']), sample_factor)
+#     exps.at[rowidx, 'valences'] = average_1D(np.array(exps.at[rowidx, 'valences']), sample_factor)
 
 
 # %%
 ###################################################
 # SAVE EXPS
 ###################################################
-exps.to_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_ready.pkl'))
+# exps.to_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_ready.pkl'))
 
 # %%
 '''

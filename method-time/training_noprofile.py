@@ -2,8 +2,7 @@ import os
 import sys
 # sys.path.append(os.path.abspath('../..'))
 sys.path.append(os.path.abspath(''))
-print(sys.path)
-
+# print(sys.path)
 import glob
 import argparse
 import numpy as np
@@ -18,9 +17,9 @@ from torch.utils.data import DataLoader
 
 import util
 ### to edit accordingly.
-from dataloader import dataset_non_ave_with_profile as dataset_class
+from dataloader import dataset_non_ave_no_profile as dataset_class
 ### to edit accordingly.
-from network import Two_FC_layer as archi
+from network import LSTM_single as archi
 
 
 # CUDA for PyTorch
@@ -33,13 +32,12 @@ print('device: ', device)
 
 # Parameters
 affect_type = 'arousals'
-params = {'batch_size': 128,
+params = {'batch_size': 16,
           'shuffle': True,
           'num_workers': 6}
+lstm_size = 10
+step = 10
 max_epochs = 100
-possible_conditions = np.array(['age', 'country_enculturation', 'country_live', 'fav_music_lang', 'gender', 'fav_genre', 'play_instrument', 'training', 'training_duration'])
-# conditions = ['play_instrument']
-conditions = possible_conditions
 
 
 '''
@@ -49,17 +47,67 @@ feat_dict = util.load_pickle('data/feat_dict_ready.pkl')
 exps = pd.read_pickle(os.path.join('data', 'exps_ready.pkl'))
 pinfo = pd.read_pickle(os.path.join('data', 'pinfo_numero.pkl'))
 
+# standardize the features
+def standardize(feat_dict): # all together
+    mean_sum = np.zeros(1582)
+    std_sum = np.zeros(1582)
+    for songurl, audio_feat in feat_dict.items():
+        # print(songurl)
+        # print(np.shape(audio_feat))
+        mean_sum += np.mean(audio_feat, axis=0)
+        # print(np.shape(mean))
+        std_sum += np.std(audio_feat,axis=0)
+    
+    mean = mean_sum/len(feat_dict)
+    std = std_sum/len(feat_dict)
 
+    for songurl, audio_feat in feat_dict.items():
+        standard_feat = (audio_feat - mean)/std
+        # print(standard_feat)
+        feat_dict[songurl] = standard_feat
+
+    return feat_dict
+
+
+# print(feat_dict['deam_115'][0])
+feat_dict = standardize(feat_dict)
+
+def dataloader_prep(train=True):
+    # prepare data for testing
+    dataset_obj = dataset_class(affect_type, feat_dict, exps, lstm_size, step)
+    dataset = dataset_obj.gen_dataset(train=train)
+    loader = DataLoader(dataset, **params)
+
+    return loader
 
 ## MODEL
-input_dim = 1582 + len(conditions)
-model = archi(input_dim=input_dim).to(device)
+input_dim = 1582 #+ len(conditions)
+hidden_dim = 512
+model = archi(input_dim, hidden_dim).to(device)
 model.float()
 print(model)
 model.train()
 
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+'''
+testing model params.
+'''
+
+
+
+
+# for feature, label in test_loader:
+#     feature, label = feature.to(device).float(), label.to(device).float()
+    
+#     feature = feature.permute(2,0,1)
+#     print(feature.shape)
+#     print(label.shape)
+#     output = model(feature)
+#     print(output.shape)
+#     break
+
 
 def train(train_loader):
     loss_epoch_log = []
@@ -70,6 +118,9 @@ def train(train_loader):
         numbatches = len(train_loader)
         # Transfer to GPU
         feature, label = feature.to(device).float(), label.to(device).float()
+        feature = feature.permute(2,0,1)
+        print('label shape:  ', label.shape)
+        label = label.transpose(1,0)
         # clear gradients 
         optimizer.zero_grad()
         # forward pass
@@ -90,8 +141,11 @@ def train(train_loader):
             numbatches = len(train_loader)
             # Transfer to GPU
             feature, label = feature.to(device).float(), label.to(device).float()
+            feature = feature.permute(2,0,1)
+            label = label.transpose(1,0)
             # clear gradients 
-            optimizer.zero_grad()
+            model.zero_grad()
+            # optimizer.zero_grad()
             # forward pass
             output = model.forward(feature)
             # MSE Loss calculation
@@ -124,6 +178,7 @@ def train(train_loader):
 
     return model
 
+
 def save_model(model, model_name):
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -139,55 +194,32 @@ def load_model(model_name):
     model.eval() # assuming loading for eval and not further training. (does not save optimizer so shouldn't continue training.)
     return model
 
-def run_training(model_name):
-
-    # prepare data for training
-    dataset_obj = dataset_class(affect_type, feat_dict, exps, pinfo, conditions)
-    train_dataset = dataset_obj.gen_dataset(train=True)
-    train_loader = DataLoader(train_dataset, **params)
-
-    # train.
-    model = train(train_loader)
-    save_model(model, model_name)
-    single_test(model_name)
 
 def plot_pred_comparison(output, label, mseloss):
     plt.plot(output.cpu().numpy(), label='pred')
     plt.plot(label.cpu().numpy(), label='ori')
     plt.legend()
-    plt.xlabel('Time')
-    plt.ylabel(f'{affect_type}')
     plt.title(f'Prediction vs Ground Truth || mse: {mseloss}')
     return plt
 
 def plot_pred_against(output, label, mseloss):
     actual = label.cpu().numpy()
     predicted = output.squeeze().cpu().numpy()
+    print(np.shape(actual))
+    print(np.shape(predicted))
     plt.scatter(actual, predicted)
-    plt.xlabel('ground truth')
-    plt.ylabel('prediction')
-    plt.title(f'Prediction against Ground Truth || mse: {mseloss}')
     return plt
 
-# plot prediction of one song.
-# feat_dict['']
 
-'''
-testing
-'''
-def single_test(model_name):
+def single_test(model_name, index):
     # features - audio
-    testfeat = feat_dict['01_139']
+    testfeat = feat_dict['00_145']
     # features - pinfo
-    testtrial = exps[exps['songurl']=='01_139'].reset_index().loc[0]
-    testwid = testtrial['workerid']
-    single_pinfo_df = pinfo[pinfo['workerid'] == testwid]
-    single_pinfo_df = single_pinfo_df[conditions]
-    testpinfo = single_pinfo_df.values.tolist()[0]
+    testtrial = exps[exps['songurl']=='00_145'].reset_index().loc[index]
     # labels
     testlabel = testtrial[affect_type]
 
-    testinput = np.array([list(audiofeat) + list(testpinfo) for audiofeat in testfeat])
+    testinput = testfeat
 
     with torch.no_grad():
         testinput = torch.from_numpy(testinput)
@@ -203,24 +235,22 @@ def single_test(model_name):
     # print(loss.item())
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
-
-    plt = plot_pred_comparison(output, label, loss.item())
-    plt.savefig(os.path.join(dir_path, 'saved_models', f'{model_name}_prediction.png'))
+    
+    plt = plot_pred_comparison(output.squeeze(), label, loss.item())
+    plt.savefig(os.path.join(dir_path, 'saved_models', f'{model_name}_prediction_{index}.png'))
     plt.close()
 
-    plt = plot_pred_against(output, label, loss.item())
-    plt.savefig(os.path.join(dir_path, 'saved_models', f'{model_name}_y_vs_yhat.png.png'))
+    plt = plot_pred_against(output.squeeze(), label, loss.item())
+    plt.savefig(os.path.join(dir_path, 'saved_models', f'{model_name}_y_vs_yhat_{index}.png'))
     plt.close()
 
-def test(model_name):
+def test(model):
     # prepare data for testing
-    dataset_obj = dataset_class(affect_type, feat_dict, exps, pinfo, conditions)
-    test_dataset = dataset_obj.gen_dataset(train=False)
-    test_loader = DataLoader(test_dataset, **params)
+    test_loader = dataloader_prep(train=False)
 
     loss_log = []
     with torch.no_grad():
-        model = load_model(model_name)
+        # model = load_model(model_name)
         for batchidx, (feature, label) in enumerate(test_loader):
             
             feature, label = feature.to(device).float(), label.to(device).float()
@@ -233,7 +263,10 @@ def test(model_name):
     aveloss = np.average(loss_log)
     print(f'average test lost (per batch): {aveloss}')
 
-model_name = 'test3'
-# run_training(model_name)
-single_test(model_name)
-# test(model_name)
+model_name = 'test'
+loader = dataloader_prep(train=True)
+model = train(loader)
+# save_model(model, model_name)
+# single_test(model_name,1)
+# loader = dataloader_prep(train=False)
+test(model)

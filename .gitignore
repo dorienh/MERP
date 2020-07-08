@@ -6,6 +6,7 @@
 
 /data
 /analysis/plots
+**/saved_models
 
 # Byte-compiled files
 **/__pycache__

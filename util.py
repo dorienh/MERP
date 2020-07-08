@@ -1,6 +1,7 @@
 '''
 global variables and functions
 '''
+import numpy as np
 
 #########################################
 ############    Smoothing    ############
@@ -35,7 +36,14 @@ def cl_output_smoothing(self, data, winlen=None):
     data = butter_lowpass_filter(data)
     return smoothing(data, winlen)
 
+#########################################
+########       Normalizing      #########
+#########################################
 
+def normalize(data, minimum, maximum):
+    ''' function to normalize the values of an array to [-1, 1] given min and max'''
+    data = np.array(data)
+    return ((data - minimum)/(maximum - minimum + 1e-05))*2 - 1
 
 #########################################
 ########    Load Pickle File    #########

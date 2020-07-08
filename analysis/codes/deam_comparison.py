@@ -10,6 +10,7 @@ import os
 import glob
 import pandas as pd
 import numpy as np
+from scipy.stats import pearsonr
 import sys
 sys.path.append(os.path.abspath('..'))
 sys.path.append(os.path.abspath('../..'))
@@ -18,7 +19,6 @@ import matplotlib.pyplot as plt
 
 import util
 
-#%%
 '''
 read deam annotations for the 4 deam songs we used
 10 annotations per song exist.
@@ -26,13 +26,24 @@ read deam annotations for the 4 deam songs we used
 datatype = 'arousals'
 deampath = '../data/deam_annotations/annotations_per_each_rater/dynamic-persec'
 deamsonglist = ['115', '343', '745', '1334']
-# %%
 
 deamlabels = {}
 for deamsong in deamsonglist:
     path = os.path.join(deampath, datatype[:-1], f'{deamsong}.csv')
     print(path)
     deamlabels[f'deam_{deamsong}'] =  pd.read_csv(path, index_col=None, header=0) 
+
+def get_deamstats():
+    deamstats = {}
+    for songurl, df in deamlabels.items():
+        ave = df.mean(axis=0)
+        stddev = df.std(axis=0)
+        deamstats[songurl] = {'ave':ave.to_numpy(), 'stddev':stddev.to_numpy()}
+    return deamstats
+
+deamstats = get_deamstats()
+
+deamtrials = exps3[exps3['songurl'].str.contains('deam')]
 
 # %%
 '''
@@ -58,16 +69,8 @@ def plot_deam_ave_std():
         plt.close()
 
 plot_deam_ave_std()
-# %%
-def get_deamstats():
-    deamstats = {}
-    for songurl, df in deamlabels.items():
-        ave = df.mean(axis=0)
-        stddev = df.std(axis=0)
-        deamstats[songurl] = {'ave':ave.to_numpy(), 'stddev':stddev.to_numpy()}
-    return deamstats
 
-deamstats = get_deamstats()
+
 
 #%%
 def average_1D(arr, n):
@@ -86,7 +89,6 @@ def check_if_within_std(deamstat, ourlabel, std_mult=1):
         else:
             within_bool_list.append(False)
     return within_bool_list
-
 
 
 
@@ -135,7 +137,7 @@ def plot_collected_against_deam_all_participants(songurl, ourlabels, ave_percent
 per participant
 '''
 
-deamtrials = exps3[exps3['songurl'].str.contains('deam')]
+
 percentage_match_list = []
 percentmatchdict = {}
 for idx in deamtrials.index:
@@ -203,15 +205,11 @@ for songurl, trials in deamtrials.groupby('songurl'):
 MSE and PEARSON table participant against 4 deam songs. 
 save in csv
 '''
-from scipy.stats import pearsonr
+
 
 deamtrials = exps3[exps3['songurl'].str.contains('deam')]
 stat_dict = {}
 
-# for deamsong, song_exps in deamtrials.groupby('songurl'):
-    
-#     for idx in song_exps.index:
-#         label_list = song_exps.l
 
 for workerid, p_exps in deamtrials.groupby('workerid'):
     worker_stat_dict = {}
@@ -224,10 +222,123 @@ for workerid, p_exps in deamtrials.groupby('workerid'):
         label_list = label_list[lendiff::]
         mse = np.square(np.subtract(tobecompared,label_list)).mean()
         corr_coeff, p_value = pearsonr(tobecompared, label_list)
+        '''
+        check if nan == no movement
+        '''
+        # if np.isnan(corr_coeff):
+        #     plt.plot(label_list)
+        #     plt.xlabel('time')
+        #     plt.ylabel(datatype)
+        #     plt.show()
         worker_stat_dict[songurl] = (round(mse,4), round(corr_coeff,4), round(p_value,4))
 
     stat_dict[workerid] = worker_stat_dict
 
+# stat_df = pd.DataFrame(stat_dict).transpose()
+# stat_df.to_csv('../analysis/plots/mse_pearson_vs_deam.csv')
+
+
+# %%
+'''
+excel.
+for each deam trial
+arousal and valence. (run twice)
+each song
+find mse, r, %1std, %2std, 
+'''
+stat_dict = {}
+for workerid, p_exps in deamtrials.groupby('workerid'):
+    worker_stat_dict= {}
+    for idx in p_exps.index:
+        # get rescaled and headless collected labels.
+        label_list = p_exps.loc[idx, datatype]
+        label_list = average_1D(label_list,5)
+        # get songurl
+        songurl = p_exps.loc[idx, 'songurl']
+        # get deam labels
+        tobecompared = deamstats[songurl]['ave']
+        lendiff = len(label_list)-len(tobecompared)
+        label_list = label_list[lendiff::]
+
+        # mse
+        temp = np.square(np.subtract(tobecompared,label_list)).mean()
+        worker_stat_dict['mse'] = round(temp, 4)
+        # pearson
+        temp, _ = pearsonr(tobecompared, label_list)
+        if np.isnan(temp):
+            worker_stat_dict['pearson'] = -1.25
+        else:
+            worker_stat_dict['pearson'] = round(temp, 4)
+        # 1 std
+        temp = check_if_within_std(deamstats[songurl], label_list, std_mult=1)
+        percentage_match = round(sum(temp)/len(temp)*100, 2)
+        worker_stat_dict['std1'] = round(percentage_match, 4)
+        # 2 std
+        temp = check_if_within_std(deamstats[songurl], label_list, std_mult=2)
+        percentage_match = round(sum(temp)/len(temp)*100, 2)
+        worker_stat_dict['std2'] = round(percentage_match, 4)
+    
+    stat_dict[workerid] = worker_stat_dict
+
 stat_df = pd.DataFrame(stat_dict).transpose()
-stat_df.to_csv('../analysis/plots/mse_pearson_vs_deam.csv')
+stat_df.to_csv(f'../analysis/plots/deam_comparison/vs_deam_stats_{datatype}.csv')
+#%%
+'''
+histograms of mse, pearson, std1 and std2...
+'''
+
+def plot_stat_hist(stat_df, stat_type, datatype):
+    fig = plt.figure(figsize=(12,6))
+    plt.hist(stat_df[stat_type], bins=20)
+    plt.xlabel(stat_type)
+    plt.ylabel('number of participants (total:387)')
+    plt.title(f'Histogram of {stat_type} between DEAM and COLLECTED {datatype} labels')
+    return plt
+
+# for stat_type in ['mse', 'pearson', 'std1', 'std2']:
+#     plt = plot_stat_hist(stat_df, stat_type, datatype)
+#     plt.savefig(f'../analysis/plots/deam_comparison/stats/{datatype}_{stat_type}_hist.png')
+#     plt.close()
+
+plt = plot_stat_hist(stat_df, 'mse', datatype)
+plt.show()
+# %%
+'''
+how many workers qualify?
+'''
+qualifying_thresholds = {'mse':0.2, 'pearson':0.2, 'std1': 50.0, 'std2': 100.0}
+workerid_counts = {'mse':0, 'pearson':0, 'std1': 0, 'std2': 0, 'all': 0}
+
+for idx in stat_df.index:
+    all_bool = True
+    row = stat_df.loc[idx]
+    if row['mse'] < qualifying_thresholds['mse']:
+        workerid_counts['mse'] += 1
+    else:
+        all_bool = False
+    if row['pearson'] > qualifying_thresholds['pearson']:
+        workerid_counts['pearson'] += 1
+    else:
+        all_bool = False
+    if row['std1'] >= qualifying_thresholds['std1']:
+        workerid_counts['std1'] += 1
+    else:
+        all_bool = False
+    if row['std2'] >= qualifying_thresholds['std2']:
+        workerid_counts['std2'] += 1
+    else:
+        all_bool = False
+
+    if all_bool == True:
+        workerid_counts['all'] += 1
+
+plt.bar(0, workerid_counts['mse'], label=f"{workerid_counts['mse']}")
+plt.bar(1, workerid_counts['pearson'], label=f"{workerid_counts['pearson']}")
+plt.bar(2, workerid_counts['std1'], label=f"{workerid_counts['std1']}")
+plt.bar(3, workerid_counts['std2'], label=f"{workerid_counts['std2']}")
+plt.xticks(np.arange(4), labels=['mse', 'pearson', 'std1', 'std2'])
+plt.title(f"{workerid_counts['all']}")
+plt.legend()
+plt.show()
+
 # %%
