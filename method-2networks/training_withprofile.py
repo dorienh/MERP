@@ -203,6 +203,7 @@ if __name__ == "__main__":
     parser.add_argument('--lstm_hidden_dim', type=int, default=512)
     parser.add_argument('--lstm_size', type=int, default=10)
     parser.add_argument('--step_size', type=int, default=5)
+    parser.add_argument('--drop_prob', type=int, default=5)
     parser.add_argument('--learning_rate', type=float, default=0.001)
     parser.add_argument('--conditions', nargs='+', type=str, default=['training'])
 
@@ -237,10 +238,11 @@ if __name__ == "__main__":
     lstm_input_dim = 1582
     fc_input_dim = len(args.conditions)
     fc_output_dim = fc_input_dim if fc_input_dim==1 else fc_input_dim//2
-    model = archi(lstm_input_dim, args.lstm_hidden_dim, fc_input_dim, fc_output_dim, args.lstm_size).to(device)
+    model = archi(lstm_input_dim, args.lstm_hidden_dim, fc_input_dim, fc_output_dim, args.lstm_size, args.drop_prob).to(device)
     model.float()
     print(model)
     model.train()
+    '''
 
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
@@ -279,4 +281,4 @@ if __name__ == "__main__":
         print(args_df)
     
 
-    
+    '''
