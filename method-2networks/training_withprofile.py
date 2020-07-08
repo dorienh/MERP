@@ -21,7 +21,7 @@ from util_method import save_model, load_model, plot_pred_against, plot_pred_com
 ### to edit accordingly.
 from dataloader import dataset_non_ave_with_profile as dataset_class
 ### to edit accordingly.
-from network import Combination_model_1 as archi
+from network import Combination_model_2 as archi
 
 
 def dataloader_prep(feat_dict, exps, pinfo, args, train=True):
@@ -45,6 +45,8 @@ def train(train_loader, model, test_loader, args):
     loss_log = []
     for batchidx, (audio_info, profile_info, label) in enumerate(train_loader):
         numbatches = len(train_loader)
+        label = label[:,-1] # we want to train the model to predict the last timestep.
+        # print(label)
         # Transfer to GPU
         audio_info, profile_info, label = audio_info.to(device).float(), profile_info.to(device).float(), label.to(device).float()
         # print('audio info shape: ', audio_info.shape)
@@ -70,6 +72,8 @@ def train(train_loader, model, test_loader, args):
         # Training
         for batchidx, (audio_info, profile_info, label) in enumerate(train_loader):
             numbatches = len(train_loader)
+            label = label[:,-1] # we want to train the model to predict the last timestep.
+            # print(label)
             # Transfer to GPU
             audio_info, profile_info, label = audio_info.to(device).float(), profile_info.to(device).float(), label.to(device).float()
             
@@ -173,7 +177,7 @@ def test(model, test_loader):
     with torch.no_grad():
 
         for batchidx, (audio_info, profile_info, label) in enumerate(test_loader):
-            
+            label = label[:,-1] # we want to train the model to predict the last timestep.
             audio_info, profile_info, label = audio_info.to(device).float(), profile_info.to(device).float(), label.to(device).float()
             # forward pass
             output = model(audio_info, profile_info)
@@ -196,14 +200,14 @@ if __name__ == "__main__":
     parser.add_argument('--dir_path', type=str, default=dir_path)
 
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
-    parser.add_argument('--num_epochs', type=int, default=20)
+    parser.add_argument('--num_epochs', type=int, default=2)
     parser.add_argument('--model_name', type=str, default='condition_tr_model_1', help='Name of folder plots and model will be saved in')
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--num_workers', type=int, default=10)
     parser.add_argument('--lstm_hidden_dim', type=int, default=512)
     parser.add_argument('--lstm_size', type=int, default=10)
     parser.add_argument('--step_size', type=int, default=5)
-    parser.add_argument('--drop_prob', type=int, default=5)
+    parser.add_argument('--drop_prob', type=int, default=0.01)
     parser.add_argument('--learning_rate', type=float, default=0.001)
     parser.add_argument('--conditions', nargs='+', type=str, default=['training'])
 
@@ -242,7 +246,7 @@ if __name__ == "__main__":
     model.float()
     print(model)
     model.train()
-    '''
+    
 
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
@@ -250,6 +254,7 @@ if __name__ == "__main__":
     train_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=True)
     test_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=False)
     model, testloss = train(train_loader, model, test_loader, args)
+    
     save_model(model, args.model_name, dir_path)
     
     # model = archi(lstm_input_dim, args.lstm_hidden_dim, fc_input_dim, fc_output_dim, args.lstm_size).to(device)
@@ -270,7 +275,7 @@ if __name__ == "__main__":
     args_df = args_series.to_frame().transpose()
     # print(args_df)
 
-    exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log2.pkl')
+    exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log3.pkl')
     if os.path.exists(exp_log_filepath):
         exp_log = pd.read_pickle(exp_log_filepath)
         exp_log = exp_log.append(args_df).reset_index(drop=True)
@@ -281,4 +286,4 @@ if __name__ == "__main__":
         print(args_df)
     
 
-    '''
+    
