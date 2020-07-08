@@ -53,31 +53,43 @@ class Simple_CNN_Reg(torch.nn.Module):
 ##############################################################
 
 class LSTM_single(torch.nn.Module):
-    def __init__(self, input_dim, hidden_dim):
+    def __init__(self, input_dim, hidden_dim, drop_prob):
         super(LSTM_single, self).__init__()
         self.hidden_dim = hidden_dim
+        self.input_dim = input_dim
 
         self.lstm = nn.LSTM(input_dim, hidden_dim)
+        self.dropout1 = nn.Dropout(drop_prob)
         self.act1 = nn.Tanh()
 
         self.fc = nn.Linear(hidden_dim, hidden_dim//2)
+        self.dropout2 = nn.Dropout(drop_prob)
         self.lr2 = nn.LeakyReLU(0.1)
         
         self.fc2 = nn.Linear(hidden_dim//2, hidden_dim//4)
+        self.dropout3 = nn.Dropout(drop_prob)
         self.lr3 = nn.LeakyReLU(0.1)
 
         self.fc3 = nn.Linear(hidden_dim//4, 1)
-        self.input_dim = input_dim
+        
 
     def forward(self, x):
         # print(x.view(len(x), -1, self.input_dim).shape)
         lstm_out, lstm_h = self.lstm(x.view(len(x), -1, self.input_dim))
+        lstm_out = self.dropout1(lstm_out)
         lstm_out = self.act1(lstm_out)
-        prediction = self.lr2(self.fc(lstm_out.view(len(x),-1, self.hidden_dim)))
-        prediction = self.lr3(self.fc2(prediction))
-        prediction = self.fc3(prediction)
+        
+        out = self.fc(lstm_out.view(len(x),-1, self.hidden_dim))
+        out = self.dropout2(out)
+        out = self.lr2(out)
 
-        return prediction
+        out = self.lr3(self.fc2(out))
+        out = self.dropout3(out)
+        out = self.lr3(out)
+        
+        out = self.fc3(out)
+
+        return out
 
 
 

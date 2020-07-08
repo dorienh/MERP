@@ -249,7 +249,7 @@ if __name__ == "__main__":
     
 
     criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
 
     train_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=True)
     test_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=False)
@@ -263,7 +263,7 @@ if __name__ == "__main__":
 
     # test_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=False)
     # testloss = test(model, test_loader)
-
+    
     #return testloss
     # args_namespace = argparse.Namespace()
     args_dict = vars(args)

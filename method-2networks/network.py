@@ -9,18 +9,86 @@ import torch
 ##############################################################
 
 class Two_FC_layer(torch.nn.Module):
-    def __init__(self, input_dim = 1582, reduced_dim=128, fc_dim = 64):
+    def __init__(self, input_dim = 1582, reduced_dim=128, fc_dim = 64, drop_prob=0.01):
         super(Two_FC_layer, self).__init__()
         self.reduced_rgb = nn.Linear(input_dim, reduced_dim, bias=False)
+        self.dropout0 = nn.Dropout(drop_prob)
 
         self.fc1 = nn.Linear(reduced_dim, fc_dim, bias=False)
+        self.dropout1 = nn.Dropout(drop_prob)
         self.lr1 = nn.LeakyReLU(0.1)
         self.fc2 = nn.Linear(fc_dim, fc_dim, bias=False)
+        self.dropout2 = nn.Dropout(drop_prob)
         self.lr2 = nn.LeakyReLU(0.1)
         self.class_dim = nn.Linear(fc_dim, out_features=1, bias=False)  # output
 
     def forward(self, x):
-        out = self.class_dim(self.lr2(self.fc2(self.lr1(self.fc1(self.reduced_rgb(x))))))
+        out = self.reduced_rgb(x)
+        out = self.dropout0(out)
+
+        out = self.fc1(out)
+        out = self.dropout1(out)
+        out = self.lr1(out)
+
+        out = self.fc2(out)
+        out = self.dropout2(out)
+        out = self.lr2(out)
+
+        out = self.class_dim(out)
+        return out
+
+
+##############################################################
+####                        2) LSTM                       ####
+##############################################################
+
+
+class LSTM_single(torch.nn.Module):
+    def __init__(self, input_dim, hidden_dim, lstm_size, batch_size, drop_prob):
+        super(LSTM_single, self).__init__()
+        self.hidden_dim = hidden_dim
+        self.input_dim = input_dim
+
+        self.lstm = nn.LSTM(input_dim, hidden_dim)
+        self.dropout1 = nn.Dropout(drop_prob)
+        self.act1 = nn.Sigmoid()
+
+        self.fc = nn.Linear(hidden_dim, hidden_dim//2)
+        self.dropout2 = nn.Dropout(drop_prob)
+        self.lr2 = nn.LeakyReLU(0.1)
+        
+        self.fc2 = nn.Linear(hidden_dim//2, hidden_dim//4)
+        self.dropout3 = nn.Dropout(drop_prob)
+        self.lr3 = nn.LeakyReLU(0.1)
+
+        self.fc3 = nn.Linear(lstm_size*batch_size, hidden_dim//4)
+        self.dropout4 = nn.Dropout(drop_prob)
+        self.lr4 = nn.LeakyReLU(0.1)
+
+        self.fc4 = nn.Linear(hidden_dim//4, 1)
+        
+
+    def forward(self, x):
+        # print(x.view(len(x), -1, self.input_dim).shape)
+        lstm_out, lstm_h = self.lstm(x.view(len(x), -1, self.input_dim))
+        lstm_out = self.dropout1(lstm_out)
+        lstm_out = self.act1(lstm_out)
+        
+        
+        out = self.fc(lstm_out.view(len(x),-1, self.hidden_dim))
+        out = self.dropout2(out)
+        out = self.lr2(out)
+
+        out = self.fc2(out)
+        out = self.dropout3(out)
+        out = self.lr3(out)
+        
+        out = self.fc3(out.view(out.size(0),-1))
+        out = self.dropout4(out)
+        out = self.lr4(out)
+        
+        out = self.fc4(out)
+
         return out
 
 ##############################################################
@@ -36,7 +104,7 @@ class Combination_model_1(torch.nn.Module):
 
         self.lstm = nn.LSTM(lstm_input_dim, lstm_hidden_dim)
         self.dropout1 = nn.Dropout(drop_prob)
-        self.sigmoid = nn.Sigmoid()
+        self.act1 = nn.Sigmoid()
 
         self.fc_a1 = nn.Linear(lstm_hidden_dim, lstm_hidden_dim//2)
         self.dropout2 = nn.Dropout(drop_prob)
@@ -66,7 +134,7 @@ class Combination_model_1(torch.nn.Module):
 
         lstm_out, lstm_h = self.lstm(x_a.view(len(x_a), -1, self.lstm_input_dim))
         lstm_out = self.dropout1(lstm_out)
-        lstm_out = self.sigmoid(lstm_out)
+        lstm_out = self.act1(lstm_out)
 
         hl_l = self.fc_a1(lstm_out.view(len(x_a), -1, self.lstm_hidden_dim))
         hl_l = self.dropout2(hl_l)
@@ -108,7 +176,7 @@ class Combination_model_2(torch.nn.Module):
 
         self.lstm = nn.LSTM(lstm_input_dim, lstm_hidden_dim)
         self.dropout0 = nn.Dropout(drop_prob)
-        self.sigmoid = nn.Sigmoid()
+        self.act1 = nn.Sigmoid()
 
         self.fc_a1 = nn.Linear(lstm_hidden_dim, lstm_hidden_dim//2)
         self.dropout1 = nn.Dropout(drop_prob)
@@ -138,7 +206,7 @@ class Combination_model_2(torch.nn.Module):
     def forward(self, x_a, x_p):
         lstm_out, lstm_h = self.lstm(x_a.view(len(x_a), -1, self.lstm_input_dim))
         lstm_out = self.dropout0(lstm_out)
-        lstm_out = self.sigmoid(lstm_out)
+        lstm_out = self.act1(lstm_out)
 
         hl_l = self.fc_a1(lstm_out.view(len(x_a), -1, self.lstm_hidden_dim))
         hl_l = self.dropout1(hl_l)
