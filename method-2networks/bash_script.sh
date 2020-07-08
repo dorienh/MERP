@@ -9,7 +9,7 @@
 # /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 # --affect_type 'arousals' \
 # --num_epochs 10 \
-# --model_name 'condition_tr_combined_model_1' \
+# --model_name 'condition_tr_combined_model_2' \
 # --batch_size 32 \
 # --hidden_dim 512 \
 # --lstm_size 10 \
@@ -37,7 +37,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_age_combined_model_1' \
+--model_name 'condition_age_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -49,7 +49,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_encult_combined_model_1' \
+--model_name 'condition_encult_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -61,7 +61,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_live_combined_model_1' \
+--model_name 'condition_live_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -73,7 +73,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_lang_combined_model_1' \
+--model_name 'condition_lang_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -85,7 +85,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_genre_combined_model_1' \
+--model_name 'condition_genre_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -97,7 +97,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_instru_combined_model_1' \
+--model_name 'condition_instru_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -109,7 +109,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_tr_combined_model_1' \
+--model_name 'condition_tr_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -121,7 +121,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_trdur_combined_model_1' \
+--model_name 'condition_trdur_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -133,7 +133,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'arousals' \
 --num_epochs 20 \
---model_name 'condition_trdur_combined_model_1' \
+--model_name 'condition_trdur_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -147,7 +147,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_age_combined_model_1' \
+--model_name 'condition_age_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -159,7 +159,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_encult_combined_model_1' \
+--model_name 'condition_encult_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -171,7 +171,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_live_combined_model_1' \
+--model_name 'condition_live_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -183,7 +183,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_lang_combined_model_1' \
+--model_name 'condition_lang_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -195,7 +195,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_genre_combined_model_1' \
+--model_name 'condition_genre_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -207,7 +207,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_instru_combined_model_1' \
+--model_name 'condition_instru_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -219,7 +219,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_tr_combined_model_1' \
+--model_name 'condition_tr_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -231,7 +231,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_trdur_combined_model_1' \
+--model_name 'condition_trdur_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \
@@ -255,7 +255,7 @@
 /home/meowyan/Documents/emotion/method-2networks/training_withprofile.py \
 --affect_type 'valences' \
 --num_epochs 20 \
---model_name 'condition_trdur_combined_model_1' \
+--model_name 'condition_trdur_combined_model_2' \
 --batch_size 128 \
 --lstm_hidden_dim 512 \
 --lstm_size 10 \

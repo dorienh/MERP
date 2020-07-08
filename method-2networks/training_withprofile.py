@@ -211,6 +211,9 @@ if __name__ == "__main__":
     parser.add_argument('--learning_rate', type=float, default=0.001)
     parser.add_argument('--conditions', nargs='+', type=str, default=['training'])
 
+    parser.add_argument('--mean', type=bool, default=False)
+    parser.add_argument('--median', type=bool, default=True)
+
     args = parser.parse_args()
     setattr(args, 'model_name', f'{args.affect_type[0]}_p_{args.model_name}')
     print(args)
@@ -238,6 +241,9 @@ if __name__ == "__main__":
     # standardize audio features
     feat_dict = standardize(feat_dict)
 
+    if args.conditions and (args.mean != False or args.median != False):
+        combine_similar_pinfo(pinfo, exps, args)
+    
     ## MODEL
     lstm_input_dim = 1582
     fc_input_dim = len(args.conditions)
