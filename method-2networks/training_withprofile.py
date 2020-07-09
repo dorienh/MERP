@@ -17,7 +17,7 @@ from torch import optim, nn
 from torch.utils.data import DataLoader
 
 import util
-from util_method import save_model, load_model, plot_pred_against, plot_pred_comparison, standardize
+from util_method import save_model, load_model, plot_pred_against, plot_pred_comparison, standardize, combine_similar_pinfo
 ### to edit accordingly.
 from dataloader import dataset_non_ave_with_profile as dataset_class
 ### to edit accordingly.
