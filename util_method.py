@@ -63,7 +63,7 @@ def combine_similar_pinfo(pinfo, exps, args):
     # print(pinfo.head)
     desired_columns = ['workerid', *args.conditions]
     selected_pinfo = pinfo[desired_columns]
-    print(selected_pinfo.head())
+    # print(selected_pinfo.head())
 
     # a list to keep every unique trial and pinfo type
     unique_trials = []
@@ -100,10 +100,29 @@ def combine_similar_pinfo(pinfo, exps, args):
                 # print(trial)
                 unique_trials.append(trial)
     # list of series to dataframe
+    print('length of unique_trials: ', len(unique_trials))
     return pd.DataFrame(unique_trials)
     
         
+def combine_no_profile(exps, args):
 
-        
-        
+    print(args.mean, args.median)
+
+    combined_list = []
+
+    for songurl, group in exps.groupby('songurl'):
+        label_list = group[args.affect_type].to_numpy()
+        if args.mean:
+            label_agg = np.mean(label_list)
+        if args.median:
+            # change to 
+            label_list = [list(label) for label in label_list]
+            label_agg = np.median(label_list, axis=0)
+
+        trial = group.iloc[0]
+        trial.at[args.affect_type] = label_agg
+        combined_list.append(trial)
+    
+    return pd.DataFrame(combined_list)
+
 

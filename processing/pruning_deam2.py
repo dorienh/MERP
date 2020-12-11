@@ -1,7 +1,3 @@
-'''
-Different pruning methods. Based on statistics instead.
-'''
-
 #%%
 '''
 imports
@@ -32,7 +28,7 @@ feat_len_dict = count_timestep_feat_dict(feat_dict)
 
 ## 3) load the amazon data
 exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'mediumrare', 'unpruned_exps.pkl'))
-pinfo = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'mediumrare', 'unpruned_pinfo.pkl'))
+pinfo = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'mediumrare', 'semipruned_pinfo.pkl'))
 
 def printcounts(exps):
     nonmaster = exps[(exps['batch'] == '7') | (exps['batch'] == '8') ]
@@ -47,6 +43,18 @@ def printcounts(exps):
     print('total')
     print('num wid: ', len(exps['workerid'].unique()))
     print('num trials: ', len(exps))
+
+# print('mean songs labelled per wid: ', exps.groupby('workerid').count().mean())
+
+
+#%%
+'''
+1) only keep entries with workerids in semipruned_pinfo
+erroneous profiles have been removed.
+'''
+exps2 = exps[exps['workerid'].isin(pinfo.workerid)].reset_index(drop=True)
+
+#%%
 
 '''
 1) remove trials that are too short or too long (remove by index)
@@ -63,61 +71,9 @@ def too_short_too_long(exps, feat_len_dict, threshold=20):
     # print('num qualified entries: ', len(qualified_idexes))
     return exps.iloc[qualified_idexes].reset_index(drop=True)
 
-exps2 = too_short_too_long(exps, feat_len_dict)
+exps3 = too_short_too_long(exps2, feat_len_dict)
 
-
-'''
-2) remove trials under erroneous profiles (remove by workerid and batch)
-'''
-def erroneous_training_duration_profiles(pinfo, exps):
-    # check training duration
-    # remove if more than 100 or less than 0
-    pinfo_td = pinfo['training_duration'].astype(int)
-    err_p = pinfo[(pinfo_td < 0) | (pinfo_td > 100)]
-
-    for _, participant in err_p.iterrows():
-        exps = exps[~ ((exps['workerid'] == participant['workerid']) & (exps['batch'] == f"{participant['batch']}"))]
-    return exps.reset_index(drop=True)
-
-exps3 = erroneous_training_duration_profiles(pinfo, exps2)
-
-'''
-# repeat workerid, different answers. remove. 
-'''
-def remove_duplicate_conflicting_profiles(pinfo, exps):
-    duplicate_pinfos = pinfo[pinfo['workerid'].duplicated(keep=False)]
-    duplicate_pinfos = duplicate_pinfos.drop(columns='batch')
-    duplicate_wids = duplicate_pinfos['workerid'].unique()
-    to_delete = []
-    for wid in duplicate_wids:
-        temp = duplicate_pinfos[duplicate_pinfos['workerid']==wid]
-        # print(temp.iloc[0].values[1::])
-        # print(temp.iloc[1].values[1::])
-        # print()
-        if not np.array_equal(temp.iloc[0].values[1::],temp.iloc[1].values[1::]):
-            to_delete.append(wid)
-        
-    for wid in to_delete:
-        exps = exps[~ (exps['workerid'] == wid)]
-    
-    return exps.reset_index(drop=True)
-
-exps3 = remove_duplicate_conflicting_profiles(pinfo, exps3)
-    
-'''
-# training 'No' but training_duration > 0 (3 workerids)
-'''
-def remove_training_conflicting_profiles(pinfo, exps):
-    err_p = pinfo.loc[(pinfo['training_duration'].astype(int)>0) & (pinfo['training']=='No')]
-    to_delete = err_p['workerid'].tolist()
-
-    for wid in to_delete:
-        exps = exps[~ (exps['workerid'] == wid)]
-    
-    return exps.reset_index(drop=True)
-
-exps3 = remove_training_conflicting_profiles(pinfo, exps3)
-
+# %%
 def remove_missing_deam_workers(exps):
     to_delete = []
 
@@ -131,11 +87,7 @@ def remove_missing_deam_workers(exps):
     
     return exps.reset_index(drop=True)
 
-exps3= remove_missing_deam_workers(exps3)
-
-print(f'number of trials: {len(exps3)}')
-print(f'number of workers: {len(exps3["workerid"].unique())}')
-
+exps4 = remove_missing_deam_workers(exps3)
 
 #%%
 '''
@@ -170,7 +122,7 @@ deamstats = get_deamstats(datatypes, deamlabels)
 '''
 get deam trials from exps
 '''
-deamtrials = exps3[exps3['songurl'].str.contains('deam')].reset_index()
+deamtrials = exps4[exps4['songurl'].str.contains('deam')].reset_index()
 
 def average_1D(arr, n):
     end =  n * int(len(arr)/n)
@@ -199,7 +151,6 @@ def check_if_within_std(deamstat, ourlabel, std_mult=1):
         else:
             within_bool_list.append(False)
     return within_bool_list
-
 
 #%%
 '''
@@ -309,70 +260,5 @@ print(f'number of trials: {len(exps3)}')
 print(f'number of workers: {len(exps3["workerid"].unique())}')
 print(f'number of trials: {len(qualified_trials)}')
 print(f'number of workers: {len(qualified_trials["workerid"].unique())}')
-
-#%%
-
-'''
-rescale and remove head
-'''
-## 1) load feat_dict
-feat_dict_ready = util.load_pickle('../data/feat_dict_ready.pkl')
-
-## 2) use feat_dict to find number of timesteps in each song, store in feat_len_dict
-feat_len_dict_ready = count_timestep_feat_dict(feat_dict_ready)
-
-def rescale_and_remove_head(trial, song_len_dict):
-    songurl = trial['songurl']
-    song_len = song_len_dict[songurl]
-
-    # rescale
-    arousal = average_1D(trial['arousals'], 5)
-    valence = average_1D(trial['valences'], 5)
-    # remove head
-    startidx = len(arousal) - song_len
-    arousal = arousal[startidx::]
-    valence = valence[startidx::]
-    return arousal, valence
-
-def rescale_and_remove_head_dataframe(exps, song_len_dict):
-    exps = exps.copy()
-    for idx in exps.index:
-        trial = exps.loc[idx]
-        arousal, valence = rescale_and_remove_head(trial, feat_len_dict_ready)
-        exps.at[idx,'arousals'] = arousal
-        exps.at[idx,'valences'] = valence
-    return exps
-
-modified_exps = rescale_and_remove_head_dataframe(qualified_trials, feat_len_dict_ready)
-
-#%%
-def check_exps(exps):
-    count = 0
-    for idx in exps.index:
-        row = exps.loc[idx]
-        count += len(row['arousals'])
-    print(f'total number of timesteps: {count}')
-    print(f'number of trials: {len(exps)}')
-    print(f'number of workers: {len(exps["workerid"].unique())}')
-
-print('after removing erronous profiles')
-check_exps(exps3)
-print('\nafter removing based on std and pearson')
-check_exps(qualified_trials)
-print('\nafter rescaling and removing first 15 seconds')
-check_exps(modified_exps)
-
-
-#%%
-###################################################
-# NORMALIZE EXPS (they are already normalized naturally so no need.)
-###################################################
-# temp = modified_exps['arousals'].to_numpy()
-# np.max(np.concatenate(temp))
-
-# %%
-import pickle
-with open('../data/exps_ready.pkl', 'wb') as handle:
-    pickle.dump(modified_exps, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 # %%

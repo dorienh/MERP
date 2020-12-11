@@ -36,7 +36,8 @@ class Two_FC_layer(torch.nn.Module):
 
         out = self.class_dim(out)
         return out
-        
+
+
 ##############################################################
 ####                        2) LSTM                       ####
 ##############################################################
@@ -45,77 +46,6 @@ class Two_FC_layer(torch.nn.Module):
 class LSTM_single(torch.nn.Module):
     def __init__(self, input_dim, hidden_dim, lstm_size, batch_size, drop_prob):
         super(LSTM_single, self).__init__()
-        self.hidden_dim = hidden_dim
-        self.input_dim = input_dim
-
-        self.lstm = nn.LSTM(input_dim, hidden_dim)
-        self.dropout1 = nn.Dropout(drop_prob)
-        self.act1 = nn.Sigmoid()
-
-        self.fc = nn.Linear(hidden_dim, hidden_dim//4)
-        self.dropout2 = nn.Dropout(drop_prob)
-        self.lr2 = nn.LeakyReLU(0.1)
-        
-        # self.fc2 = nn.Linear(hidden_dim//2, hidden_dim//4)
-        # self.dropout3 = nn.Dropout(drop_prob)
-        # self.lr3 = nn.LeakyReLU(0.1)
-
-        self.fc3 = nn.Linear(hidden_dim//4*lstm_size, hidden_dim//8*lstm_size)
-        self.dropout4 = nn.Dropout(drop_prob)
-        self.lr4 = nn.LeakyReLU(0.1)
-
-        self.fc4 = nn.Linear(hidden_dim//8*lstm_size, hidden_dim//16*lstm_size)
-        self.dropout5 = nn.Dropout(drop_prob)
-        self.lr5 = nn.LeakyReLU(0.1)
-
-        self.fc5 = nn.Linear(hidden_dim//16*lstm_size, hidden_dim//32*lstm_size)
-        self.dropout6 = nn.Dropout(drop_prob)
-        self.lr6 = nn.LeakyReLU(0.1)
-
-        self.fc6 = nn.Linear(hidden_dim//32*lstm_size, 1)
-
-        
-
-    def forward(self, x):
-        # print(x.view(len(x), -1, self.input_dim).shape)
-        lstm_out, lstm_h = self.lstm(x.view(len(x), -1, self.input_dim))
-        lstm_out = self.dropout1(lstm_out)
-        lstm_out = self.act1(lstm_out)
-        
-        
-        out = self.fc(lstm_out.view(len(x),-1, self.hidden_dim))
-        out = self.dropout2(out)
-        out = self.lr2(out)
-
-        out = self.fc2(out)
-        out = self.dropout3(out)
-        out = self.lr3(out)
-        
-        out = self.fc3(out.view(out.size(0),-1))
-        out = self.dropout4(out)
-        out = self.lr4(out)
-        
-        out = self.fc4(out)
-        out = self.dropout5(out)
-        out = self.lr5(out)
-
-        out = self.fc5(out)
-        out = self.dropout6(out)
-        out = self.lr6(out)
-
-        out = self.fc6(out)
-
-        return out
-
-        
-##############################################################
-####                        2) LSTM 0                     ####
-##############################################################
-
-
-class LSTM_single_0(torch.nn.Module):
-    def __init__(self, input_dim, hidden_dim, lstm_size, batch_size, drop_prob):
-        super(LSTM_single_1, self).__init__()
         self.hidden_dim = hidden_dim
         self.input_dim = input_dim
 
@@ -177,9 +107,6 @@ class LSTM_single_0(torch.nn.Module):
         out = self.fc6(out)
 
         return out
-
-
-
 
 ##############################################################
 ####            2) Combine 2 features network             ####

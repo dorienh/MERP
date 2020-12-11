@@ -1,1 +1,56 @@
-Emotions are ever present in music. Regardless of genre, various songs of various emotions exist. The fact that it is possible to think that a song sounds happy, or angry, is evidence that music contains emotional data. However emotion of music is perhaps subjective. How sad a song sounds may perhaps differ from person to person. In this study, we present, a preliminary database to address this hypothesis. Utilizing Amazon Mechanical Turk, we collected a database of dynamic emotion ratings of selected songs, in the form of valence and arousal, along with some profile information of the participants. 
+Emotions are ever present in music. Regardless of genre, songs of various emotions exist. The fact that it is possible to think that a song sounds happy, or angry, is evidence that music contains emotional information. However emotion of music is perhaps subjective. How sad a song sounds may perhaps differ from person to person. In this study, we present, a preliminary database to address this hypothesis. Utilizing Amazon Mechanical Turk, we collected a database of dynamic emotion ratings of selected songs, in the form of valence and arousal, along with some profile information of the participants. 
+
+
+Distinguish between emotion evoked by music and emotion 
+
+
+music emotion recognition(MER)
+
+songs are from FMA 
+https://github.com/mdeff/fma
+
+50 full songs and 5 deam songs (45 seconds)
+hand picked, based on valence and arousal collected by deam. 
+
+1) intro (refer to excel)
+
+2) Methods - data collection
+
+Listening Study
+emotion annotation collection methods (listening study)
+	a) mturk 
+	b) demographics
+
+part of method) music selection
+	a) selection concept
+		some from FMA and 5 from deam (baseline)
+	b) song distribution plots (used to make selection)
+
+part of method) MTurk data filtering
+	a) removing songs that were too short or long (note that this is a mistake?)
+	b) remove trials with erroneous profiles
+		removing repeat workers with different profile answers.
+		training duration is negative or more than 100
+		training == False but training duration > 0
+
+3) methods (model)
+
+6) results
+
+
+6) Discussion
+
+7) Conclusion (?)
+
+etc.
+
+
+
+What we did not look at:
+lyrics
+
+
+Future:
+extend on the dataset, more information
+attention network to choose features. 
+other audio features such as spectrograms

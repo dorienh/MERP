@@ -169,12 +169,12 @@ def range_check(exps):
         garousal = np.concatenate(garousal, axis=None)
         # find difference between min and max
         # print(f"max: {min(garousal)} || min: {max(garousal)}")
-        if (max(garousal) - min(garousal)) < (2/3):
+        if (max(garousal) - min(garousal)) < (1/3):
             disqualified_workerids.append(workerid)
         # repeat for valence
         gvalence = np.array(group['valences'])
         gvalence = np.concatenate(gvalence, axis=None)
-        if (max(gvalence) - min(gvalence)) < (2/3):
+        if (max(gvalence) - min(gvalence)) < (1/3):
             disqualified_workerids.append(workerid)
     # print(disqualified_workerids)
 

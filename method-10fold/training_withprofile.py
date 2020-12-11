@@ -1,9 +1,6 @@
 import os
 import sys
-# sys.path.append(os.path.abspath('../..'))
-# sys.path.append(os.path.abspath('..'))
 sys.path.append(os.path.abspath(''))
-# print(sys.path)
 import glob
 import argparse
 import numpy as np
@@ -11,6 +8,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 import argparse
+import copy
+# from sklearn.model_selection import KFold 
 
 import torch
 from torch import optim, nn
@@ -23,20 +22,67 @@ from dataloader import dataset_non_ave_with_profile as dataset_class
 ### to edit accordingly.
 from network import Combination_model_2 as archi
 
+def make_folds(exps, number_of_folds):
+    '''
+    all 10 folds have deam songs, but the other FMA songs do not overlap in folds. 
+    this may make the folds less similar.
+    '''
 
-def dataloader_prep(feat_dict, exps, pinfo, args, train=True):
+    # kf = KFold(n_splits=10, random_state=42, shuffle=True)
+
+    deam_folds_list = []
+
+    for deamsong in util.songdict['deam']:
+        trials = exps.loc[exps['songurl'] == deamsong]
+        trials_folds = np.array_split(trials, number_of_folds)
+        deam_folds_list.append(trials_folds)
+
+    folds = []
+
+    for i, songurl_fold in util.folds.items():
+        # print(i)
+        trials = pd.DataFrame()
+        for songurl in songurl_fold:
+            trials = trials.append(exps.loc[exps['songurl'] == songurl])
+            # print(len(trials))
+        for deam_fold in deam_folds_list:
+            # print(len(deam_fold[i]))
+            trials = trials.append(deam_fold[i])
+            # print(len(trials))
+        
+        folds.append(trials)
+
+    return folds
+
+def train_test_by_fold(folds, test_fold_index):
+    '''
+    returns the train and test dataframes given the index of the fold that is to be the test set.
+    '''
+    # test
+    test_df = folds.pop(test_fold_index)
+    # train
+    train_df = pd.DataFrame()
+    for fold in folds:
+        train_df = train_df.append(fold)
+    
+
+    return train_df, test_df
+
+def dataloader_prep(feat_dict, exps, pinfo, args):
     params = {'batch_size': args.batch_size,
         'shuffle': True,
         'num_workers': args.num_workers}
     # prepare data for testing
     dataset_obj = dataset_class(args.affect_type, feat_dict, exps, pinfo, args.conditions, args.lstm_size, args.step_size)
-    dataset = dataset_obj.gen_dataset(train=train)
+    dataset = dataset_obj.gen_dataset()
     loader = DataLoader(dataset, **params)
 
     return loader
 
 
-def train(train_loader, model, test_loader, args):
+
+def train(train_loader, model, test_loader, fold_index, args):
+
     model.train()
     loss_epoch_log = []
     test_loss_epoch_log = []
@@ -108,66 +154,10 @@ def train(train_loader, model, test_loader, args):
     plt.ylabel('mseloss')
     plt.legend()
     plt.title(f'Loss || before training: {loss_epoch_log[0]:.6f} || test loss: {test_loss_epoch_log[-1]:.6f}')
-    plt.savefig(os.path.join(args.dir_path, 'saved_models', 'loss_plots', f'{args.model_name}_loss_plot.png'))
+    plt.savefig(os.path.join(args.dir_path, 'saved_models', 'loss_plots', f'{args.model_name}_loss_plot_{fold_index}.png'))
     plt.close()
 
-    return model, aveloss, test_loss_epoch_log[-1]
-
-def single_test(model, index, args): ## doesn't work... not sure how to reverse unfold yet.
-    # # features - audio
-    audio_feat = torch.from_numpy(np.array(feat_dict['00_145']))
-    # w_audio_feat = audiofeat.unfold(0,args.lstm_size, args.step_size)
-
-
-    # w_label = label.unfold(0,lstm_size, step)
-
-    # # features - pinfo
-    test_exp = exps[exps['songurl']=='00_145'].reset_index().loc[index]
-    test_exp = pd.DataFrame(test_exp).transpose()
-    print(test_exp)
-    # workerid = test_exp['workerid']
-    # workerinfo = pinfo.loc[pinfo.workerid.str.contains(workerid)][args.conditions]
-    # workerinfo = workerinfo.values.tolist()[0]
-    params = {'batch_size': args.batch_size,
-        'shuffle': True,
-        'num_workers': args.num_workers}
-    
-    
-    # print(workerinfo)
-    
-    # labels
-    ground_truth = test_exp[args.affect_type]
-
-    output_list = []
-
-    with torch.no_grad():
-
-        for batchidx, (audio_info, profile_info, label) in enumerate(single_test_dl):
-            
-            audio_info, profile_info, label = audio_info.to(device).float(), profile_info.to(device).float(), label.to(device).float()
-            # forward pass
-            output = model(audio_info, profile_info)
-            # MSE Loss calculation
-            loss = criterion(output.squeeze(), label.squeeze())
-            # print(loss)
-            loss_log.append(loss.item())
-            
-            output_list.append(output.squeeze())
-    
-    prediction = [output_list[0]]
-    for i in range(1, len(output_list)):
-        prediction.append(output_list[args.stepsize::])
-
-    print(prediction)
-    
-
-    plt = plot_pred_comparison(output.squeeze(), label, loss.item())
-    plt.savefig(os.path.join(args.dir_path, 'saved_models', 'test_plots', f'{args.model_name}_pred_{index}.png'))
-    plt.close()
-
-    plt = plot_pred_against(output.squeeze(), label, loss.item())
-    plt.savefig(os.path.join(args.dir_path, 'saved_models', 'test_plots', f'{args.model_name}_y_vs_yhat_{index}.png'))
-    plt.close()
+    return model, loss_epoch_log, test_loss_epoch_log
 
 def test(model, test_loader):
 
@@ -186,7 +176,7 @@ def test(model, test_loader):
             # print(loss)
             loss_log.append(loss.item())
     aveloss = np.average(loss_log)
-    print(f'average test lost (per batch): {aveloss}')
+    print(f'average test lost (per batch): {aveloss} \n')
     return aveloss
 
 
@@ -201,7 +191,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
     parser.add_argument('--num_epochs', type=int, default=2)
-    parser.add_argument('--model_name', type=str, default='test', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--model_name', type=str, default='median_model_2_test', help='Name of folder plots and model will be saved in')
     parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--num_workers', type=int, default=10)
     parser.add_argument('--lstm_hidden_dim', type=int, default=512)
@@ -209,6 +199,7 @@ if __name__ == "__main__":
     parser.add_argument('--step_size', type=int, default=5)
     parser.add_argument('--drop_prob', type=int, default=0.01)
     parser.add_argument('--learning_rate', type=float, default=0.001)
+    parser.add_argument('--number_of_folds', type=int, default=10)
     parser.add_argument('--conditions', nargs='+', type=str, default=['age'])
 
     parser.add_argument('--mean', type=bool, default=False)
@@ -244,6 +235,8 @@ if __name__ == "__main__":
     if args.conditions and (args.mean != False or args.median != False):
         exps = combine_similar_pinfo(pinfo, exps, args)
     print(exps.shape)
+
+    folds = make_folds(exps, args.number_of_folds)
     
     ## MODEL
     lstm_input_dim = 1582
@@ -258,40 +251,50 @@ if __name__ == "__main__":
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
 
-    train_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=True)
-    test_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=False)
-    model, trainloss, testloss = train(train_loader, model, test_loader, args)
     
-    save_model(model, args.model_name, dir_path)
+    # train each fold, storing the losses every epoch
+    for fold_index in range(args.number_of_folds):
+        
+        print(f'training fold number {fold_index}')
+
+        folds_copy = copy.deepcopy(folds)
+        train_df, test_df = train_test_by_fold(folds_copy, fold_index)
+    
+
+        train_loader = dataloader_prep(feat_dict, train_df, pinfo, args)
+        test_loader = dataloader_prep(feat_dict, test_df, pinfo, args)
+        model, trainloss, testloss = train(train_loader, model, test_loader, fold_index, args)
+    
+    # save_model(model, args.model_name, dir_path)
     
     # model = archi(lstm_input_dim, args.lstm_hidden_dim, fc_input_dim, fc_output_dim, args.lstm_size).to(device)
     # model = load_model(model, args.model_name, dir_path)
-    single_test(model, 1, args)
+    # single_test(model, 1, args)
 
-    # test_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=False)
-    # testloss = test(model, test_loader)
+    # # test_loader = dataloader_prep(feat_dict, exps, pinfo, args, train=False)
+    # # testloss = test(model, test_loader)
+
+    # # plot losses with error bars (barplot with error bars against epochs on x axis)
     
-    #return testloss
-    # args_namespace = argparse.Namespace()
-    args_dict = vars(args)
-    # print(type(args_dict))
-    args_dict['test_loss'] = f'{testloss:.6f}'
-    args_dict['train_loss'] = f'{trainloss:.6f}'
-    args_dict.pop('dir_path')
-    # print(args_dict)
-    args_series = pd.Series(args_dict)
-    args_df = args_series.to_frame().transpose()
-    # print(args_df)
+    # #return testloss
+    # # args_namespace = argparse.Namespace()
+    # args_dict = vars(args)
+    # # print(type(args_dict))
+    # args_dict['test_loss'] = f'{testloss:.6f}'
+    # args_dict['train_loss'] = f'{trainloss:.6f}'
+    # args_dict.pop('dir_path')
+    # # print(args_dict)
+    # args_series = pd.Series(args_dict)
+    # args_df = args_series.to_frame().transpose()
+    # # print(args_df)
 
-    # exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log4.pkl')
-    # if os.path.exists(exp_log_filepath):
-    #     exp_log = pd.read_pickle(exp_log_filepath)
-    #     exp_log = exp_log.append(args_df).reset_index(drop=True)
-    #     pd.to_pickle(exp_log, exp_log_filepath)
-    #     print(exp_log)
-    # else:
-    #     pd.to_pickle(args_df, exp_log_filepath)
-    #     print(args_df)
-    
-
+    # # exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log4.pkl')
+    # # if os.path.exists(exp_log_filepath):
+    # #     exp_log = pd.read_pickle(exp_log_filepath)
+    # #     exp_log = exp_log.append(args_df).reset_index(drop=True)
+    # #     pd.to_pickle(exp_log, exp_log_filepath)
+    # #     print(exp_log)
+    # # else:
+    # #     pd.to_pickle(args_df, exp_log_filepath)
+    # #     print(args_df)
     

@@ -1,5 +1,6 @@
 
 import pandas as pd
+import numpy as np
 from processing_util import batch_names, filepath_dict, csv2df
 
 def participant_info_df_creation(df, batchnum):
@@ -46,4 +47,53 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    pinfo = collate_all_batches_participant_info()
+
+    # removing rejected workerids
+
+    duplicate_wids = pinfo.duplicated(subset=['workerid'],keep=False)
+    duplicate_pinfo = pinfo[duplicate_wids]
+    not_conflicting_bool = duplicate_pinfo.duplicated(subset=['age', 'country_enculturation', 'country_live', 'fav_music_lang', 'gender', 'fav_genre', 'play_instrument', 'training', 'training_duration'])
+    not_dups = duplicate_pinfo[not_conflicting_bool]
+
+    # print(not_dups)
+
+    # union of the series 
+    union = pd.Series(np.union1d(duplicate_pinfo.workerid, not_dups.workerid)) 
+    
+    # intersection of the series 
+    intersect = pd.Series(np.intersect1d(duplicate_pinfo.workerid, not_dups.workerid)) 
+    
+    # uncommon elements in both the series  
+    notcommonseries = union[~union.isin(intersect)] 
+    # manually adding the 6 incomplete participants
+    todelete = notcommonseries.append(pd.Series(['A3KPQ7L5FS8SD6','A21SF3IKIZB0VN','A2Z3I9XW0SHBPY','A3DKB1786IV19A','A3681W483PXK3P','A2WWYVKGZZXBOB']))
+
+    unique_pinfo = pinfo[~pinfo['workerid'].isin(todelete)]
+    print('unique_pinfo.shape: ', unique_pinfo.shape)
+
+    print(unique_pinfo.master.value_counts())
+    print(duplicate_pinfo.master.value_counts())
+
+    # identify erroneous profiles
+
+    # fishy training durations...
+    pinfo_td = unique_pinfo['training_duration'].astype(int)
+    err_p1 = unique_pinfo[(pinfo_td < 0) | (pinfo_td > 100)]
+    print('num wids with weird training duration: ', len(err_p1))
+
+    err_p2 = unique_pinfo.loc[(unique_pinfo['training_duration'].astype(int)>0) & (unique_pinfo['training']=='No')]
+    print('num wids with no training but with training duration: ', len(err_p2))
+    todelete = err_p1.append(err_p2)
+    
+    print(todelete)
+    
+    clean_pinfo = unique_pinfo[~unique_pinfo['workerid'].isin(todelete.workerid)]
+    print(clean_pinfo.shape)
+
+    print(clean_pinfo.gender.value_counts())
+
+    clean_pinfo.to_pickle('data/mediumrare/semipruned_pinfo.pkl')
+
+

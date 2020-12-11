@@ -95,7 +95,24 @@ def main():
 
 if __name__ == "__main__":
     
-    main()
+    # main()
+
+    for batchnum, batchname in enumerate(filepath_dict.keys(), start = 4):
+        # print(csv_path)
+        if batchnum == 4:
+            combined_df = csv2df(filepath_dict[batchname])
+            # print(combined_df.shape)
+        else:
+            df = csv2df(filepath_dict[batchname])
+            combined_df = combined_df.append(df, ignore_index=True)
+            # print(combined_df.shape)
+        
+    
+    unique_wids = combined_df.WorkerId.unique()
+    print(unique_wids)
+
+        # worktime_df = df['WorkTimeInSeconds']
+        # print(worktime_df.max()/60)
 
 
 

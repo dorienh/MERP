@@ -16,7 +16,7 @@ from torch import optim, nn
 from torch.utils.data import DataLoader
 
 import util
-from util_method import save_model, load_model, plot_pred_against, plot_pred_comparison, standardize
+from util_method import save_model, load_model, plot_pred_against, plot_pred_comparison, standardize, combine_no_profile
 ### to edit accordingly.
 from dataloader import dataset_non_ave_no_profile as dataset_class
 ### to edit accordingly.
@@ -106,10 +106,12 @@ def train(train_loader, model, test_loader, args):
     plt.ylabel('mseloss')
     plt.legend()
     plt.title(f'Loss || before training: {loss_epoch_log[0]:.6f} || test loss: {test_loss_epoch_log[-1]:.6f}')
-    plt.savefig(os.path.join(args.dir_path, 'saved_models', f'{args.model_name}', 'loss_plot.png'))
+    plt.savefig(os.path.join(args.dir_path, 'saved_models', 'loss_plots', f'{args.model_name}_loss_plot.png'))
     plt.close()
 
-    return model, test_loss_epoch_log[-1]
+    print('aveloss: ', aveloss)
+    print('type: ', type(aveloss))
+    return model, aveloss, test_loss_epoch_log[-1]
 
 def single_test(model, index, args): ## doesn't work... not sure how to reverse unfold yet.
     # # features - audio
@@ -160,11 +162,11 @@ def single_test(model, index, args): ## doesn't work... not sure how to reverse 
     
 
     plt = plot_pred_comparison(output.squeeze(), label, loss.item())
-    plt.savefig(os.path.join(args.dir_path, 'saved_models', f'{args.model_name}', f'prediction_{index}.png'))
+    plt.savefig(os.path.join(args.dir_path, 'saved_models', 'test_plots', f'{args.model_name}_pred_{index}.png'))
     plt.close()
 
     plt = plot_pred_against(output.squeeze(), label, loss.item())
-    plt.savefig(os.path.join(args.dir_path, 'saved_models', f'{args.model_name}', f'y_vs_yhat_{index}.png'))
+    plt.savefig(os.path.join(args.dir_path, 'saved_models', 'test_plots', f'{args.model_name}_y_vs_yhat_{index}.png'))
     plt.close()
 
 def test(model, test_loader):
@@ -208,6 +210,9 @@ if __name__ == "__main__":
     parser.add_argument('--drop_prob', type=int, default=0.01)
     parser.add_argument('--learning_rate', type=float, default=0.001)
 
+    parser.add_argument('--mean', type=bool, default=False)
+    parser.add_argument('--median', type=bool, default=True)
+
     args = parser.parse_args()
     setattr(args, 'model_name', f'{args.affect_type[0]}_p_{args.model_name}')
     print(args)
@@ -234,6 +239,10 @@ if __name__ == "__main__":
     # standardize audio features
     feat_dict = standardize(feat_dict)
 
+    if args.mean != False or args.median != False:
+        exps = combine_no_profile(exps, args)
+        print('aggregated shape: {exps.shape}')
+
     ## MODEL
     lstm_input_dim = 1582
     model = archi(lstm_input_dim, args.lstm_hidden_dim, args.lstm_size, args.batch_size, args.drop_prob).to(device)
@@ -247,7 +256,7 @@ if __name__ == "__main__":
 
     train_loader = dataloader_prep(feat_dict, exps, args, train=True)
     test_loader = dataloader_prep(feat_dict, exps, args, train=False)
-    model, testloss = train(train_loader, model, test_loader, args)
+    model, trainloss, testloss = train(train_loader, model, test_loader, args)
     
     save_model(model, args.model_name, dir_path)
     
@@ -263,13 +272,14 @@ if __name__ == "__main__":
     args_dict = vars(args)
     # print(type(args_dict))
     args_dict['test_loss'] = f'{testloss:.6f}'
+    args_dict['train_loss'] = f'{trainloss:.6f}'
     args_dict.pop('dir_path')
     # print(args_dict)
     args_series = pd.Series(args_dict)
     args_df = args_series.to_frame().transpose()
     # print(args_df)
 
-    exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log3.pkl')
+    exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log4.pkl')
     if os.path.exists(exp_log_filepath):
         exp_log = pd.read_pickle(exp_log_filepath)
         exp_log = exp_log.append(args_df).reset_index(drop=True)
