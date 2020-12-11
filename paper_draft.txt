@@ -54,3 +54,148 @@ Future:
 extend on the dataset, more information
 attention network to choose features. 
 other audio features such as spectrograms
+
+
+What you wanna tell the people, what the people need to know, what they would wanna know, about this whole thing. 
+
+
+What on earth is music emotion prediction
+Why we care so much about it
+What we can do with it
+Perceived emotion, not to be confused with evoked emotion
+emotion expressed as valence and arousal 
+
+
+
+
+Emotion in music has been discussed and surveyed for centuries up till today. The field of Music Emotion Recognition in particular, has grown rapidly in the last decade or so, along with the growth of the digital world. Arguably, music is an expression of emotion. Composers since the known early music history have composed songs to express love, anger, elation, disappointment, and every other emotion, much like music today. MER is of interest to many, including psychologists, teachers, film directors, musicians and game creators amongst others. For MER has a wide range of applications, such as traversing, accessing, selecting and creating music.
+
+Emotion in music has been widely discussed and surveyed for centuries up till today. The field of Music Emotion Recognition in particular, has grown rapidly in the last decade or so, along with the growth of the music industry in the digital space. The music streaming platform Spotify as of 2020, provides more than 50 million songs to listeners, while almost 40,000 tracks are uploaded daily to the service. In 2019, about 20,000 tracks were uploaded each day, meaning the upload rate has doubled in just a year. With the explosive growth in the amount of music available, developments in Music Information Retrieval to classify and organise the music has become ever more of a necessity for the convenient access of music to the average consumer [\cite{yang2007music}, \cite{goto2012grand}]. One such classification is emotion. However emotion is subjective and often vaguely defined [\cite{yang2007music}]. Different listeners may have differing views on the emotion they perceive from a song. This begets the question of whether causations for the difference in views could be identified. More concretely, we explore whether similarities between listeners allude to similarities in their perception of emotion in music. 
+
+
+The wonder that emotion exists in music has been discussed by philosophers such as Balz, who aptly describes music as air vibrations, and how astonishing such a phenomenon could be a vessel for emotion \cite{balz1914music}. These so called sequences of air vibrations can be decomposed into various components such as pitch, volume, timbre, tempo, key, duration, and so on. Similarly, musical cues such as musical intervals, vibrato and staccato can be mapped to basic emotions such as happiness and sadness as well \cite{juslin2009emotion}. Empirical studies such as \cite{lidetecting} and \cite{lu2005automatic} showed that timbre, rhythm and pitch are able to indicate music mood. Beyond the music itself, acoustic qualities from different families of instruments too are shown to convey emotion \cite{mcadams2017perception}, hence the common conception that violins sound sad while ukeleles sound happy. Furthermore, performance is able to greatly impact the the expressed emotion by the performer, changing the perceived emotion by the listener \cite{palusis2017expression}. 
+
+Perceived emotion is not to be confused with evoked emotion. Various studies both empirical and theoretical emphasize the difference between them, while searching for a relationship between them. [] noted that memories impact evoked emotion when listening to music as the listener recalls 
+
+The emotions intended to be portrayed by the composer may not necessarily match with the perceived or evoked emotion in listeners.
+
+Emotion though abstract, has been represented in a myraid of ways. \cite{lidetecting} represented emotion as adjectives, labelling a song statically, with just a single adjective for the entire song. \cite{lu2005automatic} similarly had a single label for the entire song, but had a continuous label in the two dimensional arousal valence model instead. More recently, many studies focus on dynamic labels
+
+
+bla explored the relationship between evoked emotion and perceived emotion 
+
+
+
+browser, browser version, operating system affects mouse position sampling rate. Other factors in clude mouse DPI, system's USB polling rate and CPU resources. Over the web so internet connection as well. 
+@article{mathur2019open,
+  title={Open-source software for mouse-tracking in Qualtrics to measure category competition},
+  author={Mathur, Maya B and Reichling, David B},
+  journal={Behavior Research Methods},
+  volume={51},
+  number={5},
+  pages={1987--1997},
+  year={2019},
+  publisher={Springer}
+}
+"The sampling frequency depends on browser, operating system status and CPU load." "The average sampling interval for all the data collected was 0.23 second (4.3Hz) with the standard deviation of 0.09 second. To be conservative, we resampled the annotation time series to 1Hz (per second) sampling frequency."
+\cite{soleymani20131000}
+
+@article{balz1914music,
+  title={Music and emotion},
+  author={Balz, Albert},
+  journal={The journal of philosophy, psychology and scientific methods},
+  volume={11},
+  number={9},
+  pages={236--244},
+  year={1914}
+}
+
+@article{lidetecting,
+  title={Detecting Emotion in Music},
+  author={Li, Tao and Ogihara, Mitsunori}
+}
+
+@article{lu2005automatic,
+  title={Automatic mood detection and tracking of music audio signals},
+  author={Lu, Lie and Liu, Dan and Zhang, Hong-Jiang},
+  journal={IEEE Transactions on audio, speech, and language processing},
+  volume={14},
+  number={1},
+  pages={5--18},
+  year={2005},
+  publisher={IEEE}
+}
+
+@inproceedings{chen2015amg1608,
+  title={The AMG1608 dataset for music emotion recognition},
+  author={Chen, Yu-An and Yang, Yi-Hsuan and Wang, Ju-Chiang and Chen, Homer},
+  booktitle={2015 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)},
+  pages={693--697},
+  year={2015},
+  organization={IEEE}
+}
+
+@article{schereremotional,
+  title={Emotional states generated by music: an exploratory study of music experts},
+  author={SCHERER, KLAUS R and ZENTNER, MARCEL R and SCHACHT, ANNEKATHRIN},
+  publisher={Citeseer}
+}
+
+@article{davies1980expression,
+  title={The expression of emotion in music},
+  author={Davies, Stephen},
+  journal={Mind},
+  volume={89},
+  number={353},
+  pages={67--86},
+  year={1980},
+  publisher={JSTOR}
+}
+
+@inproceedings{muyuan2004user,
+  title={User-adaptive music emotion recognition},
+  author={Muyuan, Wang and Naiyao, Zhang and Hancheng, Zhu},
+  booktitle={Proceedings 7th International Conference on Signal Processing, 2004. Proceedings. ICSP'04. 2004.},
+  volume={2},
+  pages={1352--1355},
+  organization={IEEE}
+}
+
+## the one I can't access muyuan2004user ughh.
+
+@article{mcadams2017perception,
+  title={Perception and modeling of affective qualities of musical instrument sounds across pitch registers},
+  author={McAdams, Stephen and Douglas, Chelsea and Vempala, Naresh N},
+  journal={Frontiers in Psychology},
+  volume={8},
+  pages={153},
+  year={2017},
+  publisher={Frontiers}
+}
+
+@article{juslin2009emotion,
+  title={Emotion in music performance},
+  author={Juslin, Patrik N},
+  journal={The Oxford handbook of music psychology},
+  pages={377--389},
+  year={2009},
+  publisher={Oxford University Press Oxford}
+}
+
+@article{palusis2017expression,
+  title={Expression and Emotion in Music: How Expression and Emotion Affect the Audience’s Perception of a Performance},
+  author={Palusis, Kelly Lynn},
+  year={2017}
+}
+
+Emotio
+
+Gabrielsson, 2001; Sloboda, 1992
+
+
+
+
+
+DATA:
+
+The total length of the 54 songs is about 8778 seconds, which is about 146 minutes, or 2 hours and 26 minutes. The shortest song is approximately 31 seconds, while the longest song is 4 minutes and 58 seconds.
