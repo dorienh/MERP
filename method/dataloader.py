@@ -53,6 +53,16 @@ def prep_data(exps, labeltype, train=True):
 ####    1) averaged values without profile information    ####
 ##############################################################
 
+def average_exps_by_songurl(exps):
+    ave_labels = {}
+    for songurl, group in exps.groupby('songurl'):
+        # ave = np.mean(group['labels'],axis=1)
+        print(f'{songurl} has {len(group)} entries.')
+        ave = len(group['labels'].mean())
+        ave_labels[songurl] = ave
+
+        # print(group.head())
+    return ave_labels
 
 
 
@@ -196,11 +206,14 @@ if __name__ == "__main__":
     # # read pinfo from pickle
     # pinfo_df = pd.read_pickle(pinfofile)
 
+    sub_exps = prep_data(exps, labeltype, train=True)
+    average_exps_by_songurl(sub_exps)
+
     # dataset_obj = dataset_non_ave_with_profile(labeltype, feat_dict, exps, pinfo_df, ['age'])
     # dataset = dataset_obj.gen_dataset(False)
 
-    dataset_obj = dataset_non_ave_no_profile(labeltype, train_feat_dict, exps)
-    dataset = dataset_obj.gen_dataset()
+    # dataset_obj = dataset_non_ave_no_profile(labeltype, train_feat_dict, exps)
+    # dataset = dataset_obj.gen_dataset()
 
     # loader = DataLoader(
     #     dataset,
