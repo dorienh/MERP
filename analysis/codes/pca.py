@@ -32,7 +32,6 @@ import util
 # %%
 ## 1) load feat_dict
 feat_dict = util.load_pickle('data/feat_dict_ready.pkl')
-# %%
 
 # %%
 
@@ -122,10 +121,10 @@ test_data = reverse_dict_values_to_list(test_dict, test_pca)
 #%%
 import pickle
 
-with open('data/train_feats_pca.pickle', 'wb') as handle:
+with open('data/train_feats_pca.pkl', 'wb') as handle:
     pickle.dump(train_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-with open('data/test_feats_pca.pickle', 'wb') as handle:
+with open('data/test_feats_pca.pkl', 'wb') as handle:
     pickle.dump(test_data, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 #%%

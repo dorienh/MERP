@@ -10,7 +10,8 @@ import torch
 ##############################################################
 
 class Two_FC_layer(torch.nn.Module):
-    def __init__(self, input_dim = 1582, reduced_dim=128, fc_dim = 64):
+    def __init__(self, input_dim = 724, reduced_dim=128, fc_dim = 64):
+    # def __init__(self, input_dim = 1582, reduced_dim=128, fc_dim = 64):
         super(Two_FC_layer, self).__init__()
         self.reduced_rgb = nn.Linear(input_dim, reduced_dim, bias=False)
 
@@ -25,7 +26,8 @@ class Two_FC_layer(torch.nn.Module):
         return out
 
 class Mult_FC_layer(torch.nn.Module):
-    def __init__(self, input_dim = 1582, reduced_dim_power_2=9):
+    def __init__(self, input_dim = 724, reduced_dim_power_2=9):
+    # def __init__(self, input_dim = 1582, reduced_dim_power_2=9):
         super(Mult_FC_layer, self).__init__()
         # add more gradual change in dim. 
 

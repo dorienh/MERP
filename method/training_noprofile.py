@@ -114,7 +114,7 @@ def train(train_loader, model, test_loader, args):
 
 def single_test(model, index, args):
     # features - audio
-    testfeat = feat_dict['00_145']
+    testfeat = test_feat_dict['00_145']
     # features - pinfo
     testtrial = exps[exps['songurl']=='00_145'].reset_index().loc[index]
     # labels
@@ -138,11 +138,11 @@ def single_test(model, index, args):
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
     plt = plot_pred_comparison(output, label, loss.item())
-    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}_prediction_{index}.png'))
+    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}/prediction_{index}.png'))
     plt.close()
 
     plt = plot_pred_against(output, label, loss.item())
-    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}_y_vs_yhat_{index}.png'))
+    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}/y_vs_yhat_{index}.png'))
     plt.close()
 
 def test(model, test_loader):
@@ -176,8 +176,8 @@ if __name__ == "__main__":
     parser.add_argument('--dir_path', type=str, default=dir_path)
 
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
-    parser.add_argument('--num_epochs', type=int, default=20)
-    parser.add_argument('--model_name', type=str, default='condition_none', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--num_epochs', type=int, default=10)
+    parser.add_argument('--model_name', type=str, default='condition_none_try1', help='Name of folder plots and model will be saved in')
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--num_workers', type=int, default=10)
     parser.add_argument('--hidden_dim', type=int, default=512)
@@ -206,24 +206,36 @@ if __name__ == "__main__":
     load data
     '''
     feat_dict = util.load_pickle('data/feat_dict_ready.pkl')
+    train_feat_dict = util.load_pickle('data/train_feats_pca.pkl')
+    test_feat_dict = util.load_pickle('data/test_feats_pca.pkl')
+    # print(train_feat_dict.keys())
     exps = pd.read_pickle(os.path.join('data', 'exps_ready.pkl'))
-    pinfo = pd.read_pickle(os.path.join('data', 'pinfo_numero.pkl'))
+    # pinfo = pd.read_pickle(os.path.join('data', 'pinfo_numero.pkl'))
 
     # standardize audio features
     # feat_dict = standardize(feat_dict)
-    train
+    # train
 
     ## MODEL
-    input_dim = 1582 
+    input_dim = 724 # 1582 
     model = archi(input_dim=input_dim).to(device)
     model.float()
     print(model)
 
-    criterion = nn.MSELoss()
+
+    def my_loss(output, target):
+    loss = torch.mean((output - target)**2)
+    return loss
+
+    criterion = my_loss # nn.MSELoss()
+
+    
+
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
-    train_loader = dataloader_prep(feat_dict, exps, args, train=True)
-    test_loader = dataloader_prep(feat_dict, exps, args, train=False)
+    train_loader = dataloader_prep(train_feat_dict, exps, args, train=True)
+    test_loader = dataloader_prep(test_feat_dict, exps, args, train=False)
+    
     model, testloss = train(train_loader, model, test_loader, args)
     save_model(model, args.model_name, dir_path)
 
