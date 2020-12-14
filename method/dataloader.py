@@ -57,10 +57,11 @@ def prep_data(exps, labeltype, train=True):
 
 class dataset_ave_no_profile:
 
-    def __init__(self, affect_type, feat_dict, exps):
+    def __init__(self, affect_type, feat_dict, exps, train):
         self.seed = 42
-        self.affect_type = affect_type
+        # self.affect_type = affect_type
         self.feat_dict = feat_dict
+        exps = prep_data(exps, affect_type, train=train)
         self.ave_exps = self.average_exps_by_songurl(exps)
 
     def average_exps_by_songurl(self, exps):
@@ -240,10 +241,10 @@ if __name__ == "__main__":
     # # read pinfo from pickle
     # pinfo_df = pd.read_pickle(pinfofile)
 
-    sub_exps = prep_data(exps, labeltype, train=True)
+    # sub_exps = prep_data(exps, labeltype, train=True)
     # average_exps_by_songurl(sub_exps)
 
-    dataset_obj = dataset_ave_no_profile(labeltype, train_feat_dict, sub_exps)
+    dataset_obj = dataset_ave_no_profile(labeltype, train_feat_dict, exps, train=True)
     dataset = dataset_obj.gen_dataset()
     # dataset_obj = dataset_non_ave_with_profile(labeltype, feat_dict, exps, pinfo_df, ['age'])
     # dataset = dataset_obj.gen_dataset(False)
