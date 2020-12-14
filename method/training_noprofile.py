@@ -51,7 +51,9 @@ def train(train_loader, model, test_loader, args):
             # forward pass
             output = model.forward(feature)
             # MSE Loss calculation
-            loss = criterion(output.squeeze(), label.squeeze())
+            loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
+            loss_r = criterion(output.squeeze(), label.squeeze())
+            loss = loss_mse + loss_r
             loss_log.append(loss.item())
         aveloss = np.average(loss_log)
         loss_epoch_log.append(aveloss)
@@ -80,7 +82,10 @@ def train(train_loader, model, test_loader, args):
             # accuracy_log.append(accuracy)
 
             # MSE Loss calculation
-            loss = criterion(output.squeeze(), label.squeeze())
+            # loss = criterion(output.squeeze(), label.squeeze())
+            loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
+            loss_r = criterion(output.squeeze(), label.squeeze())
+            loss = loss_mse + loss_r
             # backward pass
             loss.backward(retain_graph=True)
             # update parameters
@@ -176,8 +181,8 @@ if __name__ == "__main__":
     parser.add_argument('--dir_path', type=str, default=dir_path)
 
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
-    parser.add_argument('--num_epochs', type=int, default=10)
-    parser.add_argument('--model_name', type=str, default='condition_none_try1', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--num_epochs', type=int, default=2)
+    parser.add_argument('--model_name', type=str, default='condition_none_customloss1', help='Name of folder plots and model will be saved in')
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--num_workers', type=int, default=10)
     parser.add_argument('--hidden_dim', type=int, default=512)
@@ -224,10 +229,20 @@ if __name__ == "__main__":
 
 
     def my_loss(output, target):
-    loss = torch.mean((output - target)**2)
-    return loss
+        loss = torch.mean((output - target)**2)
+        return loss
+    
+    def pearson_corr_loss(output, target):
+        x = output
+        y = target
 
-    criterion = my_loss # nn.MSELoss()
+        vx = x - torch.mean(x)
+        vy = y - torch.mean(y)
+
+        cost = torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
+        return cost**2 
+
+    criterion = pearson_corr_loss # nn.MSELoss()
 
     
 
@@ -237,29 +252,29 @@ if __name__ == "__main__":
     test_loader = dataloader_prep(test_feat_dict, exps, args, train=False)
     
     model, testloss = train(train_loader, model, test_loader, args)
-    save_model(model, args.model_name, dir_path)
+    # save_model(model, args.model_name, dir_path)
 
-    model = archi(input_dim).to(device)
-    model = load_model(model, args.model_name, dir_path)
-    single_test(model, 1, args)
+    # model = archi(input_dim).to(device)
+    # model = load_model(model, args.model_name, dir_path)
+    # single_test(model, 1, args)
 
-    ## logging
+    # ## logging
 
-    args_dict = vars(args)
-    # print(type(args_dict))
-    args_dict['test_loss'] = f'{testloss:.6f}'
-    args_dict.pop('dir_path')
-    # print(args_dict)
-    args_series = pd.Series(args_dict)
-    args_df = args_series.to_frame().transpose()
-    # print(args_df)
+    # args_dict = vars(args)
+    # # print(type(args_dict))
+    # args_dict['test_loss'] = f'{testloss:.6f}'
+    # args_dict.pop('dir_path')
+    # # print(args_dict)
+    # args_series = pd.Series(args_dict)
+    # args_df = args_series.to_frame().transpose()
+    # # print(args_df)
 
-    exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log.pkl')
-    if os.path.exists(exp_log_filepath):
-        exp_log = pd.read_pickle(exp_log_filepath)
-        exp_log = exp_log.append(args_df).reset_index(drop=True)
-        pd.to_pickle(exp_log, exp_log_filepath)
-        print(exp_log)
-    else:
-        pd.to_pickle(args_df, exp_log_filepath)
-        print(args_df)
+    # exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log.pkl')
+    # if os.path.exists(exp_log_filepath):
+    #     exp_log = pd.read_pickle(exp_log_filepath)
+    #     exp_log = exp_log.append(args_df).reset_index(drop=True)
+    #     pd.to_pickle(exp_log, exp_log_filepath)
+    #     print(exp_log)
+    # else:
+    #     pd.to_pickle(args_df, exp_log_filepath)
+    #     print(args_df)
