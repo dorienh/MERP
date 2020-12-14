@@ -210,7 +210,8 @@ if __name__ == "__main__":
     pinfo = pd.read_pickle(os.path.join('data', 'pinfo_numero.pkl'))
 
     # standardize audio features
-    feat_dict = standardize(feat_dict)
+    # feat_dict = standardize(feat_dict)
+    train
 
     ## MODEL
     input_dim = 1582 
