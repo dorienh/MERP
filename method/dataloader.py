@@ -53,18 +53,52 @@ def prep_data(exps, labeltype, train=True):
 ####    1) averaged values without profile information    ####
 ##############################################################
 
-def average_exps_by_songurl(exps):
-    ave_labels = {}
-    for songurl, group in exps.groupby('songurl'):
-        # ave = np.mean(group['labels'],axis=1)
-        print(f'{songurl} has {len(group)} entries.')
-        ave = len(group['labels'].mean())
-        ave_labels[songurl] = ave
-
-        # print(group.head())
-    return ave_labels
 
 
+class dataset_ave_no_profile:
+
+    def __init__(self, affect_type, feat_dict, exps):
+        self.seed = 42
+        self.affect_type = affect_type
+        self.feat_dict = feat_dict
+        self.ave_exps = self.average_exps_by_songurl(exps)
+
+    def average_exps_by_songurl(self, exps):
+        ave_labels = {}
+        for songurl, group in exps.groupby('songurl'):
+            # ave = np.mean(group['labels'],axis=1)
+            # print(f'{songurl} has {len(group)} entries.')
+            ave = group['labels'].mean()
+            ave_labels[songurl] = ave
+
+            # print(group.head())
+        # print(ave_labels)
+        return ave_labels
+
+    def gen_dataset(self):
+
+        class averagedDataset(Dataset):
+
+            def __init__(self, feat_dict, ave_exps):
+                data = []
+                labels = []
+
+                for songurl in feat_dict.keys():
+                    data.append(feat_dict[songurl])
+                    labels.append(ave_exps[songurl])
+                self.data = [item for sublist in data for item in sublist]
+                self.labels = [item for sublist in labels for item in sublist]
+            
+
+            def __len__(self):
+                return len(self.labels)
+
+            def __getitem__(self, index):
+                # print(np.shape(self.data[index]),self.labels[index])
+                # print(type(self.data[index]), type(self.labels[index]))
+                return self.data[index], self.labels[index]
+
+        return averagedDataset(self.feat_dict, self.ave_exps)
 
 ##############################################################
 ####  2) non averaged values without profile information  ####
@@ -207,27 +241,29 @@ if __name__ == "__main__":
     # pinfo_df = pd.read_pickle(pinfofile)
 
     sub_exps = prep_data(exps, labeltype, train=True)
-    average_exps_by_songurl(sub_exps)
+    # average_exps_by_songurl(sub_exps)
 
+    dataset_obj = dataset_ave_no_profile(labeltype, train_feat_dict, sub_exps)
+    dataset = dataset_obj.gen_dataset()
     # dataset_obj = dataset_non_ave_with_profile(labeltype, feat_dict, exps, pinfo_df, ['age'])
     # dataset = dataset_obj.gen_dataset(False)
 
     # dataset_obj = dataset_non_ave_no_profile(labeltype, train_feat_dict, exps)
     # dataset = dataset_obj.gen_dataset()
 
-    # loader = DataLoader(
-    #     dataset,
-    #     shuffle=True,
-    #     num_workers=0,
-    #     batch_size=32
-    # )
+    loader = DataLoader(
+        dataset,
+        shuffle=True,
+        num_workers=0,
+        batch_size=32
+    )
 
     # # torch.save(loader, 'method/pinfo_dataloader.pth')
 
-    # for data in loader:
-    #     print(np.shape(data[0]), np.shape(data[1]))
-    #     # print(data)
-    #     break
+    for data in loader:
+        print(np.shape(data[0]), np.shape(data[1]))
+        # print(data)
+        break
     # '''
     # averaged_arousals = {}
     # for songurl, song_group in exps.groupby('songurl'):
