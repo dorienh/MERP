@@ -20,7 +20,7 @@ from util_method import save_model, load_model, plot_pred_against, plot_pred_com
 ### to edit accordingly.
 from dataloader import dataset_ave_no_profile as dataset_class
 ### to edit accordingly.
-from network import Mult_FC_layer as archi
+from network import Two_FC_layer as archi
 
 
 def dataloader_prep(feat_dict, exps, args, train=True):
@@ -188,7 +188,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
     parser.add_argument('--num_epochs', type=int, default=200)
-    parser.add_argument('--model_name', type=str, default='ave_customloss2', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--model_name', type=str, default='ave_customloss3', help='Name of folder plots and model will be saved in')
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--num_workers', type=int, default=10)
     parser.add_argument('--hidden_dim', type=int, default=512)
