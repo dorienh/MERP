@@ -60,3 +60,7 @@ for i in range(len(values)):
  
 print(np.sum(explained_variances[0:500]), '\n', explained_variances[0:500])
 # %%
+import matplotlib.pyplot as plt
+
+plt.plot(np.cumsum(explained_variances))
+# %%
