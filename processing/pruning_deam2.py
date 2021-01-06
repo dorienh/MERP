@@ -254,11 +254,62 @@ print('number of qualified workers: ', len(qualified_workers))
 get qualified trials from exps according to qualified_workers list.
 '''
 
-qualified_trials = exps3[exps3['workerid'].isin(qualified_workers)].reset_index()
+qualified_trials = exps4[exps4['workerid'].isin(qualified_workers)].reset_index()
 
-print(f'number of trials: {len(exps3)}')
-print(f'number of workers: {len(exps3["workerid"].unique())}')
+print(f'number of trials: {len(exps4)}')
+print(f'number of workers: {len(exps4["workerid"].unique())}')
 print(f'number of trials: {len(qualified_trials)}')
 print(f'number of workers: {len(qualified_trials["workerid"].unique())}')
 
+# %%
+
+'''
+rescale and remove head
+'''
+## 1) load feat_dict
+feat_dict_ready = util.load_pickle('../data/feat_dict_ready.pkl')
+
+## 2) use feat_dict to find number of timesteps in each song, store in feat_len_dict
+feat_len_dict_ready = count_timestep_feat_dict(feat_dict_ready)
+
+def rescale_and_remove_head(trial, song_len_dict):
+    songurl = trial['songurl']
+    song_len = song_len_dict[songurl]
+
+    # rescale
+    arousal = average_1D(trial['arousals'], 5)
+    valence = average_1D(trial['valences'], 5)
+    # remove head
+    startidx = len(arousal) - song_len
+    arousal = arousal[startidx::]
+    valence = valence[startidx::]
+    return arousal, valence
+
+def rescale_and_remove_head_dataframe(exps, song_len_dict):
+    exps = exps.copy()
+    for idx in exps.index:
+        trial = exps.loc[idx]
+        arousal, valence = rescale_and_remove_head(trial, feat_len_dict_ready)
+        exps.at[idx,'arousals'] = arousal
+        exps.at[idx,'valences'] = valence
+    return exps
+
+modified_exps = rescale_and_remove_head_dataframe(qualified_trials, feat_len_dict_ready)
+
+#%%
+def check_exps(exps):
+    count = 0
+    for idx in exps.index:
+        row = exps.loc[idx]
+        count += len(row['arousals'])
+    print(f'total number of timesteps: {count}')
+    print(f'number of trials: {len(exps)}')
+    print(f'number of workers: {len(exps["workerid"].unique())}')
+
+print('after removing erronous profiles')
+check_exps(exps4)
+print('\nafter removing based on std and pearson')
+check_exps(qualified_trials)
+print('\nafter rescaling and removing first 15 seconds')
+check_exps(modified_exps)
 # %%
