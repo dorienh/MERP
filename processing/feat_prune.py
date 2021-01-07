@@ -19,21 +19,6 @@ import util
 feat_dict = util.load_pickle('../data/feat_dict.pkl')
 # exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_rescaled_smoothed.pkl'))
 
-# %%
-
-'''
-https://stackoverflow.com/questions/10847660/subsampling-averaging-over-a-numpy-array
-the last few datapoints that don't make up 0.5 seconds are thrown away.
-'''
-def average_2D(arr, n):
-    end =  n * int(len(arr)/n)
-    return np.mean(arr[:end].reshape(-1, 1582, n), 2) # 1582 is the number of types of features extracted in opensmile
-
-def average_1D(arr, n):
-    end =  n * int(len(arr)/n)
-    return np.mean(arr[:end].reshape(-1, n), 1)
-
-
 #%%
 ###################################################
 # feat_dict: remove head

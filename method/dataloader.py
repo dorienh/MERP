@@ -246,6 +246,10 @@ if __name__ == "__main__":
 
     dataset_obj = dataset_ave_no_profile(labeltype, train_feat_dict, exps, train=True)
     dataset = dataset_obj.gen_dataset()
+    print('size of dataset: ', len(dataset))
+    dataset_obj = dataset_ave_no_profile(labeltype, test_feat_dict, exps, train=False)
+    dataset = dataset_obj.gen_dataset()
+    print('size of dataset: ', len(dataset))
     # dataset_obj = dataset_non_ave_with_profile(labeltype, feat_dict, exps, pinfo_df, ['age'])
     # dataset = dataset_obj.gen_dataset(False)
 

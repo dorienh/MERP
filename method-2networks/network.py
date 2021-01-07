@@ -87,9 +87,9 @@ class LSTM_single(torch.nn.Module):
         out = self.dropout2(out)
         out = self.lr2(out)
 
-        out = self.fc2(out)
-        out = self.dropout3(out)
-        out = self.lr3(out)
+        # out = self.fc2(out)
+        # out = self.dropout3(out)
+        # out = self.lr3(out)
         
         out = self.fc3(out.view(out.size(0),-1))
         out = self.dropout4(out)
@@ -115,7 +115,7 @@ class LSTM_single(torch.nn.Module):
 
 class LSTM_single_0(torch.nn.Module):
     def __init__(self, input_dim, hidden_dim, lstm_size, batch_size, drop_prob):
-        super(LSTM_single_1, self).__init__()
+        super(LSTM_single_0, self).__init__()
         self.hidden_dim = hidden_dim
         self.input_dim = input_dim
 

@@ -209,14 +209,20 @@ def worker_comply_deam_pearson(deamtrials, song_threshold):
             songurl = trial['songurl']
 
             temp_a,temp_v = rescale_and_remove_head_deam(trial)
+            
             r_a, _ = pearsonr(deamstats[datatypes[0]][songurl]['ave'], temp_a)
             r_v, _ = pearsonr(deamstats[datatypes[1]][songurl]['ave'], temp_v)
 
+
             if not np.isnan(r_a):
                 complaince_dict[trial['songurl']]['a'] = 1
+            else:
+                print(deamstats[datatypes[0]][songurl]['ave'])
+                print(temp_a)
+            break
             if not np.isnan(r_v):
                 complaince_dict[trial['songurl']]['v'] = 1
-            
+        break
     # check if both arousal and valence are within the threshold
         complaince_dict_combined = {}
         for key, val in complaince_dict.items():
@@ -312,4 +318,7 @@ print('\nafter removing based on std and pearson')
 check_exps(qualified_trials)
 print('\nafter rescaling and removing first 15 seconds')
 check_exps(modified_exps)
+# %%
+
+util.save_pickle('../data/exps_ready2.pkl', modified_exps)
 # %%

@@ -28,7 +28,7 @@ import numpy as np
 
 
 feat_dict = util.load_pickle('../data/feat_dict_ready.pkl')
-exps = pd.read_pickle(os.path.join('..','data', 'exps_ready.pkl'))
+exps = pd.read_pickle(os.path.join('..','data', 'exps_ready2.pkl'))
 # %%
 ############################
 ####    exps average    ####
@@ -67,8 +67,8 @@ def reverse_dict_values_to_list(dictionary, list):
 
 # %%
 
-affect_type = 'arousals'
-# affect_type = 'valences'
+# affect_type = 'arousals'
+affect_type = 'valences'
 
 ave_exps = average_exps_by_songurl(exps, affect_type)
 all_values = gather_dict_values_to_list(ave_exps)

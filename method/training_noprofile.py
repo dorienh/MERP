@@ -37,11 +37,15 @@ def dataloader_prep(feat_dict, exps, args, train=True):
 
 
 def train(train_loader, model, test_loader, args):
-    loss_epoch_log = []
-    test_loss_epoch_log = []
+    loss_epoch_log_mse = []
+    loss_epoch_log_r = []
+    # loss_epoch_log = []
+    test_loss_epoch_log_mse = []
+    test_loss_epoch_log_r = []
 
     with torch.no_grad():
-        loss_log = []
+        loss_log_mse = []
+        loss_log_r = []
         for batchidx, (feature, label) in enumerate(train_loader):
             numbatches = len(train_loader)
             # Transfer to GPU
@@ -52,17 +56,21 @@ def train(train_loader, model, test_loader, args):
             output = model.forward(feature)
             # MSE Loss calculation
             loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
-            loss_r = criterion(output.squeeze(), label.squeeze())
+            loss_r = pearson_corr_loss(output.squeeze(), label.squeeze())
             loss = loss_mse + loss_r
-            loss_log.append(loss.item())
-        aveloss = np.average(loss_log)
-        loss_epoch_log.append(aveloss)
-        print(f'Initial round without training || MSELoss = {aveloss:.6f}')
+            loss_log_mse.append(loss_mse.item())
+            loss_log_r.append(loss_r.item())
+        aveloss_mse = np.average(loss_log_mse)
+        aveloss_r = np.average(loss_log_r)
+        loss_epoch_log_mse.append(aveloss_mse)
+        loss_epoch_log_r.append(aveloss_r)
+        print(f'Initial round without training || mse = {aveloss_mse:.2f} || r = {aveloss_r:.2f}')
     
     for epoch in np.arange(args.num_epochs):
         model.train()
         start_time = time.time()
-        loss_log = []    
+        loss_log_mse = []    
+        loss_log_r = []
 
         # Training
         for batchidx, (feature, label) in enumerate(train_loader):
@@ -84,44 +92,56 @@ def train(train_loader, model, test_loader, args):
             # MSE Loss calculation
             # loss = criterion(output.squeeze(), label.squeeze())
             loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
-            loss_r = criterion(output.squeeze(), label.squeeze())
+            loss_r = pearson_corr_loss(output.squeeze(), label.squeeze())
             loss = loss_mse + loss_r
             # backward pass
             loss.backward(retain_graph=True)
             # update parameters
             optimizer.step()
             # record training loss
-            loss_log.append(loss.item())
-            print(f'Epoch: {epoch} || Batch: {batchidx}/{numbatches} || Loss = {loss.item()}', end = '\r')
+            loss_log_mse.append(loss_mse.item())
+            loss_log_r.append(loss_r.item())
+            print(f'Epoch: {epoch} || Batch: {batchidx}/{numbatches} || mse = {loss_mse.item():5f} || r = {loss_r.item():5f}', end = '\r')
             
 
-        aveloss = np.average(loss_log)
+        # aveloss = np.average(loss_log)
+        # print(' '*200)
+        # loss_epoch_log.append(aveloss)
+
+        aveloss_mse = np.average(loss_log_mse)
+        aveloss_r = np.average(loss_log_r)
+        loss_epoch_log_mse.append(aveloss_mse)
+        loss_epoch_log_r.append(aveloss_r)
         print(' '*200)
-        loss_epoch_log.append(aveloss)
         
         epoch_duration = time.time() - start_time
-        print(f'Epoch: {epoch:3} || MSELoss: {aveloss:10.6f} || time taken (s): {epoch_duration}')
-    
-        test_loss_epoch_log.append(test(model, test_loader))
+        print(f'Epoch: {epoch:3} || mse: {aveloss_mse:8.4f} || r: {aveloss_r:8.4f} || time taken (s): {epoch_duration}')
+
+        t_aveloss_mse, t_aveloss_r  = test(model, test_loader)
+        test_loss_epoch_log_mse.append(t_aveloss_mse)
+        test_loss_epoch_log_r.append(t_aveloss_r)
 
     # plot loss against epochs
-    plt.plot(loss_epoch_log[1::], label='training loss')
-    plt.plot(test_loss_epoch_log, label='test loss')
+    plt.plot(loss_epoch_log_mse[1::], label='training loss mse')
+    plt.plot(test_loss_epoch_log_mse, label='test loss mse')
+    plt.plot(loss_epoch_log_r[1::], label='training loss r')
+    plt.plot(test_loss_epoch_log_r, label='test loss r')
     plt.xlabel('epoch')
-    plt.ylabel('mseloss')
+    plt.ylabel('loss')
+    plt.ylim([-1, 1])
     plt.legend()
-    plt.title(f'Loss || before training: {loss_epoch_log[0]:.6f} || test loss: {test_loss_epoch_log[-1]:.6f}')
+    plt.title(f'Loss || init mse:{loss_epoch_log_mse[0]:.3f} | r:{loss_epoch_log_r[0]:.3f} || test mse: {test_loss_epoch_log_mse[-1]:.3f} | r: {test_loss_epoch_log_r[-1]:.3f}')
     plt.savefig(os.path.join(args.dir_path, 'saved_models', f'{args.model_name}', 'loss_plot.png'))
     plt.close()
 
-    return model, test_loss_epoch_log[-1]
+    return model, test_loss_epoch_log_mse[-1], test_loss_epoch_log_r[-1]
 
 
-def single_test(model, index, args):
+def single_test(model, index, songurl, args):
     # features - audio
-    testfeat = test_feat_dict['00_145']
+    testfeat = test_feat_dict[songurl]
     # features - pinfo
-    testtrial = exps[exps['songurl']=='00_145'].reset_index().loc[index]
+    testtrial = exps[exps['songurl']==songurl].reset_index().loc[index]
     # labels
     testlabel = testtrial[args.affect_type]
 
@@ -139,25 +159,26 @@ def single_test(model, index, args):
         # MSE Loss calculation
         # loss = criterion(output.squeeze(), label.squeeze())
         loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
-        loss_r = criterion(output.squeeze(), label.squeeze())
+        loss_r = pearson_corr_loss(output.squeeze(), label.squeeze())
         loss = loss_mse + loss_r
     # print(loss.item())
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    plt = plot_pred_comparison(output, label, loss.item())
-    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}/prediction_{index}.png'))
+    plt = plot_pred_comparison(output, label, loss_mse.item(), loss_r.item())
+    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}/{songurl}_prediction_{index}.png'))
     plt.close()
 
-    plt = plot_pred_against(output, label, loss.item())
-    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}/y_vs_yhat_{index}.png'))
+    plt = plot_pred_against(output, label)
+    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}/{songurl}_y_vs_yhat_{index}.png'))
     plt.close()
 
 def test(model, test_loader):
 
     model.eval()
 
-    loss_log = []
+    loss_log_mse = []
+    loss_log_r = []
     with torch.no_grad():
         # model = load_model(model_name)
         for batchidx, (feature, label) in enumerate(test_loader):
@@ -168,13 +189,15 @@ def test(model, test_loader):
             # MSE Loss calculation
             # loss = criterion(output.squeeze(), label.squeeze())
             loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
-            loss_r = criterion(output.squeeze(), label.squeeze())
+            loss_r = pearson_corr_loss(output.squeeze(), label.squeeze())
             loss = loss_mse + loss_r
             # print(loss)
-            loss_log.append(loss.item())
-    aveloss = np.average(loss_log)
-    print(f'average test lost (per batch): {aveloss}')
-    return aveloss
+            loss_log_mse.append(loss_mse.item())
+            loss_log_r.append(loss_r.item())
+    aveloss_mse = np.average(loss_log_mse)
+    aveloss_r = np.average(loss_log_r)
+    print(f'average test lost (per batch): mse: {aveloss_mse:2f} r: {aveloss_r:2f}')
+    return aveloss_mse, aveloss_r
 
 
 
@@ -188,12 +211,12 @@ if __name__ == "__main__":
 
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
     parser.add_argument('--num_epochs', type=int, default=200)
-    parser.add_argument('--model_name', type=str, default='ave_customloss3', help='Name of folder plots and model will be saved in')
-    parser.add_argument('--batch_size', type=int, default=32)
+    parser.add_argument('--model_name', type=str, default='ave_customloss4', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--num_workers', type=int, default=10)
-    parser.add_argument('--hidden_dim', type=int, default=512)
-    parser.add_argument('--lstm_size', type=int, default=10)
-    parser.add_argument('--step_size', type=int, default=5)
+    parser.add_argument('--hidden_dim', type=int, default=256)
+    # parser.add_argument('--lstm_size', type=int, default=10)
+    # parser.add_argument('--step_size', type=int, default=5)
     parser.add_argument('--learning_rate', type=float, default=0.001)
     parser.add_argument('--conditions', nargs='+', type=str, default=[])
 
@@ -234,7 +257,7 @@ if __name__ == "__main__":
     print(model)
 
 
-    def my_loss(output, target):
+    def mse_loss(output, target):
         loss = torch.mean((output - target)**2)
         return loss
     
@@ -246,41 +269,45 @@ if __name__ == "__main__":
         vy = y - torch.mean(y)
 
         cost = torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
-        return cost**2 
+        return cost*-1
 
-    criterion = pearson_corr_loss # nn.MSELoss()
+    # criterion = pearson_corr_loss # nn.MSELoss()
 
     
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
-    train_loader = dataloader_prep(train_feat_dict, exps, args, train=True)
-    test_loader = dataloader_prep(test_feat_dict, exps, args, train=False)
+    # train_loader = dataloader_prep(train_feat_dict, exps, args, train=True)
+    # test_loader = dataloader_prep(test_feat_dict, exps, args, train=False)
     
-    model, testloss = train(train_loader, model, test_loader, args)
-    save_model(model, args.model_name, dir_path)
+    # model, testloss_mse, testloss_r = train(train_loader, model, test_loader, args)
+    # save_model(model, args.model_name, dir_path)
 
     model = archi(input_dim).to(device)
     model = load_model(model, args.model_name, dir_path)
-    single_test(model, 1, args)
+    
+    for songurl in util.testlist:
+        single_test(model, 1, songurl, args)
 
     ## logging
 
-    args_dict = vars(args)
-    # print(type(args_dict))
-    args_dict['test_loss'] = f'{testloss:.6f}'
-    args_dict.pop('dir_path')
-    # print(args_dict)
-    args_series = pd.Series(args_dict)
-    args_df = args_series.to_frame().transpose()
-    # print(args_df)
+    # args_dict = vars(args)
+    # # print(type(args_dict))
+    # args_dict['test_loss_mse'] = f'{testloss_mse:.6f}'
+    # args_dict['test_loss_r'] = f'{testloss_r:.6f}'
+    # args_dict['test_loss'] = f'{testloss_r+testloss_mse:.6f}'
+    # args_dict.pop('dir_path')
+    # # print(args_dict)
+    # args_series = pd.Series(args_dict)
+    # args_df = args_series.to_frame().transpose()
+    # # print(args_df)
 
-    exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log.pkl')
-    if os.path.exists(exp_log_filepath):
-        exp_log = pd.read_pickle(exp_log_filepath)
-        exp_log = exp_log.append(args_df).reset_index(drop=True)
-        pd.to_pickle(exp_log, exp_log_filepath)
-        print(exp_log)
-    else:
-        pd.to_pickle(args_df, exp_log_filepath)
-        print(args_df)
+    # exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log.pkl')
+    # if os.path.exists(exp_log_filepath):
+    #     exp_log = pd.read_pickle(exp_log_filepath)
+    #     exp_log = exp_log.append(args_df).reset_index(drop=True)
+    #     pd.to_pickle(exp_log, exp_log_filepath)
+    #     print(exp_log)
+    # else:
+    #     pd.to_pickle(args_df, exp_log_filepath)
+    #     print(args_df)

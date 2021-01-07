@@ -77,11 +77,13 @@ class dataset_non_ave_no_profile:
                 # audiofeat = list(song_feat)*len(song_df)
                 audiofeat = np.array(song_feat)
                 audiofeat = torch.from_numpy(audiofeat)
-                # print(audiofeat.shape)
+                print('meow')
+                print(audiofeat.shape)
                 w_audiofeat = audiofeat.unfold(0,lstm_size, step)
-                # print(len(song_df), np.shape(w_audiofeat))
+                print(len(song_df), np.shape(w_audiofeat))
+                reverse = w_audiofeat.fold
                 self.data = torch.cat(len(song_df)*[w_audiofeat])
-                # print(np.shape(self.data))
+                print(np.shape(self.data))
 
                 # concatenate the labels of each trial into a list. 
                 labels = []
@@ -202,42 +204,42 @@ class dataset_non_ave_with_profile:
         return dataset
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-#     # set labeltype here.
-#     labeltype = 'arousals'
-#     lstm_size = 10
-#     step = 10
-#     conditions = ['age']
+    # set labeltype here.
+    labeltype = 'arousals'
+    lstm_size = 10
+    step = 10
+    conditions = ['age']
 
-#     # set the file paths for features labels and pinfo(if applicable)
-#     featfile = 'data/feat_dict_ready.pkl'
-#     labelfile = 'data/exps_ready.pkl'
-#     pinfofile = 'data/pinfo_numero.pkl'
+    # set the file paths for features labels and pinfo(if applicable)
+    featfile = 'data/feat_dict_ready.pkl'
+    labelfile = 'data/exps_ready.pkl'
+    pinfofile = 'data/pinfo_numero.pkl'
     
-#     # load the data 
-#     # read audio features from pickle
-#     feat_dict = util.load_pickle(featfile)
-#     # read labels from pickle
-#     exps = pd.read_pickle(labelfile)
-#     # read pinfo from pickle
-#     pinfo_df = pd.read_pickle(pinfofile)
+    # load the data 
+    # read audio features from pickle
+    feat_dict = util.load_pickle(featfile)
+    # read labels from pickle
+    exps = pd.read_pickle(labelfile)
+    # read pinfo from pickle
+    pinfo_df = pd.read_pickle(pinfofile)
 
-#     # for wid, group in exps.groupby('workerid'):
-#     #     print(len(group))
+    # for wid, group in exps.groupby('workerid'):
+    #     print(len(group))
 
-#     dataset_obj = dataset_non_ave_with_profile(labeltype, feat_dict, exps, pinfo_df, conditions, lstm_size, step)
-#     dataset = dataset_obj.gen_dataset(False)
+    # dataset_obj = dataset_non_ave_with_profile(labeltype, feat_dict, exps, pinfo_df, conditions, lstm_size, step)
+    # dataset = dataset_obj.gen_dataset(False)
 
-#     # dataset_obj = dataset_non_ave_no_profile(labeltype, feat_dict, exps, lstm_size, step)
-#     # dataset = dataset_obj.gen_dataset(False)
+    dataset_obj = dataset_non_ave_no_profile(labeltype, feat_dict, exps, lstm_size, step)
+    dataset = dataset_obj.gen_dataset(False)
 
-#     loader = DataLoader(
-#         dataset,
-#         shuffle=True,
-#         num_workers=0,
-#         batch_size=32
-#     )
+    loader = DataLoader(
+        dataset,
+        shuffle=True,
+        num_workers=0,
+        batch_size=32
+    )
 
     # # torch.save(loader, 'method/pinfo_dataloader.pth')
 

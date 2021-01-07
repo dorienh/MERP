@@ -56,6 +56,9 @@ def load_pickle(filepath):
         unpickled = pickle.load(handle)
     return unpickled
 
+def save_pickle(filepath, item):
+    with open(filepath, 'wb') as handle:
+        pickle.dump(item, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 #########################################
 ########       Song List        #########
@@ -118,7 +121,18 @@ labeltypes = ['arousals', 'valences']
 # group9 = [songdict['00'][8], songdict['01'][8], songdict['0505'][8], songdict['10'][8], songdict['11'][8]]
 # group10 = [songdict['00'][9], songdict['01'][9], songdict['0505'][9], songdict['10'][9], songdict['11'][9]]
 
+'''
+hardcoded the folds. first 4 have the deam songs, last one doesn't. 
+
+'''
 folds = {}
-for i in range(10):
-    fold = [songdict['00'][i], songdict['01'][i], songdict['0505'][i], songdict['10'][i], songdict['11'][i]]
-    folds[i] = fold
+for i in range(0,10,2):
+    fold = [songdict['00'][i], songdict['00'][i+1],
+            songdict['01'][i], songdict['01'][i+1],
+            songdict['0505'][i], songdict['0505'][i+1],
+            songdict['10'][i], songdict['10'][i+1],
+            songdict['11'][i], songdict['11'][i+1]]
+    if i<8:
+        fold.append(songdict['deam'][i//2])
+    folds[i//2] = fold
+# print('meow', folds)

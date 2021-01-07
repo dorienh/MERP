@@ -18,14 +18,17 @@ def load_model(model, model_name, dir_path):
     model.eval() # assuming loading for eval and not further training. (does not save optimizer so shouldn't continue training.)
     return model
 
-def plot_pred_comparison(output, label, mseloss):
-    plt.plot(output.cpu().numpy(), label='pred')
-    plt.plot(label.cpu().numpy(), label='ori')
+def plot_pred_comparison(output, label, mseloss, rloss=None):
+    plt.plot(output.cpu().numpy(), label='prediction')
+    plt.plot(label.cpu().numpy(), label='ground truth')
     plt.legend()
-    plt.title(f'Prediction vs Ground Truth || mse: {mseloss}')
+    if not rloss:
+        plt.title(f'Prediction vs Ground Truth || mse: {mseloss}')
+    else:
+        plt.title(f'Prediction vs Ground Truth || mse: {mseloss:.5} || r: {rloss:.5}')
     return plt
 
-def plot_pred_against(output, label, mseloss):
+def plot_pred_against(output, label):
     actual = label.cpu().numpy()
     predicted = output.squeeze().cpu().numpy()
     # print(np.shape(actual))

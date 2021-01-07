@@ -200,11 +200,11 @@ if __name__ == "__main__":
     parser.add_argument('--dir_path', type=str, default=dir_path)
 
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
-    parser.add_argument('--num_epochs', type=int, default=2)
-    parser.add_argument('--model_name', type=str, default='no_p_trial', help='Name of folder plots and model will be saved in')
-    parser.add_argument('--batch_size', type=int, default=32)
+    parser.add_argument('--num_epochs', type=int, default=100)
+    parser.add_argument('--model_name', type=str, default='no_p_trial_combinedloss', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--num_workers', type=int, default=10)
-    parser.add_argument('--lstm_hidden_dim', type=int, default=512)
+    parser.add_argument('--lstm_hidden_dim', type=int, default=256)
     parser.add_argument('--lstm_size', type=int, default=10)
     parser.add_argument('--step_size', type=int, default=5)
     parser.add_argument('--drop_prob', type=int, default=0.01)
@@ -250,8 +250,23 @@ if __name__ == "__main__":
     print(model)
     model.train()
     
+    def pearson_corr_loss(output, target):
+        x = output
+        y = target
 
-    criterion = nn.MSELoss()
+        vx = x - torch.mean(x)
+        vy = y - torch.mean(y)
+
+        cost = torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
+        return cost*-1
+
+    def combined_loss(output, target):
+        r = pearson_corr_loss(output, target)
+        mse = loss = torch.mean((output - target)**2)
+
+        return r+mse
+
+    criterion = combined_loss
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
 
     train_loader = dataloader_prep(feat_dict, exps, args, train=True)

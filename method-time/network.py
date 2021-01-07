@@ -74,7 +74,7 @@ class LSTM_single(torch.nn.Module):
         
 
     def forward(self, x):
-        # print(x.view(len(x), -1, self.input_dim).shape)
+        print(x.shape)
         lstm_out, lstm_h = self.lstm(x.view(len(x), -1, self.input_dim))
         lstm_out = self.dropout1(lstm_out)
         lstm_out = self.act1(lstm_out)
