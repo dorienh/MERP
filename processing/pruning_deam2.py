@@ -199,6 +199,10 @@ print(len(std_qualified_workers))
 from scipy.stats import pearsonr
 def worker_comply_deam_pearson(deamtrials, song_threshold):
     qualified_workerids = []
+    sum_a = 0
+    sum_v = 0
+    count_a = 0
+    count_v = 0
     for workerid, wid_group in deamtrials.groupby('workerid'):
             
         # dict to store booleans if the worker complies for the 4 songs. default is False, 0
@@ -216,13 +220,13 @@ def worker_comply_deam_pearson(deamtrials, song_threshold):
 
             if not np.isnan(r_a):
                 complaince_dict[trial['songurl']]['a'] = 1
-            else:
-                print(deamstats[datatypes[0]][songurl]['ave'])
-                print(temp_a)
-            break
+                sum_a += r_a
+                count_a += 1
             if not np.isnan(r_v):
                 complaince_dict[trial['songurl']]['v'] = 1
-        break
+                sum_v += r_v
+                count_v += 1
+        
     # check if both arousal and valence are within the threshold
         complaince_dict_combined = {}
         for key, val in complaince_dict.items():
@@ -235,6 +239,7 @@ def worker_comply_deam_pearson(deamtrials, song_threshold):
 
         if sum(complaince_dict_combined.values()) > song_threshold:
                 qualified_workerids.append(deamtrials.loc[idx, 'workerid'])
+        print(sum_a/count_a, sum_v/count_v)
     return qualified_workerids
 
 pearson_qualified_workers = worker_comply_deam_pearson(deamtrials, song_threshold = 2)
@@ -260,7 +265,7 @@ print('number of qualified workers: ', len(qualified_workers))
 get qualified trials from exps according to qualified_workers list.
 '''
 
-qualified_trials = exps4[exps4['workerid'].isin(qualified_workers)].reset_index()
+qualified_trials = exps4[exps4['workerid'].isin(std_qualified_workers)].reset_index()
 
 print(f'number of trials: {len(exps4)}')
 print(f'number of workers: {len(exps4["workerid"].unique())}')
