@@ -35,8 +35,9 @@ class dataset_ave_no_profile:
         # else:
         #     songlist = util.testlist
         songlist = self.feat_dict.keys()
-        self.ave_exps = exps.loc[exps.songurl.str.contains('|'.join(songlist))].reset_index(drop=True)
-        self.ave_exps = self.ave_exps.set_index('songurl')
+        self.ave_exps = exps.loc[exps.index.str.contains('|'.join(songlist))]
+        # print(self.ave_exps.head())
+        # self.ave_exps = self.ave_exps.set_index('songurl')
 
     def gen_dataset(self):
 

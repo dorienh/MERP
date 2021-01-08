@@ -13,7 +13,7 @@ class LSTM_single(torch.nn.Module):
         self.hidden_dim = hidden_dim
         self.input_dim = input_dim
 
-        self.lstm = nn.LSTM(input_dim, hidden_dim)
+        self.lstm = nn.LSTM(input_dim, hidden_dim, batch_first=True)
         self.dropout1 = nn.Dropout(drop_prob)
         self.act1 = nn.LeakyReLU(0.1)
 
@@ -29,19 +29,23 @@ class LSTM_single(torch.nn.Module):
         
 
     def forward(self, x):
-        print(x.shape)
-        lstm_out, lstm_h = self.lstm(x.view(len(x), -1, self.input_dim))
+        # print('x shape: ', x.shape)
+        lstm_out, lstm_h = self.lstm(x)
+        # print('lstm_out shape: ', lstm_out.shape)
         lstm_out = self.dropout1(lstm_out)
         lstm_out = self.act1(lstm_out)
         
-        out = self.fc(lstm_out.view(len(x),-1, self.hidden_dim))
+        # print(lstm_out.shape)
+        out = self.fc(lstm_out)
         out = self.dropout2(out)
         out = self.act2(out)
+        # print('fc1 shape: ', out.shape)
 
         out = self.fc2(out)
         out = self.dropout3(out)
         out = self.act3(out)
+        # print('fc2 shape: ', out.shape)
         
         out = self.fc3(out)
-
+        # print('out shape: ', out.shape)
         return out

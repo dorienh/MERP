@@ -87,6 +87,7 @@ standardized_ave_exps = reverse_dict_values_to_list(ave_exps, standardized_value
 for averaged values, we don't care about wid so just have 2 columns, song url and labels.
 '''
 new_exps = pd.DataFrame(list(zip(standardized_ave_exps.keys(),standardized_ave_exps.values())),  columns=['songurl', 'labels'])
+new_exps.set_index('songurl', inplace=True)
 new_exps.head()
 
 

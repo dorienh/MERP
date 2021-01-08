@@ -19,8 +19,11 @@ def load_model(model, model_name, dir_path):
     return model
 
 def plot_pred_comparison(output, label, mseloss, rloss=None):
-    plt.plot(output.cpu().numpy(), label='prediction')
-    plt.plot(label.cpu().numpy(), label='ground truth')
+    if type(output) is not np.ndarray:
+        output = output.cpu().numpy()
+        label = label.cpu().numpy()
+    plt.plot(output, label='prediction')
+    plt.plot(label, label='ground truth')
     plt.legend()
     if not rloss:
         plt.title(f'Prediction vs Ground Truth || mse: {mseloss}')
@@ -29,8 +32,12 @@ def plot_pred_comparison(output, label, mseloss, rloss=None):
     return plt
 
 def plot_pred_against(output, label):
-    actual = label.cpu().numpy()
-    predicted = output.squeeze().cpu().numpy()
+    if type(output) is not np.ndarray:
+        predicted = output.squeeze().cpu().numpy()
+        actual = label.cpu().numpy()
+    else:
+        actual = label
+        predicted = output
     # print(np.shape(actual))
     # print(np.shape(predicted))
     plt.scatter(actual, predicted)
@@ -157,7 +164,7 @@ def reverse_windowing(data, lstm_size, step_size):
     i=0
     while i < (original_len - reverse_step_size):
         original_data.append(data[i])
-        print('i: ', i)
+        # print('i: ', i)
         print(sum([len(x) for x in original_data]))
         i += reverse_step_size
     original_data.append(data[-1][(i-original_len)::])
