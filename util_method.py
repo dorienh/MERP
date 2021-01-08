@@ -129,3 +129,39 @@ def combine_no_profile(exps, args):
     return pd.DataFrame(combined_list)
 
 
+#########################
+####    WINDOWING    ####
+#########################
+
+def windowing(data, lstm_size, step_size):
+    
+    windows = []
+
+    numwindows = len(data) - (lstm_size - step_size)
+
+    for ts in np.arange(numwindows, step=step_size):
+        window = data[ts:ts+lstm_size]
+        windows.append(window)
+    windows = np.array(windows)
+
+    return windows
+
+def reverse_windowing(data, lstm_size, step_size):
+    
+    reverse_step_size = lstm_size//step_size
+
+    original_len = len(data) + (lstm_size-step_size)
+
+    original_data = []
+
+    i=0
+    while i < (original_len - reverse_step_size):
+        original_data.append(data[i])
+        print('i: ', i)
+        print(sum([len(x) for x in original_data]))
+        i += reverse_step_size
+    original_data.append(data[-1][(i-original_len)::])
+    original_data = [item for sublist in original_data for item in sublist]
+    original_data = np.array(original_data)
+
+    return original_data
