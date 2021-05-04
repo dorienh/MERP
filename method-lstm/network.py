@@ -49,3 +49,27 @@ class LSTM_single(torch.nn.Module):
         out = self.fc3(out)
         # print('out shape: ', out.shape)
         return out
+
+
+if __name__ == "__main__":
+
+    train_feat_dict = util.load_pickle('data/train_feats_pca_windowed.pkl')
+    test_feat_dict = util.load_pickle('data/test_feats_pca_windowed.pkl')
+    exps = pd.read_pickle('data/exps_std_a_ave_windowed.pkl')
+
+    ## MODEL
+    input_dim = 724 # 1582 
+    model = archi(input_dim=input_dim, hidden_dim=args.hidden_dim, drop_prob=args.drop_prob).to(device)
+    model.float()
+    print(model)
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+
+    ########################
+    ####    Training    ####
+    ########################
+     
+    train_loader = dataloader_prep(train_feat_dict, exps, args, train=True)
+    test_loader = dataloader_prep(test_feat_dict, exps, args, train=False)
+    
+    model, test_ave_mse, test_ave_r = train(train_loader, model, test_loader, args)

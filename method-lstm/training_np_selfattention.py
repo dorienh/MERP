@@ -19,7 +19,7 @@ from util_method import save_model, load_model, plot_pred_against, plot_pred_com
 ### to edit accordingly.
 from dataloader import dataset_ave_no_profile as dataset_class
 ### to edit accordingly.
-from network import LSTM_single as archi
+from selfattention import self_attention as archi
 
 
 #####################
@@ -49,6 +49,8 @@ def train(train_loader, model, test_loader, args):
             # forward pass
             output = model.forward(feature)
             # MSE Loss calculation
+            # print(output)
+            # print(label)
             loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
             loss_r = pearson_corr_loss(output.squeeze(), label.squeeze())
 
@@ -163,7 +165,9 @@ def test(model, test_loader):
 
 
 def single_test(model, index, songurl, exps, args):
-
+    '''
+        exps - the original exps with many workers
+    '''
     # features - audio
     testfeat = test_feat_dict[songurl]
     # features - exps
@@ -174,8 +178,8 @@ def single_test(model, index, songurl, exps, args):
 
     testinput = testfeat
 
-    print('testinput ', testinput.shape)
-    print('testlabel ', testlabel.shape)
+    # print('testinput ', testinput.shape)
+    # print('testlabel ', testlabel.shape)
 
     with torch.no_grad():
         testinput = torch.from_numpy(testinput)
@@ -193,9 +197,9 @@ def single_test(model, index, songurl, exps, args):
     # print(loss.item())
 
     output = reverse_windowing(output, args.lstm_size, args.step_size)
-    print('meow: ', output.shape)
+    # print('meow: ', output.shape)
     label = reverse_windowing(label, args.lstm_size, args.step_size)
-    print('label: ', label.shape)
+    # print('label: ', label.shape)
 
     dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -238,10 +242,10 @@ if __name__ == "__main__":
     parser.add_argument('--dir_path', type=str, default=dir_path)
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
     parser.add_argument('--num_epochs', type=int, default=100)
-    parser.add_argument('--model_name', type=str, default='testing100epochs', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--model_name', type=str, default='selfattn0', help='Name of folder plots and model will be saved in')
     parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--num_workers', type=int, default=10)
-    parser.add_argument('--hidden_dim', type=int, default=128)
+    parser.add_argument('--hidden_dim', type=int, default=512)
     parser.add_argument('--drop_prob', type=float, default=0.1)
     parser.add_argument('--lstm_size', type=int, default=10)
     parser.add_argument('--step_size', type=int, default=1)
@@ -299,8 +303,8 @@ if __name__ == "__main__":
     ###########################
 
     ## MODEL
-    input_dim = list(train_feat_dict.values())[0].shape[1] #724 # 1582 
-    model = archi(input_dim=input_dim, hidden_dim=args.hidden_dim, drop_prob=args.drop_prob).to(device)
+    input_dim = 724 # 1582 
+    model = archi(in_features=input_dim, out_features=args.hidden_dim, kernel_size=5).to(device)
     model.float()
     print(model)
 
@@ -324,9 +328,9 @@ if __name__ == "__main__":
     # model = archi(input_dim).to(device)
     # model = load_model(model, args.model_name, dir_path)
 
-    for songurl in util.testlist:
-        # single_test(model, 1, songurl, original_exps, args)
-        single_test(model, 1, songurl, exps, args)
+    # for songurl in util.testlist:
+    #     # single_test(model, 1, songurl, original_exps, args)
+    #     single_test(model, 1, songurl, exps, args)
 
     # # logging
 
