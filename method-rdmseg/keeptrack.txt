@@ -1,0 +1,104 @@
+params
+
+Models:
+
+4 layer FC
+3 layer FC
+conv lstm
+lstm
+
+lr:
+0.0001, 0.0002, 0.0005, 0.001, 
+0.002 (is also... bit too jumpy i think.) 
+0.005 (is 100% crazy jumpy can forget this lol)
+
+batchsize:
+LSTM: 1,2,4,8,16,32
+FC: 1,2,4,8,16,32,64,128,256, 
+
+512 hmm... very very jumpy...?
+
+epochs...?
+FC: 100 
+rdmseg: 500 for testing
+
+hidden dim:
+bigger or smaller? 512? or 128? or even 64?
+
+
+
+rdm seg: (lstm size 10)
+
+conv lstm, 0.0001, 1, 2000, 512 (mse: 0.357375 r: 0.079523)
+
+conv lstm, 0.0001, 2, 1000, 512 (mse: 0.355739 r: -0.839142)
+
+conv lstm, 0.0001, 4, 1000, 512 (mse: 0.324097 r: -0.735192)
+
+conv lstm, 0.0001, 8, 1000, 512 (mse: 0.267915 r: -0.812740)
+
+conv lstm, 0.0001, 16, 1000, 512 (mse: 0.289339 r: -0.801649)
+
+all these mse r values are not very telling cos they jump alot...
+
+conv lstm, 0.0001, 16, 1000, 256 (mse: 0.372757 r: -0.711292) bah i think 512 is better
+
+conv lstm, 0.0002, 16, 1000, 512 (mse: 0.301702 r: -0.795011) (pretty much no diff)
+
+conv lstm, 0.0005, 16, 1000, 512 (mse: 0.317339 r: -0.782793) (yep, no diff.)
+
+conv lstm, 0.001, 16, 1000, 512 (mse: 0.345385 r: -0.776350) (kawari ga nai desu ne. honto ni. wara.)
+
+(lstm size 20)
+
+conv lstm, 0.0001, 16, 1000, 512 (mse: 0.271426 r: -0.818664) honestly, i can't tell which is better lol.
+
+lstm, 0.0001, 16, 1000, 512 (mse: 0.207740 r: -0.850132)
+
+
+
+
+
+Hilang:
+
+3 layer FC, 0.0001, 1, 20, 512 (all nan. stopped early)
+
+3 layer FC, 0.0001, 2, 20, 512 (all nan. stopped early)
+
+3 layer FC, 0.0001, 4, 20, 512 (nan from 2nd epoch. stopped early)
+
+3 layer FC, 0.0001, 8, 20, 512 (mse: 1.732080 r: -0.823567) very up down
+
+3 layer FC, 0.0001, 16, 20, 512 (mse: 1.637000 r: -0.823365) very up down
+
+3 layer FC, 0.0001, 32, 20, 512 (mse: 1.610122 r: -0.798943) very up down
+
+3 layer FC, 0.0001, 64, 100, 512 (mse: 1.330184 r: -0.766571) very up down lol
+
+3 layer FC, 0.0001, 128, 100, 512 (mse: 1.954278 r: -0.687636) very up down as always
+
+3 layer FC, 0.0001, 256, 100, 512 (mse: 1.222878 r: -0.668683) jumping everywhere
+
+3 layer FC, 0.0001, 512, 100, 512 (mse: 2.843489 r: -0.459907) really bad.
+
+3 layer FC, 0.0001, 256, 100, 128 (mse: 2.748603 r: -0.566148) very bad...
+
+3 layer FC, 0.0001, 256, 100, 64 (mse: 4.244209 r: -0.547909) WOW atrocious. (but the front few epochs very pretty drop. then sudden increase LOL) (alot of them are like this)
+
+3 layer FC, 0.0002, 64, 100, 512 (mse: 1.451070 r: -0.756592) still quite jumpy
+
+3 layer FC, 0.0005, 64, 100, 512 (mse: 0.938445 r: -0.762834) looks good but it jumps quite a bit
+
+3 layer FC, 0.001, 64, 100, 512 (mse: 1.103489 r: -0.755082) still veh jumpy
+
+3 layer FC, 0.002, 64, 100, 512 (mse: 0.984177 r: -0.750941) super jumpy...
+
+3 layer FC, 0.005, 64, 100, 512 (mse: 1.494263 r: -0.718559) MSE JUMPED TO 40?!?!
+
+3 layer FC, 0.002, 256, 100, 512 (mse: 1.297085 r: -0.637985) rising training loss? hmm... around  up to 2.8 jumpy test loss.
+
+3 layer FC, 0.002, 512, 100, 512 (mse: 1.087177 r: -0.585662) 2.3 ish...
+
+
+
+what about, adding weight to mse? let weight = 2...
