@@ -15,6 +15,30 @@ import pandas as pd
 import util
 
 #%%
+'''
+Using a different OPENSmile config file that results in 0.5s timestep data, no need to rescale.
+'''
+feat_dict = util.load_pickle('../data/feat_dict2.pkl')
+
+head_cutoff = 30 # cutting off the first 15 seconds 
+
+feat_dict_headless = {}
+for key, value in feat_dict.items():
+    feat_dict_headless[key] = value[head_cutoff:]
+
+def check_lens_feat_dict(feat_dict):
+    len_dict = {}
+    for key, value in feat_dict.items():
+        len_dict[key] = len(value)
+    print(len_dict)
+
+
+check_lens_feat_dict(feat_dict)
+check_lens_feat_dict(feat_dict_headless)
+
+util.save_pickle('../data/feat_dict_ready2.pkl', feat_dict_headless)
+
+#%%
 # load data
 feat_dict = util.load_pickle('../data/feat_dict.pkl')
 # exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'exps_rescaled_smoothed.pkl'))
@@ -130,7 +154,7 @@ norm_feat_dict = {key: util.normalize(value, minimum, maximum) for key, value in
 # SAVE FEAT_DICT
 ###################################################
 
-with open('../data/feat_dict_ready.pkl', 'wb') as handle:
+with open('../data/feat_dict_ready2.pkl', 'wb') as handle:
     pickle.dump(norm_feat_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 

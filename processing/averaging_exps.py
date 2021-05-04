@@ -28,7 +28,7 @@ import numpy as np
 
 
 feat_dict = util.load_pickle('../data/feat_dict_ready.pkl')
-exps = pd.read_pickle(os.path.join('..','data', 'exps_ready2.pkl'))
+exps = pd.read_pickle(os.path.join('..','data', 'exps_ready3.pkl'))
 # %%
 ############################
 ####    exps average    ####
@@ -71,14 +71,14 @@ def reverse_dict_values_to_list(dictionary, list):
 affect_type = 'valences'
 
 ave_exps = average_exps_by_songurl(exps, affect_type)
-all_values = gather_dict_values_to_list(ave_exps)
+# all_values = gather_dict_values_to_list(ave_exps)
 
-mean = all_values.mean()
-std = all_values.std()
+# mean = all_values.mean()
+# std = all_values.std()
 
-standardized_values = (all_values - mean) / std
+# standardized_values = (all_values - mean) / std
 
-standardized_ave_exps = reverse_dict_values_to_list(ave_exps, standardized_values)
+# standardized_ave_exps = reverse_dict_values_to_list(ave_exps, standardized_values)
 
 # standardized_ave_exps.keys()
 
@@ -86,13 +86,12 @@ standardized_ave_exps = reverse_dict_values_to_list(ave_exps, standardized_value
 '''
 for averaged values, we don't care about wid so just have 2 columns, song url and labels.
 '''
-new_exps = pd.DataFrame(list(zip(standardized_ave_exps.keys(),standardized_ave_exps.values())),  columns=['songurl', 'labels'])
+new_exps = pd.DataFrame(list(zip(ave_exps.keys(),ave_exps.values())),  columns=['songurl', 'labels'])
 new_exps.set_index('songurl', inplace=True)
 new_exps.head()
 
-
 import pickle
 
-with open(f'../data/exps_std_{affect_type[0]}_ave.pkl', 'wb') as handle:
+with open(f'../data/exps_std_{affect_type[0]}_ave3.pkl', 'wb') as handle:
     pickle.dump(new_exps, handle, protocol=pickle.HIGHEST_PROTOCOL)
 # %%

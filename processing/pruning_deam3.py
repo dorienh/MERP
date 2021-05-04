@@ -1,3 +1,7 @@
+'''
+Using the other config file, hence features were alr in 0.5s but exps still needs rescaling.
+'''
+
 #%%
 '''
 imports
@@ -15,7 +19,8 @@ import util
 loading files
 '''
 ## 1) load feat_dict
-feat_dict = util.load_pickle('../data/feat_dict.pkl')
+feat_dict = util.load_pickle('../data/feat_dict2.pkl')
+feat_dict_ready = util.load_pickle('../data/feat_dict_ready2.pkl')
 
 #%%
 ## 2) use feat_dict to find number of timesteps in each song, store in feat_len_dict
@@ -26,6 +31,7 @@ def count_timestep_feat_dict(feat_dict):
     return feat_len_dict
 
 feat_len_dict = count_timestep_feat_dict(feat_dict)
+feat_ready_len_dict = count_timestep_feat_dict(feat_dict_ready)
 
 ## 3) load the amazon data
 exps = pd.read_pickle(os.path.join(os.path.abspath('..'), 'data', 'mediumrare', 'unpruned_exps.pkl'))
@@ -39,7 +45,8 @@ def printcounts(exps):
     print('num wid: ', len(master['workerid'].unique()))
     print('num trial: ', len(master))
     print('non master:')
-    print('num wid: ', len(nonmaster['workerid'].unique()))
+    temp = len(nonmaster['workerid'].unique()) - 1
+    print('num wid: ', temp)
     print('num trial: ', len(nonmaster))
     print('total')
     print('num wid: ', len(exps['workerid'].unique()))
@@ -47,21 +54,45 @@ def printcounts(exps):
 
 # print('mean songs labelled per wid: ', exps.groupby('workerid').count().mean())
 
-
-#%%
+# %%
 '''
 1) only keep entries with workerids in semipruned_pinfo
 erroneous profiles have been removed.
 '''
 exps2 = exps[exps['workerid'].isin(pinfo.workerid)].reset_index(drop=True)
 
-#%%
 
+
+# %%
 '''
-1) remove trials that are too short or too long (remove by index)
+rescale to 0.5s timesteps
 '''
-## 4)  keep trials that are >= feat_len but <= feat_len+20
-def too_short_too_long(exps, feat_len_dict, threshold=20):
+def average_1D(arr, n):
+    end =  n * int(len(arr)/n)
+    return np.mean(arr[:end].reshape(-1, n), 1)
+
+def rescale(trial):
+    songurl = trial['songurl']
+    # rescale
+    arousal = average_1D(trial['arousals'], 5)
+    valence = average_1D(trial['valences'], 5)
+
+    return arousal, valence
+
+def rescale_dataframe(exps):
+    exps = exps.copy()
+    for idx in exps.index:
+        trial = exps.loc[idx]
+        arousal, valence = rescale(trial)
+        exps.at[idx,'arousals'] = arousal
+        exps.at[idx,'valences'] = valence
+    return exps
+
+exps3 = rescale_dataframe(exps2)
+
+# %%
+## 4)  keep trials that are >= feat_len but <= feat_len+ 2 seconds
+def too_short_too_long(exps, feat_len_dict, threshold=4):
     qualified_idexes = []
 
     for idx, exp in exps.iterrows():
@@ -72,7 +103,7 @@ def too_short_too_long(exps, feat_len_dict, threshold=20):
     # print('num qualified entries: ', len(qualified_idexes))
     return exps.iloc[qualified_idexes].reset_index(drop=True)
 
-exps3 = too_short_too_long(exps2, feat_len_dict)
+exps4 = too_short_too_long(exps3, feat_len_dict)
 
 # %%
 def remove_missing_deam_workers(exps):
@@ -88,9 +119,44 @@ def remove_missing_deam_workers(exps):
     
     return exps.reset_index(drop=True)
 
-exps4 = remove_missing_deam_workers(exps3)
+exps5 = remove_missing_deam_workers(exps4)
 
-#%%
+# %%
+'''
+remove head
+'''
+
+def remove_head(trial, song_len):
+    # remove head
+    arousal = trial['arousals']
+    valence = trial['valences']
+
+    startidx = len(arousal) - song_len
+    arousal = arousal[startidx::]
+    valence = valence[startidx::]
+    return arousal, valence
+
+def dehead_dataframe(exps, song_len_dict):
+    exps = exps.copy()
+    for idx in exps.index:
+        trial = exps.loc[idx]
+        songurl = trial['songurl']
+        song_len = song_len_dict[songurl]
+
+        arousal, valence = remove_head(trial, song_len)
+        exps.at[idx,'arousals'] = arousal
+        exps.at[idx,'valences'] = valence
+    return exps
+
+exps6 = dehead_dataframe(exps5, feat_ready_len_dict)
+
+# %%
+'''
+get deam trials from exps
+'''
+deamtrials = exps6[exps6['songurl'].str.contains('deam')].reset_index()
+
+# %%
 '''
 DEAM COMPARISON
 retreive DEAM data.
@@ -120,25 +186,12 @@ def get_deamstats(datatype, deamlabels):
 deamlabels = get_deam_annotations(datatypes, deampath, deamsonglist)
 deamstats = get_deamstats(datatypes, deamlabels)
 
+#%%
 '''
-get deam trials from exps
+DEAM COMPARISON
+define functions to check which workerids comply with arbitruary tresholds for each statistic type.
 '''
-deamtrials = exps4[exps4['songurl'].str.contains('deam')].reset_index()
-
-def average_1D(arr, n):
-    end =  n * int(len(arr)/n)
-    return np.mean(arr[:end].reshape(-1, n), 1)
-
-def rescale_and_remove_head_deam(trial, desired_len=60):
-    # rescale
-    arousal = average_1D(trial['arousals'], 5)
-    valence = average_1D(trial['valences'], 5)
-    # remove head
-    lendiff = len(arousal) - desired_len
-    arousal = arousal[lendiff::]
-    valence = valence[lendiff::]
-
-    return arousal, valence
+# STD
 
 def check_if_within_std(deamstat, ourlabel, std_mult=1):
     maxlist = deamstat['ave'] + deamstat['stddev']*std_mult
@@ -153,12 +206,7 @@ def check_if_within_std(deamstat, ourlabel, std_mult=1):
             within_bool_list.append(False)
     return within_bool_list
 
-#%%
-'''
-DEAM COMPARISON
-define functions to check which workerids comply with arbitruary tresholds for each statistic type.
-'''
-# STD
+
 def worker_comply_deam_std(deamtrials, std_mult, std_threshold, song_threshold):
     qualified_workerids = []
     for workerid, wid_group in deamtrials.groupby('workerid'):
@@ -169,7 +217,8 @@ def worker_comply_deam_std(deamtrials, std_mult, std_threshold, song_threshold):
         for idx in wid_group.index:
             trial = wid_group.loc[idx]
             songurl = trial['songurl']
-            temp_a,temp_v = rescale_and_remove_head_deam(trial)
+            temp_a = trial['arousals']
+            temp_v = trial['valences']
 
             check_a = check_if_within_std(deamstats[datatypes[0]][songurl], temp_a, std_mult=std_mult)
             check_v = check_if_within_std(deamstats[datatypes[1]][songurl], temp_v, std_mult=std_mult)
@@ -196,140 +245,24 @@ def worker_comply_deam_std(deamtrials, std_mult, std_threshold, song_threshold):
 
 std_qualified_workers = worker_comply_deam_std(deamtrials, std_mult=2, std_threshold=50.0, song_threshold=4)
 print(len(std_qualified_workers))
-#%%
-from scipy.stats import pearsonr
-def worker_comply_deam_pearson(deamtrials, song_threshold):
-    qualified_workerids = []
-    sum_a = 0
-    sum_v = 0
-    count_a = 0
-    count_v = 0
-    for workerid, wid_group in deamtrials.groupby('workerid'):
-            
-        # dict to store booleans if the worker complies for the 4 songs. default is False, 0
-        complaince_dict = {'deam_115':{'a':0, 'v':0}, 'deam_343':{'a':0, 'v':0}, 'deam_745':{'a':0, 'v':0}, 'deam_1334':{'a':0, 'v':0}}
-
-        for idx in wid_group.index:
-            trial = wid_group.loc[idx]
-            songurl = trial['songurl']
-
-            temp_a,temp_v = rescale_and_remove_head_deam(trial)
-            
-            r_a, _ = pearsonr(deamstats[datatypes[0]][songurl]['ave'], temp_a)
-            r_v, _ = pearsonr(deamstats[datatypes[1]][songurl]['ave'], temp_v)
 
 
-            if not np.isnan(r_a):
-                complaince_dict[trial['songurl']]['a'] = 1
-                sum_a += r_a
-                count_a += 1
-            if not np.isnan(r_v):
-                complaince_dict[trial['songurl']]['v'] = 1
-                sum_v += r_v
-                count_v += 1
-        
-    # check if both arousal and valence are within the threshold
-        complaince_dict_combined = {}
-        for key, val in complaince_dict.items():
-            # if sum == 1 meaning both are 1. haha
-            if sum(val.values()) == 2:
-                complaince_dict_combined[key] = 1
-            else:
-                complaince_dict_combined[key] = 0
-        
-
-        if sum(complaince_dict_combined.values()) > song_threshold:
-                qualified_workerids.append(deamtrials.loc[idx, 'workerid'])
-        print(sum_a/count_a, sum_v/count_v)
-    return qualified_workerids
-
-pearson_qualified_workers = worker_comply_deam_pearson(deamtrials, song_threshold = 2)
-print(len(pearson_qualified_workers))
-#%%
-'''
-define a function that accepts lists of qualified workers, 
-return a list of workers that are found in every list.  
-'''
-def common_qualified_workers(*qualified_worker_lists):
-    result = set(qualified_worker_lists[0])
-    for s in qualified_worker_lists[1:]:
-        result.intersection_update(s)
-    return result
-
-qualified_workers = common_qualified_workers(std_qualified_workers, pearson_qualified_workers)
-
-print('number of qualified workers: ', len(qualified_workers))
-
-
-#%%
-'''
-get qualified trials from exps according to qualified_workers list.
-'''
-
-qualified_trials = exps4[exps4['workerid'].isin(std_qualified_workers)].reset_index()
+# %%
+qualified_trials = exps6[exps6['workerid'].isin(std_qualified_workers)].reset_index()
 
 print('original')
 print(f'number of trials: {len(exps)}')
 print(f'number of workers: {len(exps["workerid"].unique())}')
 print('after removing too short too long')
-print(f'number of trials: {len(exps4)}')
-print(f'number of workers: {len(exps4["workerid"].unique())}')
+print(f'number of trials: {len(exps6)}')
+print(f'number of workers: {len(exps6["workerid"].unique())}')
 print('after removing deam std uncompliant')
 print(f'number of trials: {len(qualified_trials)}')
 print(f'number of workers: {len(qualified_trials["workerid"].unique())}')
+# %%
+util.save_pickle('../data/exps_ready3.pkl', qualified_trials)
+# %%
 
 # %%
 
-'''
-rescale and remove head
-'''
-## 1) load feat_dict
-feat_dict_ready = util.load_pickle('../data/feat_dict_ready.pkl')
-
-## 2) use feat_dict to find number of timesteps in each song, store in feat_len_dict
-feat_len_dict_ready = count_timestep_feat_dict(feat_dict_ready)
-
-def rescale_and_remove_head(trial, song_len_dict):
-    songurl = trial['songurl']
-    song_len = song_len_dict[songurl]
-
-    # rescale
-    arousal = average_1D(trial['arousals'], 5)
-    valence = average_1D(trial['valences'], 5)
-    # remove head
-    startidx = len(arousal) - song_len
-    arousal = arousal[startidx::]
-    valence = valence[startidx::]
-    return arousal, valence
-
-def rescale_and_remove_head_dataframe(exps, song_len_dict):
-    exps = exps.copy()
-    for idx in exps.index:
-        trial = exps.loc[idx]
-        arousal, valence = rescale_and_remove_head(trial, feat_len_dict_ready)
-        exps.at[idx,'arousals'] = arousal
-        exps.at[idx,'valences'] = valence
-    return exps
-
-modified_exps = rescale_and_remove_head_dataframe(qualified_trials, feat_len_dict_ready)
-
-#%%
-def check_exps(exps):
-    count = 0
-    for idx in exps.index:
-        row = exps.loc[idx]
-        count += len(row['arousals'])
-    print(f'total number of timesteps: {count}')
-    print(f'number of trials: {len(exps)}')
-    print(f'number of workers: {len(exps["workerid"].unique())}')
-
-print('after removing erronous profiles')
-check_exps(exps4)
-print('\nafter removing based on std and pearson')
-check_exps(qualified_trials)
-print('\nafter rescaling and removing first 15 seconds')
-check_exps(modified_exps)
-# %%
-
-util.save_pickle('../data/exps_ready2.pkl', modified_exps)
 # %%
