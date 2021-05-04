@@ -224,6 +224,8 @@ def single_test(model, songurl, feat_dict, exps, fold_i, args, filename_prefix=N
     '''
         exps - the original exps with many workers
     '''
+    model.eval()
+
     # print(songurl)
     # features - audio
     testfeat = feat_dict[songurl]
@@ -398,7 +400,7 @@ if __name__ == "__main__":
 
         cost = (vx * vy).sum(1) / (torch.sqrt((vx ** 2).sum(1)) * torch.sqrt((vy ** 2).sum(1)))
         cost[torch.isnan(cost)] = 0 #torch.tensor([0]).to(device)
-        cost = cost*-1 
+        # cost = cost*-1 # no need for this since it is not used during training.
         # reducing the batch of pearson to either mean or sum
         if reduction=='mean':
             return cost.mean()

@@ -73,8 +73,8 @@ def get_losses_from_row_np(logdf, idx_of_interest):
     noprofile_pcc = float(row_of_interest['tt_r'])
     return noprofile_mse, noprofile_pcc
 
-idx_of_interest_a = 17
-idx_of_interest_v = 22
+idx_of_interest_a = 23
+idx_of_interest_v = 24
 
 np_mse_v, np_pcc_v = get_losses_from_row_np(log_lstm, idx_of_interest_v)
 np_mse_a, np_pcc_a = get_losses_from_row_np(log_lstm, idx_of_interest_a)
@@ -119,6 +119,7 @@ plt.ylabel('mse - arousal')
 plt.legend()
 plt.tight_layout()
 plt.savefig('../plots/va_results/profile_comp_mse_a.png')
+plt.show()
 plt.close()
 
 # %%
@@ -127,10 +128,11 @@ X = np.arange(0,11) # the 10 profile types. later add 1 for non profile.
 plt.plot(profile_list, lstm_loss['pcc_v'], '-o', color='orange', label='lstm')
 plt.plot(profile_list, linear_loss['pcc_v'], '-o', color='purple', label='linear')
 plt.xticks(X, profile_list, rotation='vertical')
-plt.ylabel('pearson - arousal')
+plt.ylabel('pearson - valence')
 plt.legend()
 plt.tight_layout()
-plt.savefig('../plots/va_results/profile_comp_r_a.png')
+plt.savefig('../plots/va_results/profile_comp_r_v.png')
+plt.show()
 plt.close()
 
 # %%
@@ -143,4 +145,6 @@ plt.ylabel('pearson - arousal')
 plt.legend()
 plt.tight_layout()
 plt.savefig('../plots/va_results/profile_comp_r_a.png')
+plt.show()
 plt.close()
+# %%

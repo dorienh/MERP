@@ -257,6 +257,7 @@ def single_test(model, songurl, feat_dict, exps, fold_i, args, filename_prefix=N
     '''
         exps - the original exps with many workers
     '''
+    model.eval()
     # print(songurl)
     # features - audio
     testfeat = feat_dict[songurl]

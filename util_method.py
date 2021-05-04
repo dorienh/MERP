@@ -209,3 +209,8 @@ def reverse_windowing1(data, lstm_size, step_size):
     original_data = np.array(original_data)
 
     return original_data
+
+##################################
+####    GAUSSIAN SMOOTHING    ####
+##################################
+

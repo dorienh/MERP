@@ -189,7 +189,7 @@ def test(model, test_loader):
 
 
 def single_test(model, songurl, exps, fold_i, args):
-
+    model.eval()
     # features - audio
     testfeat = test_feat_dict[songurl]
     # labels
@@ -257,9 +257,9 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--dir_path', type=str, default=dir_path)
-    parser.add_argument('--affect_type', type=str, default='valences', help='Can be either "arousals" or "valences"')
-    parser.add_argument('--num_epochs', type=int, default=100)
-    parser.add_argument('--model_name', type=str, default='5fold_hd512_mseonly_bias_tanh_time30', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
+    parser.add_argument('--num_epochs', type=int, default=1)
+    parser.add_argument('--model_name', type=str, default='testing123', help='Name of folder plots and model will be saved in')
     parser.add_argument('--batch_size', type=int, default=8)
     parser.add_argument('--num_workers', type=int, default=10)
     parser.add_argument('--hidden_dim', type=int, default=512)
