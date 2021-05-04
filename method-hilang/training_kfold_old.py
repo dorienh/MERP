@@ -17,20 +17,19 @@ from torch.utils.data import DataLoader
 import util
 from util_method import save_model, load_model, plot_pred_against, plot_pred_comparison, standardize
 ### to edit accordingly.
-# from dataloader import dataset_ave_no_profile as dataset_class
-from dataloader import rdm_dataset as dataset_class
+from dataloader import dataset_ave_no_profile as dataset_class
 ### to edit accordingly.
-from network import Three_FC_layer as archi
+from network import Two_FC_layer as archi
 
 #####################
 ####    Train    ####
 #####################
-def train(train_loader, model, valid_loader, args):
+def train(train_loader, model, test_loader, args):
     loss_log = {
         'train_mse' : [],
         'train_r' : [],
-        'valid_mse' : [],
-        'valid_r' : []
+        'test_mse' : [],
+        'test_r' : []
     }
     '''
         intial round
@@ -64,14 +63,7 @@ def train(train_loader, model, valid_loader, args):
     '''
         actual training
     '''
-    n_epochs_least = 100
-    n_epochs_stop = 50
-    epochs_no_improve = 0
-    min_val_loss = np.Inf
-    early_stop = False
-
     for epoch in np.arange(args.num_epochs):
-        # val_loss = 0 # for early stopping
         model.train()
         start_time = time.time()
         epoch_loss_log = {
@@ -92,7 +84,7 @@ def train(train_loader, model, valid_loader, args):
             # loss
             loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
             loss_r = pearson_corr_loss(output.squeeze(), label.squeeze())
-            loss = loss_mse*args.mse_weight + loss_r
+            loss = loss_mse + loss_r
 
             # backward pass
             loss.backward(retain_graph=True)
@@ -105,9 +97,6 @@ def train(train_loader, model, valid_loader, args):
 
             print(f'Epoch: {epoch} || Batch: {batchidx}/{numbatches} || mse = {loss_mse.item():5f} || r = {loss_r.item():5f}', end = '\r')
 
-            # val_loss += loss.item()
-        
-        
         # log average loss
         aveloss_mse = np.average(epoch_loss_log['mse'])
         aveloss_r = np.average(epoch_loss_log['r'])
@@ -119,60 +108,44 @@ def train(train_loader, model, valid_loader, args):
         epoch_duration = time.time() - start_time
         print(f'Epoch: {epoch:3} || mse: {aveloss_mse:8.5f} || r: {aveloss_r:8.5f} || time taken (s): {epoch_duration:8f}')
         
-        # test_ave_mse, test_ave_r  = test(model, test_loader)
-        valid_ave_mse, valid_ave_r, valid_loss  = test(model, valid_loader)
+        test_ave_mse, test_ave_r  = test(model, test_loader)
+        loss_log['test_mse'].append(test_ave_mse)
+        loss_log['test_r'].append(test_ave_r)
 
-        # loss_log['test_mse'].append(test_ave_mse)
-        # loss_log['test_r'].append(test_ave_r)
-        loss_log['valid_mse'].append(valid_ave_mse)
-        loss_log['valid_r'].append(valid_ave_r)
-        
-        # val_loss = val_loss / len(train_loader)
-        # print(sum_test, min_val_loss)
-        if valid_loss < min_val_loss:
-            # print('meow')
-            epochs_no_improve = 0
-            min_val_loss = valid_loss
-            best_epoch = epoch
-            best_model = model
-            best_valid_ave_mse = valid_ave_mse
-            best_valid_ave_r = valid_ave_r
+    # # plot loss against epochs
+    # plt.plot(loss_log['train_mse'][1::], label='training loss mse')
+    # plt.plot(loss_log['test_mse'], label='test loss mse')
+    # plt.plot(loss_log['train_r'][1::], label='training loss r')
+    # plt.plot(loss_log['test_r'], label='test loss r')
+    # plt.xlabel('epoch')
+    # plt.ylabel('loss')
+    # plt.ylim([-1, 1])
+    # plt.legend()
+    # plt.title(f"Loss || init mse:{loss_log['train_mse'][0]:.3f} | r:{loss_log['train_r'][0]:.3f} || test mse: {loss_log['test_mse'][-1]:.3f} | r: {loss_log['test_r'][-1]:.3f}")
+    # plt.savefig(os.path.join(args.dir_path, 'saved_models', f'{args.model_name}', 'loss_plot.png'))
+    # plt.close()
 
-        else:
-            epochs_no_improve += 1
-        print(epochs_no_improve)
-        # iter += 1
-        if epoch > n_epochs_least and epochs_no_improve == n_epochs_stop:
-            print('Early stopping!' )
-            early_stop = True
-        
-        if early_stop:
-            print("Stopped")
-            break
-    
+    return model, loss_log
 
+def plot_loss(filename, loss_log):
     # plot loss against epochs
     plt.plot(loss_log['train_mse'][1::], label='training loss mse')
-    plt.plot(loss_log['valid_mse'], label='validation loss mse')
+    plt.plot(loss_log['test_mse'], label='test loss mse')
     plt.plot(loss_log['train_r'][1::], label='training loss r')
-    plt.plot(loss_log['valid_r'], label='validation loss r')
+    plt.plot(loss_log['test_r'], label='test loss r')
     plt.xlabel('epoch')
     plt.ylabel('loss')
     plt.ylim([-1, 1])
     plt.legend()
-    plt.title(f"Loss || init mse:{loss_log['train_mse'][0]:.3f} | r:{loss_log['train_r'][0]:.3f} || valid mse: {best_valid_ave_mse:.3f} | r: {best_valid_ave_r:.3f}")
-    plt.savefig(os.path.join(args.dir_path, 'saved_models', f'{args.model_name}', 'loss_plot.png'))
+    plt.title(f"Loss || init mse:{loss_log['train_mse'][0]:.3f} | r:{loss_log['train_r'][0]:.3f} || test mse: {loss_log['test_mse'][-1]:.3f} | r: {loss_log['test_r'][-1]:.3f}")
+    plt.savefig(os.path.join(args.dir_path, 'saved_models', 'kfold', f'{args.model_name}', filename))
     plt.close()
-
-    return best_model, best_valid_ave_mse, best_valid_ave_r, best_epoch
-    # return model, test_ave_mse, test_ave_r
 
 ####################
 ####    Test    ####
 ####################
 
 def test(model, test_loader):
-    # print('test?')
 
     model.eval()
 
@@ -183,13 +156,11 @@ def test(model, test_loader):
     with torch.no_grad():
         # model = load_model(model_name)
         for batchidx, (feature, label) in enumerate(test_loader):
-            # print('feature: ', feature)
             
             feature, label = feature.to(device).float(), label.to(device).float()
             # forward pass
             output = model(feature)
             # MSE Loss calculation
-            # print('output: ', output, 'label: ', label)
 
             loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
             loss_r = pearson_corr_loss(output.squeeze(), label.squeeze())
@@ -200,16 +171,17 @@ def test(model, test_loader):
     
     test_ave_mse = np.average(epoch_loss_log['mse'])
     test_ave_r = np.average(epoch_loss_log['r'])
-    sum_test = test_ave_mse + test_ave_r
     print(f'average test lost (per batch): mse: {test_ave_mse:4f} r: {test_ave_r:4f}')
-    return test_ave_mse, test_ave_r, sum_test
+    return test_ave_mse, test_ave_r
 
 
-def single_test(model, songurl, exps, args):
-
+def single_test(model, index, songurl, exps, args):
+    '''
+        exps - the original exps with many workers
+    '''
     # features - audio
     testfeat = test_feat_dict[songurl]
-    # labels
+    # features - exps
     testlabel = exps.at[songurl,'labels']
 
     testinput = testfeat
@@ -223,9 +195,6 @@ def single_test(model, songurl, exps, args):
 
         # forward pass
         output = model(feature)
-        # print(testinput.shape)
-        # print(output.shape)
-        # print(testlabel.shape)
         # MSE Loss calculation
         # loss = criterion(output.squeeze(), label.squeeze())
         loss_mse = nn.MSELoss()(output.squeeze(), label.squeeze())
@@ -237,12 +206,12 @@ def single_test(model, songurl, exps, args):
 
     plt = plot_pred_comparison(output, label, loss_mse.item(), loss_r.item())
     plt.suptitle(f'{songurl}')
-    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}/predictions/{songurl}_prediction.png'))
+    plt.savefig(os.path.join(dir_path, 'saved_models', 'kfold', f'{args.model_name}/predictions/{songurl}_prediction_{index}.png'))
     plt.close()
 
     plt = plot_pred_against(output, label)
     plt.suptitle(f'{songurl}')
-    plt.savefig(os.path.join(dir_path, 'saved_models', f'{args.model_name}/predictions/{songurl}_y_vs_yhat.png'))
+    plt.savefig(os.path.join(dir_path, 'saved_models', 'kfold', f'{args.model_name}/predictions/{songurl}_y_vs_yhat_{index}.png'))
     plt.close()
 
 ####################
@@ -255,12 +224,18 @@ def dataloader_prep(feat_dict, exps, args, train=True):
         'num_workers': args.num_workers}
     # prepare data for testing
     dataset_obj = dataset_class(feat_dict, exps, train)
-    # dataset = dataset_obj.gen_dataset()#train=train)
-    loader = DataLoader(dataset_obj, **params)
+    dataset = dataset_obj.gen_dataset()#train=train)
+    loader = DataLoader(dataset, **params)
 
     return loader
 
 if __name__ == "__main__":
+
+    ######################################
+    ####    Params for brute force    ####
+    ######################################
+
+    # to_try = {'batch_size':32}, {'batch_size':64}] errr this is way too complex for my poor brain. 
     
     ########################
     ####    Argparse    ####
@@ -271,15 +246,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--dir_path', type=str, default=dir_path)
     parser.add_argument('--affect_type', type=str, default='arousals', help='Can be either "arousals" or "valences"')
-    parser.add_argument('--num_epochs', type=int, default=300)
-    parser.add_argument('--model_name', type=str, default='mse10', help='Name of folder plots and model will be saved in')
-    parser.add_argument('--batch_size', type=int, default=8)
+    parser.add_argument('--num_epochs', type=int, default=100)
+    parser.add_argument('--model_name', type=str, default='testing_ComParE', help='Name of folder plots and model will be saved in')
+    parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--num_workers', type=int, default=10)
-    parser.add_argument('--hidden_dim', type=int, default=512)
+    parser.add_argument('--hidden_dim', type=int, default=128)
     # parser.add_argument('--lstm_size', type=int, default=10)
     # parser.add_argument('--step_size', type=int, default=5)
-    parser.add_argument('--mse_weight', type=float, default=10.0)
-    parser.add_argument('--learning_rate', type=float, default=0.0001)
+    parser.add_argument('--learning_rate', type=float, default=0.001)
     # parser.add_argument('--conditions', nargs='+', type=str, default=[])
 
     args = parser.parse_args()
@@ -287,21 +261,23 @@ if __name__ == "__main__":
     print(args)
 
     # check if folder with same model_name exists. if not, create folder.
-    os.makedirs(os.path.join(dir_path,'saved_models', args.model_name), exist_ok=True)
-    os.makedirs(os.path.join(dir_path,'saved_models', args.model_name, 'predictions'), exist_ok=True)
+    os.makedirs(os.path.join(dir_path,'saved_models', 'kfold', args.model_name), exist_ok=True)
+    os.makedirs(os.path.join(dir_path,'saved_models', 'kfold', args.model_name, 'predictions'), exist_ok=True)
 
     #########################
     ####    Load Data    ####
     #########################
 
-    # load the data 
-    # read audio features from pickle
-    train_feat_dict = util.load_pickle('data/train_feats.pkl')
-    valid_feat_dict = util.load_pickle('data/valid_feats.pkl')
-    test_feat_dict = util.load_pickle('data/test_feats.pkl')
+    # # load the data 
+    # # read audio features from pickle
+    # train_feat_dict = util.load_pickle('data/train_feats_pca.pkl')
+    # test_feat_dict = util.load_pickle('data/test_feats_pca.pkl')
     # read labels from pickle
-    exps = pd.read_pickle(f'data/exps_std_{args.affect_type[0]}_ave3.pkl')
-    # original_exps = pd.read_pickle('data/exps_ready.pkl')
+    exps = pd.read_pickle('data/exps_std_a_ave.pkl')
+    original_exps = pd.read_pickle('data/exps_ready.pkl')
+
+    # log file path
+    exp_log_filepath = os.path.join(dir_path,'saved_models','kfold','experiment_log.pkl')
     
     ####################
     ####    Cuda    ####
@@ -327,76 +303,94 @@ if __name__ == "__main__":
         vy = y - torch.mean(y)
 
         cost = torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
-        if torch.isnan(cost):
-            return torch.tensor([0]).to(device)
-        else:
-            return cost*-1
+        return cost*-1
 
-    # def weighted_mse_loss(output, target):
-    #     mseloss = nn.MSELoss()(output, target)
-        
-    #     return args.mse_weight * mseloss # does this work??
-
-    ###########################
-    ####    Model param    ####
-    ###########################
-
-    ## MODEL
-    input_dim = list(train_feat_dict.values())[0].shape[1] #724 # 1582 
-    print('check input_dim: ', input_dim)
-    model = archi(input_dim=input_dim, reduced_dim=args.hidden_dim, fc_dim=64).to(device)
-    model.float()
-    print(model)
-
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    
 
     ########################
     ####    Training    ####
     ########################
-     
-    train_loader = dataloader_prep(train_feat_dict, exps, args)
-    valid_loader = dataloader_prep(valid_feat_dict, exps, args)
-    test_loader = dataloader_prep(test_feat_dict, exps, args)
-    
-    ## model, test_ave_mse, test_ave_r = train(train_loader, model, test_loader, args)
-    model, val_ave_mse, val_ave_r, num_epochs = train(train_loader, model, valid_loader, args)
-    save_model(model, args.model_name, dir_path)
+    loss_log_folds = {'test_loss_mse':[], 'test_loss_r':[], 'test_loss':[]}
+    num_folds = 5
+    for fold_i in range(num_folds):
 
-    #######################
-    ####    Testing    ####
-    #######################
+        
+        ## LOAD DATA
+        train_feat_dict = util.load_pickle(f'data/folds/train_feats_pca_{fold_i}.pkl')
+        test_feat_dict = util.load_pickle(f'data/folds/test_feats_pca_{fold_i}.pkl')
 
-    # model = archi(input_dim=input_dim, reduced_dim=args.hidden_dim, fc_dim=64).to(device)
-    # model = load_model(model, args.model_name, dir_path)
-    test_ave_mse, test_ave_r, sum_test  = test(model, test_loader)
+        train_loader = dataloader_prep(train_feat_dict, exps, args, train=True)
+        test_loader = dataloader_prep(test_feat_dict, exps, args, train=False)
 
-    for songurl in util.testlist:
-        single_test(model, songurl, exps, args)
+        ###########################
+        ####    Model param    ####
+        ###########################
 
-    # logging
+        ## MODEL
+        input_dim = np.shape(list(train_feat_dict.values())[0])[1]
+        model = archi(input_dim=input_dim).to(device)
+        model.float()
+        print(model)
 
-    args_dict = vars(args)
-    # print(type(args_dict))
-    args_dict['num_epochs'] = num_epochs
-    args_dict['v_mse'] = f'{val_ave_mse:.6f}'
-    args_dict['v_r'] = f'{val_ave_r:.6f}'
-    args_dict['v_loss'] = f'{val_ave_mse+val_ave_r:.6f}'
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+        
+        model, loss_log = train(train_loader, model, test_loader, args)
 
-    args_dict['t_mse'] = f'{test_ave_mse:.6f}'
-    args_dict['t_r'] = f'{test_ave_r:.6f}'
-    args_dict['t_loss'] = f'{sum_test:.6f}'
-    args_dict.pop('dir_path')
-    # print(args_dict)
-    args_series = pd.Series(args_dict)
+        plot_loss(f'lossplot_{fold_i}.png', loss_log)
+        
+        # loss_log_list.append(loss_log)
+
+        # save_model(model, args.model_name, dir_path)
+
+        #######################
+        ####    Testing    ####
+        #######################
+
+        # model = archi(input_dim).to(device)
+        # model = load_model(model, args.model_name, dir_path)
+
+        for songurl in test_feat_dict.keys():
+            single_test(model, fold_i, songurl, exps, args)
+
+        # logging
+        loss_log_folds['test_loss_mse'].append(loss_log['test_mse'][-1])
+        loss_log_folds['test_loss_r'].append(loss_log['test_r'][-1])
+        loss_log_folds['test_loss'].append(loss_log['test_mse'][-1]+loss_log['test_r'][-1])
+
+        args_dict = vars(args)
+        # print(type(args_dict))
+        args_dict['fold'] = fold_i+1
+        args_dict['test_loss_mse'] = f"{loss_log['test_mse'][-1]:.6f}"
+        args_dict['test_loss_r'] = f"{loss_log['test_r'][-1]:.6f}"
+        args_dict['test_loss'] = f"{loss_log['test_mse'][-1]+loss_log['test_r'][-1]:.6f}"
+        new_args_dict = args_dict.copy()
+        new_args_dict.pop('dir_path')
+        # args_dict.pop('dir_path')
+        # print(args_dict)
+        args_series = pd.Series(new_args_dict)
+        args_df = args_series.to_frame().transpose()
+        # print(args_df)
+
+        if os.path.exists(exp_log_filepath):
+            exp_log = pd.read_pickle(exp_log_filepath)
+            exp_log = exp_log.append(args_df).reset_index(drop=True)
+            pd.to_pickle(exp_log, exp_log_filepath)
+            print(exp_log)
+        else:
+            pd.to_pickle(args_df, exp_log_filepath)
+            print(args_df)
+        
+    # add one line to exp log about the average test losses. 
+    args_dict['fold'] = 'ave'
+    args_dict['test_loss_mse'] = np.mean(loss_log_folds['test_loss_mse'])
+    args_dict['test_loss_r'] = np.mean(loss_log_folds['test_loss_r'])
+    args_dict['test_loss'] = np.mean(loss_log_folds['test_loss'])
+    new_args_dict = args_dict.copy()
+    new_args_dict.pop('dir_path')
+    args_series = pd.Series(new_args_dict)
     args_df = args_series.to_frame().transpose()
-    # print(args_df)
 
-    exp_log_filepath = os.path.join(dir_path,'saved_models','experiment_log2.pkl')
-    if os.path.exists(exp_log_filepath):
-        exp_log = pd.read_pickle(exp_log_filepath)
-        exp_log = exp_log.append(args_df).reset_index(drop=True)
-        pd.to_pickle(exp_log, exp_log_filepath)
-        print(exp_log)
-    else:
-        pd.to_pickle(args_df, exp_log_filepath)
-        print(args_df)
+    exp_log = pd.read_pickle(exp_log_filepath)
+    exp_log = exp_log.append(args_df).reset_index(drop=True)
+    pd.to_pickle(exp_log, exp_log_filepath)
+    print(exp_log)
