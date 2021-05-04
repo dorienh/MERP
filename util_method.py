@@ -4,17 +4,22 @@ import pandas as pd
 import torch
 import matplotlib.pyplot as plt
 
-def save_model(model, model_name, dir_path):
+def save_model(model, model_name, dir_path, file_name=None):
 
-    path_to_save = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{model_name}.pth")
+    if file_name:
+        path_to_save = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{file_name}.pth")
+    else:
+        path_to_save = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{model_name}.pth")
     torch.save(model.state_dict(), path_to_save)
     # loss_fig.savefig(os.path.join(args.model_path, f"{model_name}_loss_plot.png"))
 
-def load_model(model, model_name, dir_path):
-
-    path_to_load = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{model_name}.pth")
+def load_model(model, model_name, dir_path, file_name=None):
+    if file_name:
+        path_to_load = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{file_name}.pth")
+    else:
+        path_to_load = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{model_name}.pth")
     # print(path_to_load)
-    model.load_state_dict(torch.load(path_to_load))
+    model.load_my_state_dict(torch.load(path_to_load))
     model.eval() # assuming loading for eval and not further training. (does not save optimizer so shouldn't continue training.)
     return model
 
@@ -29,6 +34,7 @@ def plot_pred_comparison(output, label, mseloss, rloss=None):
         plt.title(f'Prediction vs Ground Truth || mse: {mseloss}')
     else:
         plt.title(f'Prediction vs Ground Truth || mse: {mseloss:.5} || r: {rloss:.5}')
+    plt.ylim(-1,1)
     return plt
 
 def plot_pred_against(output, label):
@@ -41,6 +47,7 @@ def plot_pred_against(output, label):
     # print(np.shape(actual))
     # print(np.shape(predicted))
     plt.scatter(actual, predicted)
+    plt.ylim(-1,1)
     return plt
 
 # standardize the features
@@ -148,12 +155,42 @@ def windowing(data, lstm_size, step_size):
 
     for ts in np.arange(numwindows, step=step_size):
         window = data[ts:ts+lstm_size]
+        window = np.array(window, dtype='float32')
         windows.append(window)
     windows = np.array(windows)
-
+    # windows = windows.astype('float32') 
     return windows
 
 def reverse_windowing(data, lstm_size, step_size):
+
+    reconstructed = []
+
+    head = (lstm_size + step_size)//2 + 1
+    
+    reconstructed.append(data[0][0:head])
+
+    if lstm_size == step_size:
+        startidx = 0
+        endidx = lstm_size
+    else:
+        startidx = (lstm_size - step_size)//2 + 1
+        endidx = startidx + step_size 
+
+    for i in np.arange(1, len(data)-1):
+        reconstructed.append(data[i][startidx:endidx])
+    
+    # if len(data[-1]) > step_size:
+    #     reconstructed.append(data[-1][startidx:])
+    # else:
+    #     reconstructed.append(data[-1])
+    reconstructed.append(data[-1][startidx:])
+
+    reconstructed = [item for sublist in reconstructed for item in sublist]
+    
+    return np.array(reconstructed)
+        
+
+def reverse_windowing1(data, lstm_size, step_size):
     
     reverse_step_size = lstm_size//step_size
 
@@ -165,7 +202,7 @@ def reverse_windowing(data, lstm_size, step_size):
     while i < (original_len - reverse_step_size):
         original_data.append(data[i])
         # print('i: ', i)
-        print(sum([len(x) for x in original_data]))
+        # print(sum([len(x) for x in original_data]))
         i += reverse_step_size
     original_data.append(data[-1][(i-original_len)::])
     original_data = [item for sublist in original_data for item in sublist]
