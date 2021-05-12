@@ -102,6 +102,7 @@ X = np.arange(0,11) # the 10 profile types. later add 1 for non profile.
 plt.plot(profile_list, lstm_loss['mse_v'], '-o', color='orange', label='lstm')
 plt.plot(profile_list, linear_loss['mse_v'], '-o', color='purple', label='linear')
 plt.xticks(X, profile_list, rotation='vertical')
+plt.ylim([0,0.3])
 plt.ylabel('mse - valence')
 plt.legend()
 plt.tight_layout()
@@ -115,6 +116,7 @@ X = np.arange(0,11) # the 10 profile types. later add 1 for non profile.
 plt.plot(profile_list, lstm_loss['mse_a'], '-o', color='orange', label='lstm')
 plt.plot(profile_list, linear_loss['mse_a'], '-o', color='purple', label='linear')
 plt.xticks(X, profile_list, rotation='vertical')
+plt.ylim([0,0.3])
 plt.ylabel('mse - arousal')
 plt.legend()
 plt.tight_layout()
@@ -128,6 +130,7 @@ X = np.arange(0,11) # the 10 profile types. later add 1 for non profile.
 plt.plot(profile_list, lstm_loss['pcc_v'], '-o', color='orange', label='lstm')
 plt.plot(profile_list, linear_loss['pcc_v'], '-o', color='purple', label='linear')
 plt.xticks(X, profile_list, rotation='vertical')
+plt.ylim([-0.15,0.2])
 plt.ylabel('pearson - valence')
 plt.legend()
 plt.tight_layout()
@@ -141,10 +144,13 @@ X = np.arange(0,11) # the 10 profile types. later add 1 for non profile.
 plt.plot(profile_list, lstm_loss['pcc_a'], '-o', color='orange', label='lstm')
 plt.plot(profile_list, linear_loss['pcc_a'], '-o', color='purple', label='linear')
 plt.xticks(X, profile_list, rotation='vertical')
+plt.ylim([-0.15,0.2])
 plt.ylabel('pearson - arousal')
 plt.legend()
 plt.tight_layout()
 plt.savefig('../plots/va_results/profile_comp_r_a.png')
 plt.show()
 plt.close()
+# %%
+
 # %%
