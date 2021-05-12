@@ -95,3 +95,23 @@ import pickle
 with open(f'../data/exps_std_{affect_type[0]}_ave3.pkl', 'wb') as handle:
     pickle.dump(new_exps, handle, protocol=pickle.HIGHEST_PROTOCOL)
 # %%
+import torch
+from torch.nn import functional as F
+import matplotlib.pyplot as plt
+
+kernel = torch.FloatTensor([[[0.0099, 0.0301, 0.0587, 0.0733, 0.0587, 0.0301, 0.0099]]]) # sigma = 1.5, kernel size = 7
+
+out = torch.rand(1,100,1)
+
+
+out = out.flatten(1)
+# print(out.shape)
+plt.plot(out.squeeze())
+
+out = out.unsqueeze(1)
+# Apply smoothing
+out_smooth = F.conv1d(out, kernel, padding=3)
+
+plt.plot(out_smooth.squeeze())
+
+# %%
