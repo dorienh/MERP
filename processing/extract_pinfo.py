@@ -14,10 +14,10 @@ def participant_info_df_creation(df, batchnum):
     """
     extracts personal information from DataFrame of amazon turk data and outputs a DataFrame, one row for one participant.
     """
-    if batchnum is '7' or batchnum is '8':
-        master = 0
-    else:
-        master = 1
+    if batchnum is '7' or batchnum is '8': # if not master
+        master = 0.0
+    else: # if master
+        master = 1.0
     template = {
         'workerid': df['WorkerId'],
         'batch': batchnum,
@@ -138,6 +138,6 @@ if __name__ == '__main__':
     # print(clean_pinfo[clean_pinfo.workerid.duplicated(keep=False)])
 
 
-    # clean_pinfo.to_pickle('data/mediumrare/semipruned_pinfo.pkl')
+    clean_pinfo.to_pickle('data/mediumrare/semipruned_pinfo.pkl')
 
 
