@@ -23,14 +23,14 @@ def participant_info_df_creation(df, batchnum):
         'batch': batchnum,
         'master': master,
         'age': df['Answer.age'],
-        'country_enculturation': df['Answer.country-enculturation'],
-        'country_live': df['Answer.country-live'],
-        'fav_music_lang': df['Answer.fav-music-language'],
         'gender': df['Answer.gender'],
-        'fav_genre': df['Answer.genre'],
-        'play_instrument': df['Answer.play-instrument'],
+        'residence': df['Answer.country-live'],
+        'enculturation': df['Answer.country-enculturation'],
+        'language': df['Answer.fav-music-language'],
+        'genre': df['Answer.genre'],
+        'instrument': df['Answer.play-instrument'],
         'training': df['Answer.training'],
-        'training_duration': df['Answer.training-duration'].replace('{}', 0)
+        'duration': df['Answer.training-duration'].replace('{}', 0)
     }
     return pd.DataFrame(template)
 
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     print('num duplicates: ', len(duplicate_pinfo))
     print('master count: \n', duplicate_pinfo.master.value_counts())
     # print(duplicate_pinfo.master.value_counts())
-    not_conflicting_bool = duplicate_pinfo.duplicated(subset=['workerid','age', 'country_enculturation', 'country_live', 'fav_music_lang', 'gender', 'fav_genre', 'play_instrument', 'training', 'training_duration'])
+    not_conflicting_bool = duplicate_pinfo.duplicated(subset=['workerid','age', 'gender', 'residence', 'enculturation', 'language', 'genre', 'instrument', 'training', 'duration'])
     not_dups = duplicate_pinfo[not_conflicting_bool].sort_values('workerid')
 
     # print('meow', not_dups)
@@ -116,11 +116,11 @@ if __name__ == '__main__':
     # identify erroneous profiles
 
     # fishy training durations...
-    pinfo_td = unique_pinfo['training_duration'].astype(int)
+    pinfo_td = unique_pinfo['duration'].astype(int)
     err_p1 = unique_pinfo[(pinfo_td < 0) | (pinfo_td > 100)]
     print('num wids with weird training duration: ', len(err_p1))
 
-    err_p2 = unique_pinfo.loc[(unique_pinfo['training_duration'].astype(int)>0) & (unique_pinfo['training']=='No')]
+    err_p2 = unique_pinfo.loc[(unique_pinfo['duration'].astype(int)>0) & (unique_pinfo['training']=='No')]
     print('num wids with no training but with training duration: ', len(err_p2))
     todelete = err_p1.append(err_p2)
 
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     # print(clean_pinfo.gender.value_counts())
     # clean_pinfo = clean_pinfo.drop_duplicates(subset=['workerid'])
     
-    temp = clean_pinfo.duplicated(subset=['workerid','age', 'country_enculturation', 'country_live', 'fav_music_lang', 'gender', 'fav_genre', 'play_instrument', 'training', 'training_duration'],keep=False)
+    temp = clean_pinfo.duplicated(subset=['workerid','age', 'gender', 'residence', 'enculturation', 'language', 'genre', 'instrument', 'training', 'duration'],keep=False)
     print(clean_pinfo[temp])
     # print(clean_pinfo.iloc[100])
     # print(clean_pinfo[clean_pinfo.workerid.duplicated(keep=False)])
