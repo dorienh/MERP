@@ -16,8 +16,8 @@ mapper_dict = {
     'genre': {'Rock': 1.0, 'Classical music': 0.66, 'Pop': 0.33, 'Other': 0.0},
     'instrument': {'Yes': 1.0, 'No': 0.0},
     'training': {'Yes': 1.0, 'No': 0.0},
-    'duration': {(0,0):0, (1,5):0.5, (6,50):1.0}
-    # 'master' was set as 1.0 for yes and 0.0 for no in extract_pinfo.py
+    'duration': {(0,0):0, (1,5):0.5, (6,50):1.0},
+    'master': {'Yes': 1.0, 'No': 0.0}
 }
 
 def categorical(mapper, arr):
@@ -54,8 +54,6 @@ for profile_type, mapper in mapper_dict.items():
         ncol = categorical(mapper, col)
     # print(profile_type, pd.Series(ncol).value_counts())
     n_pinfo_dict[profile_type] = ncol
-
-n_pinfo_dict['master'] = pinfo['master']
 
 df = pd.DataFrame(n_pinfo_dict)
 print(df.head())

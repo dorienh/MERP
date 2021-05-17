@@ -15,9 +15,9 @@ def participant_info_df_creation(df, batchnum):
     extracts personal information from DataFrame of amazon turk data and outputs a DataFrame, one row for one participant.
     """
     if batchnum is '7' or batchnum is '8': # if not master
-        master = 0.0
+        master = 'No'
     else: # if master
-        master = 1.0
+        master = 'Yes'
     template = {
         'workerid': df['WorkerId'],
         'batch': batchnum,
