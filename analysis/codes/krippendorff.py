@@ -141,10 +141,10 @@ if __name__ == '__main__':
         print(songurl)
 
         labels = group['arousals'].to_list()
-        labels = np.transpose(labels)
-        print(np.shape(labels))
+        # labels = np.transpose(labels)
+        print('shape of labels: ', np.shape(labels))
         t = krippendorff_alpha(labels)
-        print(t)
+        print('k_alpha value: ', t)
         # print(np.reshape(labels, (len(labels), 1, -1)))
 
         break

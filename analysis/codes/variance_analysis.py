@@ -842,46 +842,7 @@ plt.xlabel('song')
 
 # plt.show()
 plt.savefig(f'../analysis_plots/boxplot_avevar_per_profile/{datatype[:-1]}/training_duration.png')
-#%%
 
-# %%
-'''
-Kat:
-Thanks, Balu! Yes, and of course the analysis approach is dictated by the research question(s). I think the following are interesting:
-- What is the average rating (across participants) for every time point for every song? 
-(This is really the main research question, right? What are the mean arousal/valence ratings for every time point of each song across participants)
-- For each of the mean ratings computed above, what is the variance (across participants)? 
-This tells us how much agreement there is across participants in terms of their momentary A/V ratings for every time point in every song.
-
-And then we can also check the following to make sure the ratings are high quality:
-- How much variability is present within a single rater? (Is there low or high variance within a rater for a particular song?). 
-As Balu says, one approach would be to compare the rating distribution of one individual against a reference, such as Deam reference ratings. 
-Another approach would be to compare the individual rater with all of the other raters... 
-this reminds me of the statistical concept called inter-rater reliability: https://en.wikipedia.org/wiki/Inter-rater_reliability , 
-although I've only computed this for discrete ratings in the past, not continuous ratings like we have, 
-so I'd have to see how to implement continuous IRRs. 
-Something like intraclass correlation coefficients (ICC) might be useful: https://en.wikipedia.org/wiki/Intraclass_correlation
-
-'''
-
-'''
-Dorien:
-For each song, for each point in time, visualise the variance within participants. So we have an indication as to how much they agree or not. 
-
-'''
-
-'''
-Balu:
-Before that, with respect to the box plot, I am agreeing with Kat's remark: the box-plot can be used to show either 
-the variation present in the ratings for a particular song for a particular reviewer (i.e., intra (or within) reviewer rating variation) 
-or it can be used to show the variation present in the ratings for a particular song at a given time for multiple reviewers 
-(i.e., inter (or between) reviewers rating variation). 
-The former will capture idiosyncrasy of a particular reviewer and the latter give some idea about how closer are those idiosyncrasies.
-.
-My thought was to use such box-plot to find consistency in ratings of a reviewer and in order to achieve this we need to 
-compare the rating distribution of a reviewer against a reference (in this case the Deam reference songs) and see if they are very different. 
-
-'''
 #%%
 
 '''
@@ -895,7 +856,7 @@ time plots
 boxplots
 1) for each song (non deam), average label of each participant 
 2) for each participant, average label of each song 
-(by mistake... i did label average rather than variance average... but i guess it's still usefull?)
+(by mistake... i did label average rather than variance average... but i guess it's still useful?)
 1) for each song (non deam), average variance of each participant 
 2) for each participant, average variance of each song
 3) for each profile group, plot the average variance of each song across participants in that profile group.

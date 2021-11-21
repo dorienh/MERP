@@ -57,6 +57,17 @@ class lstm_double(torch.nn.Module):
         # print('out shape: ', out.shape)
         return out
 
+    def load_my_state_dict(self, state_dict):
+ 
+        own_state = self.state_dict()
+        for name, param in state_dict.items():
+            if name not in own_state:
+                 continue
+            if isinstance(param, nn.Parameter):
+                # backwards compatibility for serialized parameters
+                param = param.data
+            own_state[name].copy_(param)
+
 class lstm_single(torch.nn.Module):
     def __init__(self, input_dim, hidden_dim):
         super(lstm_single, self).__init__()
@@ -127,18 +138,18 @@ class lstm_single_2fc(torch.nn.Module):
         return out
 
 class Three_FC_layer(torch.nn.Module):
-    def __init__(self, input_dim = 724, reduced_dim=128):
+    def __init__(self, input_dim = 724, hidden_dim=128):
     # def __init__(self, input_dim = 1582, reduced_dim=128, fc_dim = 64):
         super(Three_FC_layer, self).__init__()
         # self.reduce_dim = nn.Linear(input_dim, reduced_dim, bias=False)
 
-        self.fc1 = nn.Linear(input_dim, reduced_dim)#, bias=False)
+        self.fc1 = nn.Linear(input_dim, hidden_dim)#, bias=False)
         self.dropout1 = nn.Dropout(0.5)
         self.lr1 = nn.LeakyReLU(0.1)
-        self.fc2 = nn.Linear(reduced_dim, reduced_dim//2)#, bias=False)
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim//2)#, bias=False)
         self.dropout2 = nn.Dropout(0.5)
         self.lr2 = nn.LeakyReLU(0.1)
-        self.fc_out = nn.Linear(reduced_dim//2, out_features=1)#, bias=False)  # output
+        self.fc_out = nn.Linear(hidden_dim//2, out_features=1)#, bias=False)  # output
         self.actout = nn.Tanh()
 
         # kernel = torch.FloatTensor([[[0.006, 0.061, 0.242, 0.383, 0.242, 0.061, 0.006]]]) # sigma = 1
@@ -171,6 +182,17 @@ class Three_FC_layer(torch.nn.Module):
         # Apply smoothing
         out = F.conv1d(out, self.kernel, padding=3)
         return out
+    
+    def load_my_state_dict(self, state_dict):
+ 
+        own_state = self.state_dict()
+        for name, param in state_dict.items():
+            if name not in own_state:
+                 continue
+            if isinstance(param, nn.Parameter):
+                # backwards compatibility for serialized parameters
+                param = param.data
+            own_state[name].copy_(param)
 
 # class Three_FC_layer(torch.nn.Module):
 #     def __init__(self, input_dim = 261, reduced_dim=512, fc_dim = 64):

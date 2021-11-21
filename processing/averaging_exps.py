@@ -1,4 +1,6 @@
 '''
+update: this is no longer necessary. averaging is done on the fly.
+
 jupyter notebook for reformatting.
 
 EXPS

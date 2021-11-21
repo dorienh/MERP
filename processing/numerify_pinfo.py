@@ -1,11 +1,12 @@
-from matplotlib.colors import get_named_colors_mapping
+# from matplotlib.colors import get_named_colors_mapping
 import numpy as np
 import pandas as pd
 import os
 import sys
 sys.path.append(os.path.abspath(''))
+# sys.path.append(os.path.abspath('../..'))
 print(sys.path)
-import util
+# import util
 
 mapper_dict = {
     'age': {(0,25):0.0, (26,35):0.33, (36,50):0.66, (51,80):1.0},
@@ -19,6 +20,19 @@ mapper_dict = {
     'duration': {(0,0):0, (1,5):0.5, (6,50):1.0},
     'master': {'Yes': 1.0, 'No': 0.0}
 }
+
+# reversed in va_by_profile.py
+# not sure if i'll use it but might be useful for plotting output. 
+r_mapper_dict = {'age': {0.0: (0, 25), 0.33: (26, 35), 0.66: (36, 50), 1.0: (51, 80)}, 
+'gender': {1.0: 'Female', 0.5: 'Other', 0.0: 'Male'}, 
+'residence': {1.0: 'USA', 0.5: 'India', 0.0: 'Other'}, 
+'enculturation': {1.0: 'USA', 0.5: 'India', 0.0: 'Other'}, 
+'language': {1.0: 'English', 0.5: 'Tamil', 0.0: 'Other'}, 
+'genre': {1.0: 'Rock', 0.66: 'Classical', 0.33: 'Pop', 0.0: 'Other'}, 
+'instrument': {1.0: 'Yes', 0.0: 'No'}, 
+'training': {1.0: 'Yes', 0.0: 'No'}, 
+'duration': {0: (0, 0), 0.5: (1, 5), 1.0: (6, 50)}, 
+'master': {1.0: 'Yes', 0.0: 'No'}}
 
 def categorical(mapper, arr):
     retval = list(map(mapper.get, arr))
@@ -57,6 +71,7 @@ for profile_type, mapper in mapper_dict.items():
 
 df = pd.DataFrame(n_pinfo_dict)
 print(df.head())
+print(df.shape)
 
 df.to_pickle(os.path.join(os.path.abspath(''), 'data', 'pinfo_numero.pkl'))
 

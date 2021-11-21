@@ -134,9 +134,14 @@ if __name__ == '__main__':
     
     temp = clean_pinfo.duplicated(subset=['workerid','age', 'gender', 'residence', 'enculturation', 'language', 'genre', 'instrument', 'training', 'duration'],keep=False)
     print(clean_pinfo[temp])
+    # print(clean_pinfo[temp].index)
     # print(clean_pinfo.iloc[100])
     # print(clean_pinfo[clean_pinfo.workerid.duplicated(keep=False)])
-
+    del clean_pinfo['batch']
+    print(clean_pinfo.shape)
+    # A3QJ14Y7N8VQ42 had one master and one non master submission, I decided to keep his entry as master rather than remove his entries. :/
+    clean_pinfo = clean_pinfo.drop_duplicates(subset=['workerid','age', 'gender', 'residence', 'enculturation', 'language', 'genre', 'instrument', 'training', 'duration'], ignore_index=True)
+    print(clean_pinfo.shape)
 
     clean_pinfo.to_pickle('data/mediumrare/semipruned_pinfo.pkl')
 

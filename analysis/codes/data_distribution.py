@@ -38,9 +38,10 @@ for idx, row in ave_exps_age.iterrows():
     
 
 #%%
-prof_exp_log_profile = pd.read_pickle('/home/meowyan/Documents/emotion/method-rdmseg-prof/saved_models/experiment_log2.pkl')
-prof_exp_log_lstm = pd.read_pickle('/home/meowyan/Documents/emotion/method-rdmseg/saved_models/experiment_log3.pkl')
-prof_exp_log_linear = pd.read_pickle('/home/meowyan/Documents/emotion/method-hilang/saved_models/experiment_log3.pkl')
+log_p_linear = pd.read_pickle('/home/meowyan/Documents/emotion/method-rdmseg-prof/saved_models/experiment_log_linear1.pkl')
+log_p_lstm = pd.read_pickle('/home/meowyan/Documents/emotion/method-rdmseg-prof/saved_models/experiment_log_lstm1.pkl')
+log_lstm = pd.read_pickle('/home/meowyan/Documents/emotion/method-rdmseg/saved_models/experiment_log3.pkl')
+log_linear = pd.read_pickle('/home/meowyan/Documents/emotion/method-hilang/saved_models/experiment_log3.pkl')
 
  # %%
 for songurl, group in exps.groupby('songurl'):
@@ -88,7 +89,7 @@ for key, path in songfilenamedict.items():
     songlengthdict[key] = length
     
 
-
+#librosa.load ain't working for me and i can't find the solution on google either. ARGH.
 
 # %%
 import numpy as np
@@ -105,6 +106,9 @@ print('sum length: ', sum(lengths))
 10 sum: 9622.18 (16.04 mins)
 11 sum: 23245.159 (38.74 mins)
 '''
+
+
+
 # %%
 
 # total number of datapoints after pruning
@@ -172,7 +176,7 @@ pinfo = pinfo.drop(columns='batch')
 pinfo_numero = pinfo_numero.loc[pinfo_numero.workerid.str.contains('|'.join(exps.workerid))].reset_index(drop=True)
 
 #%%
-# age, gender, master, country_enculturation, country_live, fav_music_lang, fav_genre, play_instrument, training, training_duration
+# age, gender, master, enculturation, residence, language, genre, instrument, training, duration
 
 age = pinfo['age']
 numages = age.nunique()
@@ -254,9 +258,9 @@ sizes.plot.pie(autopct='%1.1f%%',labels=['No', 'Yes'],colors=['tab:blue', 'tab:p
 plt.savefig('../plots/pinfo/master.png')
 
 #%%
-country_r = pinfo_numero['country_live']
+country_r = pinfo_numero['residence']
 sizes_r = country_r.value_counts()
-country_e = pinfo_numero['country_enculturation']
+country_e = pinfo_numero['enculturation']
 sizes_e = country_e.value_counts()
 
 fig = plt.figure(figsize=(5,3), dpi=300)
@@ -270,7 +274,7 @@ plt.tight_layout()
 plt.savefig('../plots/pinfo/country_r_e.png')
 
 # %%
-country_e = pinfo['country_enculturation']
+country_e = pinfo['enculturation']
 sizes = country_e.value_counts()
 print(sizes)
 fig = plt.figure(figsize=(3,3), dpi=300)
@@ -280,7 +284,7 @@ sizes.plot.pie(autopct='%1.1f%%', pctdistance=1.1, labeldistance=1.25)
 plt.ylabel('')
 plt.title('Country of music enculturation')
 # plt.tight_layout()
-print(pinfo['country_enculturation'].nunique()) #15
+print(pinfo['enculturation'].nunique()) #15
 #['US' 'JP' 'IN' 'EC' 'MX' 'IT' 'ZA' 'RU' 'GB' 'AM' 'CO' 'AS' 'NZ' 'AE' 'BR']
 # US
 # Japan
@@ -298,13 +302,13 @@ print(pinfo['country_enculturation'].nunique()) #15
 # United Arab Emirates
 # Brazil
 # %%
-country_r = pinfo_numero['country_live']
+country_r = pinfo_numero['residence']
 sizes = country_r.value_counts()
 print(sizes)
 fig = plt.figure(figsize=(8,8))
 sizes.plot.pie(autopct='%1.1f%%',labels=['USA', 'India', 'Others'],colors=['tab:blue', 'tab:purple', 'tab:olive', 'tab:cyan'], pctdistance=1.1)
 plt.savefig('../plots/pinfo/country_r.png')
-print(pinfo['country_live'].nunique()) #11
+print(pinfo['residence'].nunique()) #11
 # ['US' 'IN' 'IT' 'ZA' 'RU' 'ID' 'GB' 'AM' 'AS' 'RO' 'BR']
 # US
 # India
@@ -318,10 +322,10 @@ print(pinfo['country_live'].nunique()) #11
 # Romania
 # Brazil
 #%%
-fav_music_lang = pinfo_numero['fav_music_lang']
-sizes_l = fav_music_lang.value_counts()
+language = pinfo_numero['language']
+sizes_l = language.value_counts()
 
-sizes_g = pinfo_numero['fav_genre'].value_counts()
+sizes_g = pinfo_numero['genre'].value_counts()
 
 fig = plt.figure(figsize=(5,3), dpi=300)
 plt.subplot(1,2,1)
@@ -335,8 +339,8 @@ plt.savefig('../plots/pinfo/music_listening.png')
 
 # %%
 
-fav_music_lang = pinfo['fav_music_lang']
-print(pinfo['fav_music_lang'].nunique())  #11
+language = pinfo['language']
+print(pinfo['language'].nunique())  #11
 # ['EN', 'KO', 'JA', 'TE', 'TA', 'HI', 'ML', 'IT', 'HY', 'DE', 'BN']
 # English
 # Korean
@@ -350,9 +354,9 @@ print(pinfo['fav_music_lang'].nunique())  #11
 # German
 # Bengali
 
-# sizes = pinfo['fav_music_lang'].value_counts()
+# sizes = pinfo['language'].value_counts()
 # sizes.plot.pie(colors=['tab:blue', 'tab:purple', 'tab:olive', 'tab:brown'])
-sizes = fav_music_lang.value_counts()
+sizes = language.value_counts()
 print(sizes)
 fig = plt.figure(figsize=(3,3),dpi=300)
 
@@ -360,27 +364,27 @@ sizes.plot.pie(autopct='%1.1f%%', pctdistance=1.1, labeldistance=1.25)
 plt.title('Preferred language of music lyrics')
 plt.ylabel('')
 # sizes.plot.pie(autopct='%1.1f%%',labels=['English'/, 'Tamil', 'Others'], colors=['tab:blue', 'tab:purple', 'tab:olive', 'tab:cyan'])
-# plt.savefig('../plots/pinfo/fav_music_lang.png')
+# plt.savefig('../plots/pinfo/language.png')
 # %%
-# fav_genre
-sizes1 = pinfo_numero['fav_genre'].value_counts()
-sizes2 = pinfo['fav_genre'].value_counts()
+# genre
+sizes1 = pinfo_numero['genre'].value_counts()
+sizes2 = pinfo['genre'].value_counts()
 print(sizes1)
 fig = plt.figure(figsize=(3,3), dpi=300)
 sizes2.plot.pie(autopct='%1.1f%%', pctdistance=1.1, labeldistance=1.25)
 plt.title('Preferred genre')
 plt.ylabel('')
 # sizes1.plot.pie(autopct='%1.1f%%',labels=['Others', 'Rock', 'Classical', 'Pop'], colors=['tab:blue', 'tab:purple', 'tab:olive', 'tab:cyan'])
-pinfo['fav_genre'].nunique() #13
+pinfo['genre'].nunique() #13
 #['Pop', 'Country', 'Metal', 'Rhythm and Blues', 'Rock', 'Jazz', 'Other', 'Indie Rock', 'Electronic dance music', 'Electro', 'Dubstep', 'Classical music', 'Techno']
-# plt.savefig('../plots/pinfo/fav_genre.png')
+# plt.savefig('../plots/pinfo/genre.png')
 # %%
-# play_instrument
-sizes = pinfo['play_instrument'].value_counts()
+# instrument
+sizes = pinfo['instrument'].value_counts()
 print(sizes)
 fig = plt.figure(figsize=(8,8))
 sizes.plot.pie(autopct='%1.1f%%',colors=['tab:blue', 'tab:purple', 'tab:olive', 'tab:cyan'])
-plt.savefig('../plots/pinfo/play_instrument.png')
+plt.savefig('../plots/pinfo/instrument.png')
 #%%
 # training
 sizes = pinfo['training'].value_counts()
@@ -389,20 +393,20 @@ fig = plt.figure(figsize=(8,8))
 sizes.plot.pie(autopct='%1.1f%%',colors=['tab:blue', 'tab:purple', 'tab:olive', 'tab:cyan'])
 plt.savefig('../plots/pinfo/training.png')
 #%%
-# training_duration
+# duration
 
-sizes = pinfo['training_duration'].value_counts()
-sizes1 = pinfo_numero['training_duration'].value_counts()
+sizes = pinfo['duration'].value_counts()
+sizes1 = pinfo_numero['duration'].value_counts()
 # print(sizes)
 print(sizes1)
 fig = plt.figure(figsize=(8,8))
 sizes1.plot.pie(autopct='%1.1f%%',labels=['[1-5]','0' , '>6'],colors=['tab:blue', 'tab:purple', 'tab:olive', 'tab:cyan'])
-plt.savefig('../plots/pinfo/training_duration.png')
+plt.savefig('../plots/pinfo/duration.png')
 # %%
 #%%
-sizes_pi = pinfo['play_instrument'].value_counts()
+sizes_pi = pinfo['instrument'].value_counts()
 sizes_tr = pinfo['training'].value_counts()
-sizes_td = pinfo_numero['training_duration'].value_counts()
+sizes_td = pinfo_numero['duration'].value_counts()
 sizes_m = pinfo['master'].value_counts()
 
 fig = plt.figure(figsize=(5,6),dpi=300)

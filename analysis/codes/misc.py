@@ -3,17 +3,24 @@ import os
 import sys
 sys.path.append(os.path.abspath(''))
 sys.path.append(os.path.abspath('..'))
+sys.path.append(os.path.abspath('../..'))
 
 import util
-from ave_exp_by_prof import ave_exps_by_profile
+from processing.ave_exp_by_prof import ave_exps_by_profile
 
 import pandas as pd
 import numpy as np
 import torch
+import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 12})
+plt.rcParams["figure.dpi"] = 300
+import matplotlib
+matplotlib.rcParams['font.sans-serif'] = "Arial"
+matplotlib.rcParams['font.family'] = "sans-serif"
 
-
-feat_dict = util.load_pickle('../data/feat_dict_ready2.pkl')
-exps = pd.read_pickle(os.path.join('..','data', 'exps_ready3.pkl'))
+feat_dict = util.load_pickle('../../data/feat_dict_ready2.pkl')
+exps = pd.read_pickle(os.path.join('..','..','data', 'exps_ready3.pkl'))
+pinfo = util.load_pickle('../../data/pinfo_numero.pkl')
 # %%
 arousals = exps['arousals']
 # %%
@@ -40,7 +47,7 @@ print(feat_count)
 affect_type = 'arousals'
 profile = ['age', 'gender']
 # profile = ['age']
-pinfo = util.load_pickle('../data/pinfo_numero.pkl')
+
 
 exps_prof_aved = ave_exps_by_profile(exps, pinfo, affect_type, profile)
 prof_aved_count = 0
@@ -48,51 +55,49 @@ for index, row in exps_prof_aved.iterrows():
     prof_aved_count += len(row['labels'])
 print(prof_aved_count)
 # %%
-import torch
+'''
+PLOT V-A OF ALL DEAM SONGS. 
+not many high V low A songs, so... the one we use is pretty much... high V high A...S
+'''
+x = []
+y = []
 
-def pearson_corr_loss(output, target):
-        x = output
-        y = target
+datatypes = ['arousals', 'valences']
+deampath = '../../data/deam_annotations/annotations_averaged_per_song/dynamic_per_second_annotations'
 
-        vx = x - torch.mean(x)
-        print(torch.mean(x).shape)
-        vy = y - torch.mean(y)
-        print(torch.mean(y).shape)
+arousals = pd.read_csv(os.path.join(deampath, 'arousal.csv'), index_col=None, header=0)
+valences = pd.read_csv(os.path.join(deampath, 'valence.csv'), index_col=None, header=0)
 
-        cost = torch.sum(vx * vy) / (torch.sqrt(torch.sum(vx ** 2)) * torch.sqrt(torch.sum(vy ** 2)))
-        if torch.isnan(cost):
-            return torch.tensor([0]).to(device)
-        else:
-            return cost*-1
+for idx in np.arange(len(arousals)):
+    a_mean = arousals.iloc[idx, 1:].mean()
+    v_mean = valences.iloc[idx, 1:].mean()
+    x.append(a_mean)
+    y.append(v_mean)
+    
+plt.scatter(x,y,marker='.')
+plt.xlabel('arousal')
+plt.ylabel('valence')
+plt.title('all deam songs')
 
-output = torch.randn(8,10)
-target = torch.randn(8,10)
-
-pearson_corr_loss(output,target)
 # %%
-import torch
-def pearson_corr_loss(output, target, reduction='mean'):
-        x = output
-        y = target
+# plot num participants who have labelled each song.
+nondeamexps = exps[~exps['songurl'].str.contains('deam')].reset_index()
 
-        vx = x - x.mean(1).unsqueeze(-1) # Keep batch, only calcuate mean per sample
-        vy = y - y.mean(1).unsqueeze(-1)
+# non master
+counts = nondeamexps.groupby(['songurl']).size()
+fig = plt.figure(figsize=(10,4))
+counts.plot(kind='bar',alpha=1, rot=80, fontsize=10)
+plt.ylabel('number of participants')
+plt.tight_layout()
+plt.savefig('../plots/pinfo/num_p_per_song.png')
 
-        cost = (vx * vy).sum(1) / (torch.sqrt((vx ** 2).sum(1)) * torch.sqrt((vy ** 2).sum(1)))
-        # cost = torch.nan_to_num(cost) # doesn't exist.... for some reason.
-        cost[torch.isnan(cost)] = torch.tensor([0]).to(device)
-        # reducing the batch of pearson to either mean or sum
-        if reduction=='mean':
-            return cost.mean()
-        elif reduction=='sum':
-            return cost.sum()
-        elif reduction==None:
-            return cost
-# %%
-output = torch.randn(8,10)
-target = torch.randn(8,10)
-
-pearson_corr_loss(output,target)
-# %%
-
+# master
+pinfo = pinfo[pinfo['master'] == 1.0]
+nondeamexps = nondeamexps[nondeamexps['workerid'].isin(pinfo['workerid'].unique())]
+counts = nondeamexps.groupby(['songurl']).size()
+fig = plt.figure(figsize=(10,4))
+counts.plot(kind='bar',alpha=1, rot=80, fontsize=10)
+plt.ylabel('number of participants')
+plt.tight_layout()
+plt.savefig('../plots/pinfo/master_num_p_per_song.png')
 # %%

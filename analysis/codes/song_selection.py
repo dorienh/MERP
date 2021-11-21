@@ -7,6 +7,11 @@ import glob
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 12})
+plt.rcParams["figure.dpi"] = 300
+import matplotlib
+matplotlib.rcParams['font.sans-serif'] = "Arial"
+matplotlib.rcParams['font.family'] = "sans-serif"
 import seaborn as sns
 
 # %%

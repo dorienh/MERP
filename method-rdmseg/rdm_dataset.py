@@ -40,11 +40,15 @@ class rdm_dataset(Dataset):
         data = self.data[index]
         label = self.labels[index]
 
-        audio_length = self.song_lengths[index]
-        start_idx = self.random.randint(audio_length - self.seq_len)
-        end_idx = start_idx + self.seq_len
+        if self.seq_len:
+            audio_length = self.song_lengths[index]
+            start_idx = self.random.randint(audio_length - self.seq_len)
+            end_idx = start_idx + self.seq_len
 
-        return data[start_idx:end_idx], label[start_idx:end_idx]
+            return data[start_idx:end_idx], label[start_idx:end_idx]
+            
+        else:
+            return data, label
     
     def __len__(self):
         return len(self.data)

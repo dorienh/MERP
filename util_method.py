@@ -4,24 +4,47 @@ import pandas as pd
 import torch
 import matplotlib.pyplot as plt
 
-def save_model(model, model_name, dir_path, file_name=None):
+def save_model(model, savepath, file_name=None):
 
     if file_name:
-        path_to_save = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{file_name}.pth")
+        path_to_save = os.path.join(savepath, f"{file_name}.pth")
     else:
-        path_to_save = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{model_name}.pth")
+        model_name = os.path.basename(savepath)
+        path_to_save = os.path.join(savepath, f"{model_name}.pth")
     torch.save(model.state_dict(), path_to_save)
     # loss_fig.savefig(os.path.join(args.model_path, f"{model_name}_loss_plot.png"))
 
-def load_model(model, model_name, dir_path, file_name=None):
+def load_model(model, savepath, file_name=None):
     if file_name:
-        path_to_load = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{file_name}.pth")
+        path_to_load = os.path.join(savepath, f"{file_name}.pth")
     else:
-        path_to_load = os.path.join(dir_path, 'saved_models', f"{model_name}", f"{model_name}.pth")
+        model_name = os.path.basename(savepath)
+        path_to_load = os.path.join(savepath, f"{model_name}.pth")
     # print(path_to_load)
     model.load_my_state_dict(torch.load(path_to_load))
     model.eval() # assuming loading for eval and not further training. (does not save optimizer so shouldn't continue training.)
     return model
+
+def pearson_corr_loss(output, target, reduction='mean'):
+        x = output
+        y = target
+
+        vx = x - x.mean(1).unsqueeze(-1) # Keep batch, only calcuate mean per sample [8,1]
+        vy = y - y.mean(1).unsqueeze(-1)
+        # print('shape of mean: ', x.mean(1).shape)
+        # print('shape of mean unsqueeze(-1): ', x.mean(1).unsqueeze(-1).shape)
+
+        cost = (vx * vy).sum(1) / (torch.sqrt((vx ** 2).sum(1)) * torch.sqrt((vy ** 2).sum(1)))
+        cost[torch.isnan(cost)] = 0
+        # cost = cost*-1 # no need for this since it is not used during training.
+        # print('shape of cost: ', (vx * vy).sum(1).shape)
+        # reducing the batch of pearson to either mean or sum
+        if reduction=='mean':
+            return cost.mean()
+        elif reduction=='sum':
+            return cost.sum()
+        elif reduction==None:
+            return cost
 
 def plot_pred_comparison(output, label, mseloss, rloss=None):
     if type(output) is not np.ndarray:
@@ -46,9 +69,18 @@ def plot_pred_against(output, label):
         predicted = output
     # print(np.shape(actual))
     # print(np.shape(predicted))
-    plt.scatter(actual, predicted)
+    plt.scatter(actual, predicted, marker='x')
     plt.ylim(-1,1)
+    plt.xlim(-1,1)
     return plt
+
+def average_exps_by_songurl(exps, affect_type):
+    ave_labels = {}
+    for songurl, group in exps.groupby('songurl'):
+        ave = group[affect_type].mean()
+        ave_labels[songurl] = ave
+
+    return ave_labels
 
 # standardize the features
 def standardize(feat_dict): # all together

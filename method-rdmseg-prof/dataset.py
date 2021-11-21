@@ -33,24 +33,32 @@ class rdm_dataset(Dataset):
     def __getitem__(self,index):
 
         row = self.exps.iloc[index]
-        
-        # audio 
-        songurl = row['songurl']
-        audio_feat_full = self.feat_dict[songurl]
-
-        audio_length = len(audio_feat_full)
-        # print(np.shape(audio_feat_full))
-        start_idx = self.random.randint(audio_length - self.seq_len)
-        end_idx = start_idx + self.seq_len
-
-        audio_feat = audio_feat_full[start_idx:end_idx]
-
         # profile
         profile = row['profile']
         if hasattr(profile, '__iter__'):
             profile = list(profile)
         else:
             profile = [profile]
+
+        # audio 
+        songurl = row['songurl']
+        audio_feat_full = self.feat_dict[songurl]
+
+        # label
+        label_full = row['labels']
+
+        if self.seq_len:
+            audio_length = len(audio_feat_full)
+            # print(np.shape(audio_feat_full))
+            start_idx = self.random.randint(audio_length - self.seq_len)
+            end_idx = start_idx + self.seq_len
+
+            audio_feat = audio_feat_full[start_idx:end_idx]
+            label = label_full[start_idx:end_idx]
+
+        else:
+            audio_feat = audio_feat_full
+            label = label_full
 
         # concatenate audio feature and profile features (duplicated for every time step)
         # print(np.shape(audio_feat))
@@ -59,9 +67,8 @@ class rdm_dataset(Dataset):
         data = np.concatenate((audio_feat, repeated_profile),axis=1)
         # print(np.shape(data))
 
-        # label
-        label_full = row['labels']
-        label = label_full[start_idx:end_idx]
+        
+       
 
         return data, label
     
@@ -129,12 +136,12 @@ if __name__ == "__main__":
     # test_feat_dict = util.load_pickle('../data/test_feats.pkl')
     exps = pd.read_pickle(os.path.join('data', f'exps_std_{affect_type[0]}_profile_ave_1.pkl'))
 
-    dataset = rdm_dataset(train_feat_dict, exps, seq_len=1)
+    dataset = rdm_dataset(train_feat_dict, exps, seq_len=None)
     loader = DataLoader(
         dataset,
         shuffle=True,
         num_workers=0,
-        batch_size=32
+        batch_size=1
     )
 
     for j in np.arange(10):

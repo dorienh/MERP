@@ -433,6 +433,10 @@ if __name__ == "__main__":
     # exps = pd.read_pickle('data/exps_std_a_profile_ave.pkl')
     pinfo = util.load_pickle('data/pinfo_numero.pkl')
     original_exps = pd.read_pickle('data/exps_ready3.pkl')
+    '''
+    pick out the master participants only and test.
+    '''
+    pinfo[pinfo['master'] == 1.0]
     exps = ave_exps_by_profile(original_exps, pinfo, args.affect_type, args.conditions)
     # print(exps.head())
     

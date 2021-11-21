@@ -14,40 +14,7 @@ hand picked, based on valence and arousal collected by deam.
 
 1) intro (refer to excel)
 
-2) Methods - data collection
 
-Listening Study
-emotion annotation collection methods (listening study)
-	a) mturk 
-	b) demographics
-
-part of method) music selection
-	a) selection concept
-		some from FMA and 5 from deam (baseline)
-	b) song distribution plots (used to make selection)
-
-part of method) MTurk data filtering
-	a) removing songs that were too short or long (note that this is a mistake?)
-	b) remove trials with erroneous profiles
-		removing repeat workers with different profile answers.
-		training duration is negative or more than 100
-		training == False but training duration > 0
-
-3) methods (model)
-
-6) results
-
-
-6) Discussion
-
-7) Conclusion (?)
-
-etc.
-
-
-
-What we did not look at:
-lyrics
 
 
 Future:
@@ -67,10 +34,325 @@ emotion expressed as valence and arousal
 
 
 
-
-Emotion in music has been discussed and surveyed for centuries up till today. The field of Music Emotion Recognition in particular, has grown rapidly in the last decade or so, along with the growth of the digital world. Arguably, music is an expression of emotion. Composers since the known early music history have composed songs to express love, anger, elation, disappointment, and every other emotion, much like music today. MER is of interest to many, including psychologists, teachers, film directors, musicians and game creators amongst others. For MER has a wide range of applications, such as traversing, accessing, selecting and creating music.
-
 Emotion in music has been widely discussed and surveyed for centuries up till today. The field of Music Emotion Recognition in particular, has grown rapidly in the last decade or so, along with the growth of the music industry in the digital space. The music streaming platform Spotify as of 2020, provides more than 50 million songs to listeners, while almost 40,000 tracks are uploaded daily to the service. In 2019, about 20,000 tracks were uploaded each day, meaning the upload rate has doubled in just a year. With the explosive growth in the amount of music available, developments in Music Information Retrieval to classify and organise the music has become ever more of a necessity for the convenient access of music to the average consumer [\cite{yang2007music}, \cite{goto2012grand}]. One such classification is emotion. However emotion is subjective and often vaguely defined [\cite{yang2007music}]. Different listeners may have differing views on the emotion they perceive from a song. This begets the question of whether causations for the difference in views could be identified. More concretely, we explore whether similarities between listeners allude to similarities in their perception of emotion in music. 
+
+The relationship between music and emotions has been explored since as early as 1956 by Meyer\cite{leonard1956emotion}. Though not yet formally defined and named at the time, Meyer does mention of the discrepencies between what we now know as expressed, perceived and induced emotion\cite{juslin2004expression} of music. Expressed emotion refers the intented emotion of music. The composer of the music may have intended to convey certain emotions, while the performer of the music relays emotion to the listener. A qualitative study in 1996 by Gabrielsson and Juslin\cite{gabrielsson1996emotional} were able to identify similarities in emotion encoding between nine professional musicians of varying instruments. Additionally, they found that listeners were mostly able to identify the emotion that the musicians intended to encode, affirming the findings of \cite{thompson1992can}. This identification of emotion by the listener is also known as perceived emotion. Induced emotion on the other hand, is arguably more subjective than perceived emotion, referring to the emotion felt by the listener caused by listening to music. 
+
+@article{thompson1992can,
+  title={Can composers express emotions through music?},
+  author={Thompson, William Forde and Robitaille, Brent},
+  journal={Empirical studies of the arts},
+  volume={10},
+  number={1},
+  pages={79--89},
+  year={1992},
+  publisher={SAGE Publications Sage CA: Los Angeles, CA}
+}
+
+The relationships between expressed, perceived and induced emotion in music have also been explored in various contexts and through various methods. Between perceived and induced emotion, though positive correlation exists, they can and often do differ \cite{gabrielsson2001emotion, kallinen2006emotion, salimpoor2009rewarding, kawakami2013sad}. Their difference may be largely attributed to non-musical factors that have shown to affect induced emotion, such as familiarity and memory association \cite{schubert2007influence, barrett2010music}, physical exertion \cite{dibben2004role}, and listening context and environment \cite{sloboda2001emotions, juslin2004expression}. Similarly, Expressed and induced emotion are shown to generally have positive correlation \cite{evans2008relationships}, yet can largely differ as well \cite{sloboda1991music}. On the other hand, the relationship between expressed and perceived music is arguably the most intriguing, as it involves the direct encoding and encapsulation of emotion in music. 
+
+That music is able to encode emotion suggests that certain features of music contain emotional information. A review by Panda et el. categorises these features into 8 musical dimensions: melody, harmony, rhythm, dynamics, tone color, expressivity, texture and form \cite{panda2020audio}. They organised and presented discrete emotional terms commonly associated with various modes of these 8 musical dimensions. Conversely, a review by Juslin and Laukka \cite{juslin2004expression} presents a summary of musical features that correlate with 5 common discrete emotions. In both reviews, it is evident that there is redundancy in the musical dimensions. Each dimension is capable of containing emotional information, and can be combined to further convey intended emotions. Furthermore, by isolating the melody dimension and varying harmony, rhythm, dynamics and expressivity dimensions, a study by Juslin \cite{juslin2000cue} showed that dimensions may contain differing emotions and yet convey an overall emotion. 
+
+[insert paragraph about features that have been used for MER. PRAAT, MIR Toolbox, YAAFE, OpenEAR, Essentia, Librosa. Other metadata: instruments (timbre), lyrics.]
+
+
+
+
+Generally, there are two types of affect labels in MER datasets, categorical and dimensional. Datasets that use discrete emotional terms as affect labels fall into the former type. Such datasets include the CAL500 dataset \cite{turnbull2007towards} which provides a three-scale rating of eighteen emotions for each song, and the Emotify dataset \cite{aljanaki2016studying} which classifies each song into one out of nine categories of the Geneva Emotional Music Scales \cite{zentner2008emotions}. As summarized in \cite{barthet2012music}, categorical labels exist in many other forms. Some studies use discrete terms directly \cite{saari2010generalizability}, while other studies propose clusters or groups of discrete emotional terms. For instance, \cite{trohidis2008multi} proposed twelve clusters, while \cite{hu2007exploring} proposed five clusters for the Audio Mood Classification task of the annual Music Information Retrieval Evaluation eXchange (MIREX). Dimensional models on the other hand attempt to abstract the representation of all emotions along two or more dimensions. A widely known two dimensional model is Russell's circumplex model of affect \cite{russell1980circumplex}. The two dimensions are Pleasure and Arousal, more commonly known as Valence and Arousal (VA). Discrete emotional terms can then be represented as points on a two dimensional plane. 
+
+Hence, categorical and dimensional models are closely related, and dimensional models have often been utilized in a categorical manner. For example, in \cite{bischoff2009music}, Thayer's two dimensional Energy and Tension model \cite{thayer1990biopsychology} was sectioned into four quadrants of the two dimensional plane, while in \cite{han2009smers}, the two dimensional model was sectioned into eleven subdivisions, where each subdimension is represented by a discrete emotional term each. Soundtracks \cite{eerola2011comparison} is a dataset that collected both categorical and dimensional labels, and compared the two models of emotion. Their results showed that the perceived emotional labels collected through both models are are largely comparable for the Soundtracks dataset. Due to the nature of the two models, MER techniques for categorical datasets usually involve classification, while dimensional datasets require regression techniques. 
+
+Although the two models are similar, dimensional models are more versatile in two ways. Firstly, the continous nature of dimensional models allow for degree of emotion to be represented \cite{yang2008regression}, while scales must accompany categorical models to capture degree of emotion. Secondly, dimensional models are more easily able to represent emotion of music over time. Categorical datasets have static labels, a single label for a song or excerpt. Dimensional datasets on the otherhand, are better suited to capture changes in emotion, and can contain both static and dynamic labels. A dataset that greatly inspired this work is the DEAM dataset \cite{aljanaki2017developing}, which is an instance of a dimensional dataset that collected both static and dynamic labels. Dynamic labels acknowledge the dynamic nature of music and enable emotional changes of music to be described. Additionally, dynamic labels can be aggregated to static labels. 
+
+As with any subjective study, ground truth collection is a formidable task. Categorical model datasets could obtain readily available emotion labels from existing resources such as Last.fm and AllMusic by webcrawling, as done in \cite{lin2009exploiting, song2012evaluation, panda2013multi}. However it is not yet common for music databases to contain dimensional affect labels, especially considering the variety of dimensional models that exist. As a result, dimensional labels must be collected manually. Datasets such as DEAP \cite{koelstra2011deap} and PMEmo \cite{zhang2018pmemo} include physiological signals, requiring participants to be gathered physically. Physical collection allows more variables during the data collection process to be standardised, at the cost of being more labour intensive. Participants are often university students \cite{turnbull2007towards, yang2007music, yang2008regression, vuoskoski2011measuring} or experts such as musicians \cite{makris2015greek, wang2014towards} or MIR researchers \cite{speck2011comparative}. Alternatively, in an effort to collect larger quantities of affect labels with a potential loss in accuracy, many works resort to crowdsourcing on platforms such as Amazon Mechanical Turk \cite{soleymani20131000, chen2015amg1608, ???}. Some works also utilize a mix of both online and offline collection methods \cite{speck2011comparative, aljanaki2014emotion}. 
+
+experts,
+university students,
+online services like amt
+gamify
+[which dataset, how big it is what they collect why they chose that method kinda summary]
+
+The important thing with subjective tests is to make sure each song is labelled by multiple participants
+
+
+
+
+possible impact of cultural differences, music experience, music preferences, demographics. 
+
+In this work, we present a open-sourced database catered towards exploring whether generalised MER can be improved, given additional profile information about an individual. In order for our dataset to be as versatile as possible, we chose to use Russell's dimensional model, and to collect dynamic labels. As we required multiple participants of similar profile types to label the same songs, we utilised AMT as our label collection platform to gather a large number of participants. 
+
+
+This is the first work to the best of our knowledge that presents a publicly available dataset of dynamic and regressive affect labels of full length music, alongside profile information of participants. Additionally, we provide statistical analysis of the collected participant profiles. 
+
+Studies that utilize categorical datasets carry out MER using classification techniques. 
+
+Trade off between length of online HIT for participant attention span and amount of labels collected.
+Need as many people to label the same songs as possible
+Especially in our interest in grouping participants into groups for comparison
+Require multiple participants in each category as far as possible. 
+Hence we collect valence and arousal simultaneously, knowing the possibility that multitasking could be disctracting to the participant, impacting the accuracy of labels. 
+
+webcrawl last.fm
+@inproceedings{panda2013multi,
+  title={Multi-modal music emotion recognition: A new dataset, methodology and comparative analysis},
+  author={Panda, Renato Eduardo Silva and Malheiro, Ricardo and Rocha, Bruno and Oliveira, Ant{\'o}nio Pedro and Paiva, Rui Pedro},
+  booktitle={10th International Symposium on Computer Music Multidisciplinary Research (CMMR 2013)},
+  pages={570--582},
+  year={2013}
+}
+
+webcrawl all music
+@inproceedings{song2012evaluation,
+  title={Evaluation of musical features for emotion classification.},
+  author={Song, Yading and Dixon, Simon and Pearce, Marcus T},
+  booktitle={ISMIR},
+  pages={523--528},
+  year={2012}
+}
+
+subjective test to label thayer 4 classes. no details...
+used lyrics as features too.
+@inproceedings{yang2008toward,
+  title={Toward multi-modal music emotion classification},
+  author={Yang, Yi-Hsuan and Lin, Yu-Ching and Cheng, Heng-Tze and Liao, I-Bin and Ho, Yeh-Chin and Chen, Homer H},
+  booktitle={Pacific-Rim Conference on Multimedia},
+  pages={70--79},
+  year={2008},
+  organization={Springer}
+}
+
+soundtracks paper.
+"we should also investigate more thoroughly the influence of individual factors on the processing of music-mediated emotions, such as personality and musical expertise"
+@article{eerola2011comparison,
+  title={A comparison of the discrete and dimensional models of emotion in music},
+  author={Eerola, Tuomas and Vuoskoski, Jonna K},
+  journal={Psychology of Music},
+  volume={39},
+  number={1},
+  pages={18--49},
+  year={2011},
+  publisher={Sage Publications Sage UK: London, England}
+}
+
+
+
+
+Collection methods
+
+The cheapest collection method would be to web-crawl an online music database with mood and emotion tags as was done in \cite{panda2013multi}. 
+
+@inproceedings{panda2013multi,
+  title={Multi-modal music emotion recognition: A new dataset, methodology and comparative analysis},
+  author={Panda, Renato Eduardo Silva and Malheiro, Ricardo and Rocha, Bruno and Oliveira, Ant{\'o}nio Pedro and Paiva, Rui Pedro},
+  booktitle={10th International Symposium on Computer Music Multidisciplinary Research (CMMR 2013)},
+  pages={570--582},
+  year={2013}
+}
+
+
+In this work we present the ??? dataset. 
+Interested to observe if there were general trends in MER amongst different groups of people.
+
+
+@inproceedings{panda2013multi,
+  title={Multi-modal music emotion recognition: A new dataset, methodology and comparative analysis},
+  author={Panda, Renato Eduardo Silva and Malheiro, Ricardo and Rocha, Bruno and Oliveira, Ant{\'o}nio Pedro and Paiva, Rui Pedro},
+  booktitle={10th International Symposium on Computer Music Multidisciplinary Research (CMMR 2013)},
+  pages={570--582},
+  year={2013}
+}
+
+In order to carry out music emotion recognition, 
+
+
+see all the tabs, write short descriptions for each here and group them together hurr hurr. 
+
+determine the direction of the narrative. how to weave in the subjectivity of MER and hence the need for datasets that cater to such subjectivity. that just a general dataset does benefit but perhaps can be enhanced with participant information. that other datasets that have done this are not pubicly available and dont have dynamic labels. get something out of that brain of yours lol. 
+
+
+Where is the emotion found in music. What is it encapsulted in or by. the major minor key, the intervals, tempo rhythm instruments blablabla all these things show that they have a part to play. And \cite{juslin2000cue} shows the redundancy of these aspects. that as a whole, in combination with one another, they affect perceived emotion of music. So features that encapture emotion have been long studied and various diff types are used in the field, we follow DEAM dataset and use their featureset designed for capturing emotional features in music. 
+
+The subjectivity of emotion maybe is due to this redundancy ya. different people weigh different aspects differently. maybe they focus on diff things or they notice diff things cos of experience or preference or culture or whatever. 
+  cultural differences in mer
+  personality
+  age 
+  In affective studies in general, affect perception seem to change with age \cite{gruhn2008age}
+  musically trained or not
+  preference
+
+as with any subjective study, ground truth collection is a formidable task. both time consuming and resource intensive. collected data is also noisy. In addition there are so many different ways to categorise and define emotion. Many datasets collect static affect labels, meaning one label (or a set of labels) for one song. However music is dynamic in nature so a static label may be insufficient to completely and precisely define the emotion of a piece of music. So some datasets have one label (or a set of labels) for an excerpt of a song, like the verse or chorus or a fixed time frame. Or even one label per half second like DEAM and PMEmo etc. The form of affect labels also differ, and usually fall into two broad categories, namely categorical and dimensional models. So and so did this, so and so does that, 2 degrees 3 degrees, often third degree is omitted and is difficult for the layman to differentiate so we considered the 2d model in this work. 
+
+
+
+
+multiple mediums of emotion, redundancy, can override one another. 
+
+\cite{juslin2000cue} - 5 acoustic cues, 
+
+As such, it is a probable reason for how the majority of datasets collected to study the relationship between music and emotion have been on perceived emotion. In this work as well
+
+
+
+though both 
+
+\cite{mcadams2017perception} instrument timbre n perceived emotion, musician vs non-musician have difference. orchestral instruments, valence, from negative to positive - woodwinds, brass, percussion, strings, arousal didn't really show difference between instrument family.
+
+\cite{eerola2012timbre} instrument timbre
+
+\cite{wu2014musical} instrument timbre
+eight sustained wind and bowed string instrument tones: bassoon (Bs), clarinet (Cl), ﬂute(Fl), horn (Hn), oboe (Ob), saxophone (Sx), trumpet (Tp),and violin (Vn).
+clarinet, flute, oboe, violin, horn, trumpet, sax
+woodwinds, strings, brass, woodwind. 
+
+
+\cite{sloboda1991music} musical structures (but it's between expressed and induced.)
+
+\cite{evans2008relationships} (felt and expressed emotion.)
+- they used AV + dominance but left out dominance cos participants showed they didn't really get dominance and also the collected data was mostly high dominance. 
+
+\cite{beier2020you}
+people from Western, Chinese and Indian backgrounds can perceive and feel similar emotional responses to music of one another's cultures. The mediums by which emotion is conveyed is shared across cultures. 
+
+  relationship between emotion and music, expressed, perceived and induced emotion. (existing datasets and reason for perceived labels)
+  categorical vs dimensional emotional models (existing datasets and reason for dimensional)
+  static vs dynamic (existing datasets and reason for dynamic)
+  with regards to personalisation: (existing datasets and findings)
+  cultural differences in mer
+  personality
+  musically trained or not
+  preference
+  methods of data collection (existing datasets and discussions)
+  crowdsourcing 
+  gamification
+  summary of limitations of existing datasets in view of what this dataset offers.
+  a list of the main contributions of the work. 
+  section summary
+
+
+@article{kawakami2013sad,
+  title={Sad music induces pleasant emotion},
+  author={Kawakami, Ai and Furukawa, Kiyoshi and Katahira, Kentaro and Okanoya, Kazuo},
+  journal={Frontiers in psychology},
+  volume={4},
+  pages={311},
+  year={2013},
+  publisher={Frontiers}
+}
+
+ "It is emphasised that both emotion perception and, especially, emotional response are dependent on an interplay between musical, personal, and situational factors."
+@article{gabrielsson2001emotion,
+  title={Emotion perceived and emotion felt: Same or different?},
+  author={Gabrielsson, Alf},
+  journal={Musicae scientiae},
+  volume={5},
+  number={1\_suppl},
+  pages={123--147},
+  year={2001},
+  publisher={SAGE Publications Sage UK: London, England}
+}
+
+@article{kallinen2006emotion,
+  title={Emotion perceived and emotion felt: Same and different},
+  author={Kallinen, Kari and Ravaja, Niklas},
+  journal={Musicae Scientiae},
+  volume={10},
+  number={2},
+  pages={191--213},
+  year={2006},
+  publisher={SAGE Publications Sage UK: London, England}
+}
+
+@article{salimpoor2009rewarding,
+  title={The rewarding aspects of music listening are related to degree of emotional arousal},
+  author={Salimpoor, Valorie N and Benovoy, Mitchel and Longo, Gregory and Cooperstock, Jeremy R and Zatorre, Robert J},
+  journal={PloS one},
+  volume={4},
+  number={10},
+  pages={e7487},
+  year={2009},
+  publisher={Public Library of Science}
+}
+
+@article{sloboda1991music,
+  title={Music structure and emotional response: Some empirical findings},
+  author={Sloboda, John A},
+  journal={Psychology of music},
+  volume={19},
+  number={2},
+  pages={110--120},
+  year={1991},
+  publisher={Sage Publications Sage CA: Thousand Oaks, CA}
+}
+
+@article{barrett2010music,
+  title={Music-evoked nostalgia: affect, memory, and personality.},
+  author={Barrett, Frederick S and Grimm, Kevin J and Robins, Richard W and Wildschut, Tim and Sedikides, Constantine and Janata, Petr},
+  journal={Emotion},
+  volume={10},
+  number={3},
+  pages={390},
+  year={2010},
+  publisher={American Psychological Association}
+}
+
+@article{gabrielsson1996emotional,
+  title={Emotional expression in music performance: Between the performer's intention and the listener's experience},
+  author={Gabrielsson, Alf and Juslin, Patrik N},
+  journal={Psychology of music},
+  volume={24},
+  number={1},
+  pages={68--91},
+  year={1996},
+  publisher={Sage Publications Sage CA: Thousand Oaks, CA}
+}
+
+@book{leonard1956emotion,
+  title={Emotion and meaning in music},
+  author={Leonard, Meyer},
+  year={1956},
+  publisher={Chicago: University of Chicago Press}
+}
+
+@article{evans2008relationships,
+  title={Relationships between expressed and felt emotions in music},
+  author={Evans, Paul and Schubert, Emery},
+  journal={Musicae Scientiae},
+  volume={12},
+  number={1},
+  pages={75--99},
+  year={2008},
+  publisher={SAGE Publications Sage UK: London, England}
+}
+
+@article{juslin2004expression,
+  title={Expression, perception, and induction of musical emotions: A review and a questionnaire study of everyday listening},
+  author={Juslin, Patrik N and Laukka, Petri},
+  journal={Journal of new music research},
+  volume={33},
+  number={3},
+  pages={217--238},
+  year={2004},
+  publisher={Taylor \& Francis}
+}
+
+perceived vs evoked (or even expressed.)
+
+
+Most MER studies focus on perceived emotion, possibly because many factors apart from subjectivity could affect evoked emotions, such as past memories, current mood, etc. 
+
+categorical vs dimensional
+
+
+
+static vs dynamic
+
+
+
+audio features and more (lyrics)
+
+Balz aptly describes music as air vibrations. It is facinating how sequences of air vibrations can be intepreted by humans, and decomposed into pitch, timbre, rhythm, harmony, etc. Even more astonishing 
+
+personalized research. 
 
 
 The wonder that emotion exists in music has been discussed by philosophers such as Balz, who aptly describes music as air vibrations, and how astonishing such a phenomenon could be a vessel for emotion \cite{balz1914music}. These so called sequences of air vibrations can be decomposed into various components such as pitch, volume, timbre, tempo, key, duration, and so on. Similarly, musical cues such as musical intervals, vibrato and staccato can be mapped to basic emotions such as happiness and sadness as well \cite{juslin2009emotion}. Empirical studies such as \cite{lidetecting} and \cite{lu2005automatic} showed that timbre, rhythm and pitch are able to indicate music mood. Beyond the music itself, acoustic qualities from different families of instruments too are shown to convey emotion \cite{mcadams2017perception}, hence the common conception that violins sound sad while ukeleles sound happy. Furthermore, performance is able to greatly impact the the expressed emotion by the performer, changing the perceived emotion by the listener \cite{palusis2017expression}. 
@@ -84,6 +366,12 @@ Emotion though abstract, has been represented in a myraid of ways. \cite{lidetec
 
 bla explored the relationship between evoked emotion and perceived emotion 
 
+
+Discussion
+
+- data collection wise: valence and arousal was collected simultaneously, at first listen. 
+- although different bins were explored, it was not exaustively experimented. Hence there may exist a different configuration of bins that would work better. (age and years of training in particular)
+- 
 
 
 browser, browser version, operating system affects mouse position sampling rate. Other factors in clude mouse DPI, system's USB polling rate and CPU resources. Over the web so internet connection as well. 
@@ -196,6 +484,3 @@ Gabrielsson, 2001; Sloboda, 1992
 
 
 
-DATA:
-
-The total length of the 54 songs is about 8778 seconds, which is about 146 minutes, or 2 hours and 26 minutes. The shortest song is approximately 31 seconds, while the longest song is 4 minutes and 58 seconds.

@@ -35,18 +35,18 @@ class Two_FC_layer(torch.nn.Module):
 ##############################################################
 
 class Three_FC_layer(torch.nn.Module):
-    def __init__(self, input_dim = 724, reduced_dim=128):
+    def __init__(self, input_dim = 724, hidden_dim=128):
     # def __init__(self, input_dim = 1582, reduced_dim=128, fc_dim = 64):
         super(Three_FC_layer, self).__init__()
         # self.reduce_dim = nn.Linear(input_dim, reduced_dim, bias=False)
 
-        self.fc1 = nn.Linear(input_dim, reduced_dim, bias=True)
+        self.fc1 = nn.Linear(input_dim, hidden_dim, bias=True)
         self.dropout1 = nn.Dropout(0.5)
         self.lr1 = nn.LeakyReLU(0.1)
-        self.fc2 = nn.Linear(reduced_dim, reduced_dim//2, bias=True)
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim//2, bias=True)
         self.dropout2 = nn.Dropout(0.5)
         self.lr2 = nn.LeakyReLU(0.1)
-        self.fc_out = nn.Linear(reduced_dim//2, out_features=1, bias=True)  # output
+        self.fc_out = nn.Linear(hidden_dim//2, out_features=1, bias=True)  # output
         
         self.actout = nn.Tanh()
 

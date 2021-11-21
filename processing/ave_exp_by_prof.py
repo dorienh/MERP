@@ -98,13 +98,14 @@ if __name__ == "__main__":
     affect_type = "arousals"
     # affect_type = "valences"
 
-    profile = ['age']
+    profile = ['age', 'gender']
 
     exps = pd.read_pickle(os.path.join('data', 'exps_ready3.pkl'))
 
     pinfo = util.load_pickle('data/pinfo_numero.pkl')
     
     df = ave_exps_by_profile(exps, pinfo, affect_type, profile)
+    print(df.head())
     
     import pickle
 
