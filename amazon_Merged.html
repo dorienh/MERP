@@ -1,0 +1,2334 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+
+<nav aria-label="Page navigation example">
+	<ul class="pagination justify-content-center">
+		<li class="page-item active" id='tag1'><a class="page-link">1</a></li>
+		<li class="page-item " id='tag2'><a class="page-link">2</a></li>
+		<li class="page-item " id='tag3'><a class="page-link">3</a></li>
+		<li class="page-item " id='tag4'><a class="page-link">4</a></li>
+	</ul>
+</nav>
+
+
+
+<div class='container my-page' id='page1'>
+	<div class="jumbotron">
+		<h1 class="display-4">Music and Emotion Study</h1>
+		<hr class="my-4">
+		<p> Welcome to our study on music and emotion. In what follows, you will be listening to a number of musical fragments while indicating your perceived emotion. The total study should take about 30 minutes. </p>
+		<p>Let's start by getting to know you better: </p>
+	</div>
+
+	<div class="row justify-content-center">
+		<div class="col">
+			<p>Age:</p>
+			<input class="form-control" id="age" name="age" type="number"/>
+    		<br>
+
+			<label for="gender">Gender</label>
+		  	<select class="form-control" name='gender' id="gender">
+		  		<option value="" selected disabled>Please select an option...</option>
+			    <option>Male</option>
+			    <option>Female</option>
+			    <option>Other</option>
+			</select>
+			<br>
+
+			<label for="fav-music-language">When you listen to music with lyrics, what language are those lyrics most often sung in (please list only 1)?</label>
+		  	<select class="form-control" name='fav-music-language' id="fav-music-language">
+		  		<option value="" selected disabled>Please select an option...</option>
+				<option value="AF">Afrikanns</option>
+				<option value="SQ">Albanian</option>
+				<option value="AR">Arabic</option>
+				<option value="HY">Armenian</option>
+				<option value="EU">Basque</option>
+				<option value="BN">Bengali</option>
+				<option value="BG">Bulgarian</option>
+				<option value="CA">Catalan</option>
+				<option value="KM">Cambodian</option>
+				<option value="ZH">Chinese (Mandarin)</option>
+                <option value="ZH">Chinese (Cantonese)</option>
+                <option value="ZH">Chinese (Other Dialects)</option>                
+				<option value="HR">Croation</option>
+				<option value="CS">Czech</option>
+				<option value="DA">Danish</option>
+				<option value="NL">Dutch</option>
+				<option value="EN">English</option>
+				<option value="ET">Estonian</option>
+				<option value="FJ">Fiji</option>
+				<option value="FI">Finnish</option>
+				<option value="FR">French</option>
+				<option value="KA">Georgian</option>
+				<option value="DE">German</option>
+				<option value="EL">Greek</option>
+				<option value="GU">Gujarati</option>
+				<option value="HE">Hebrew</option>
+				<option value="HI">Hindi</option>
+				<option value="HU">Hungarian</option>
+				<option value="IS">Icelandic</option>
+				<option value="ID">Indonesian</option>
+				<option value="GA">Irish</option>
+				<option value="IT">Italian</option>
+				<option value="JA">Japanese</option>
+				<option value="JW">Javanese</option>
+				<option value="KO">Korean</option>
+				<option value="LA">Latin</option>
+				<option value="LV">Latvian</option>
+				<option value="LT">Lithuanian</option>
+				<option value="MK">Macedonian</option>
+				<option value="MS">Malay</option>
+				<option value="ML">Malayalam</option>
+				<option value="MT">Maltese</option>
+				<option value="MI">Maori</option>
+				<option value="MR">Marathi</option>
+				<option value="MN">Mongolian</option>
+				<option value="NE">Nepali</option>
+				<option value="NO">Norwegian</option>
+				<option value="FA">Persian</option>
+				<option value="PL">Polish</option>
+				<option value="PT">Portuguese</option>
+				<option value="PA">Punjabi</option>
+				<option value="QU">Quechua</option>
+				<option value="RO">Romanian</option>
+				<option value="RU">Russian</option>
+				<option value="SM">Samoan</option>
+				<option value="SR">Serbian</option>
+				<option value="SK">Slovak</option>
+				<option value="SL">Slovenian</option>
+				<option value="ES">Spanish</option>
+				<option value="SW">Swahili</option>
+				<option value="SV">Swedish </option>
+				<option value="TA">Tamil</option>
+				<option value="TT">Tatar</option>
+				<option value="TE">Telugu</option>
+				<option value="TH">Thai</option>
+				<option value="BO">Tibetan</option>
+				<option value="TO">Tonga</option>
+				<option value="TR">Turkish</option>
+				<option value="UK">Ukranian</option>
+				<option value="UR">Urdu</option>
+				<option value="UZ">Uzbek</option>
+				<option value="VI">Vietnamese</option>
+				<option value="CY">Welsh</option>
+				<option value="XH">Xhosa</option>
+			</select>
+			<br>
+
+			<label for="country-live">In which country have you lived the longest?</label>
+		  	<select class="form-control" name='country-live' id="country-live">
+		  		<option value="" selected disabled>Please select an option...</option>
+				<option value="AF">Afghanistan</option>
+				<option value="AX">Åland Islands</option>
+				<option value="AL">Albania</option>
+				<option value="DZ">Algeria</option>
+				<option value="AS">American Samoa</option>
+				<option value="AD">Andorra</option>
+				<option value="AO">Angola</option>
+				<option value="AI">Anguilla</option>
+				<option value="AQ">Antarctica</option>
+				<option value="AG">Antigua and Barbuda</option>
+				<option value="AR">Argentina</option>
+				<option value="AM">Armenia</option>
+				<option value="AW">Aruba</option>
+				<option value="AU">Australia</option>
+				<option value="AT">Austria</option>
+				<option value="AZ">Azerbaijan</option>
+				<option value="BS">Bahamas</option>
+				<option value="BH">Bahrain</option>
+				<option value="BD">Bangladesh</option>
+				<option value="BB">Barbados</option>
+				<option value="BY">Belarus</option>
+				<option value="BE">Belgium</option>
+				<option value="BZ">Belize</option>
+				<option value="BJ">Benin</option>
+				<option value="BM">Bermuda</option>
+				<option value="BT">Bhutan</option>
+				<option value="BO">Bolivia, Plurinational State of</option>
+				<option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+				<option value="BA">Bosnia and Herzegovina</option>
+				<option value="BW">Botswana</option>
+				<option value="BV">Bouvet Island</option>
+				<option value="BR">Brazil</option>
+				<option value="IO">British Indian Ocean Territory</option>
+				<option value="BN">Brunei Darussalam</option>
+				<option value="BG">Bulgaria</option>
+				<option value="BF">Burkina Faso</option>
+				<option value="BI">Burundi</option>
+				<option value="KH">Cambodia</option>
+				<option value="CM">Cameroon</option>
+				<option value="CA">Canada</option>
+				<option value="CV">Cape Verde</option>
+				<option value="KY">Cayman Islands</option>
+				<option value="CF">Central African Republic</option>
+				<option value="TD">Chad</option>
+				<option value="CL">Chile</option>
+				<option value="CN">China</option>
+				<option value="CX">Christmas Island</option>
+				<option value="CC">Cocos (Keeling) Islands</option>
+				<option value="CO">Colombia</option>
+				<option value="KM">Comoros</option>
+				<option value="CG">Congo</option>
+				<option value="CD">Congo, the Democratic Republic of the</option>
+				<option value="CK">Cook Islands</option>
+				<option value="CR">Costa Rica</option>
+				<option value="CI">Côte d'Ivoire</option>
+				<option value="HR">Croatia</option>
+				<option value="CU">Cuba</option>
+				<option value="CW">Curaçao</option>
+				<option value="CY">Cyprus</option>
+				<option value="CZ">Czech Republic</option>
+				<option value="DK">Denmark</option>
+				<option value="DJ">Djibouti</option>
+				<option value="DM">Dominica</option>
+				<option value="DO">Dominican Republic</option>
+				<option value="EC">Ecuador</option>
+				<option value="EG">Egypt</option>
+				<option value="SV">El Salvador</option>
+				<option value="GQ">Equatorial Guinea</option>
+				<option value="ER">Eritrea</option>
+				<option value="EE">Estonia</option>
+				<option value="ET">Ethiopia</option>
+				<option value="FK">Falkland Islands (Malvinas)</option>
+				<option value="FO">Faroe Islands</option>
+				<option value="FJ">Fiji</option>
+				<option value="FI">Finland</option>
+				<option value="FR">France</option>
+				<option value="GF">French Guiana</option>
+				<option value="PF">French Polynesia</option>
+				<option value="TF">French Southern Territories</option>
+				<option value="GA">Gabon</option>
+				<option value="GM">Gambia</option>
+				<option value="GE">Georgia</option>
+				<option value="DE">Germany</option>
+				<option value="GH">Ghana</option>
+				<option value="GI">Gibraltar</option>
+				<option value="GR">Greece</option>
+				<option value="GL">Greenland</option>
+				<option value="GD">Grenada</option>
+				<option value="GP">Guadeloupe</option>
+				<option value="GU">Guam</option>
+				<option value="GT">Guatemala</option>
+				<option value="GG">Guernsey</option>
+				<option value="GN">Guinea</option>
+				<option value="GW">Guinea-Bissau</option>
+				<option value="GY">Guyana</option>
+				<option value="HT">Haiti</option>
+				<option value="HM">Heard Island and McDonald Islands</option>
+				<option value="VA">Holy See (Vatican City State)</option>
+				<option value="HN">Honduras</option>
+				<option value="HK">Hong Kong</option>
+				<option value="HU">Hungary</option>
+				<option value="IS">Iceland</option>
+				<option value="IN">India</option>
+				<option value="ID">Indonesia</option>
+				<option value="IR">Iran, Islamic Republic of</option>
+				<option value="IQ">Iraq</option>
+				<option value="IE">Ireland</option>
+				<option value="IM">Isle of Man</option>
+				<option value="IL">Israel</option>
+				<option value="IT">Italy</option>
+				<option value="JM">Jamaica</option>
+				<option value="JP">Japan</option>
+				<option value="JE">Jersey</option>
+				<option value="JO">Jordan</option>
+				<option value="KZ">Kazakhstan</option>
+				<option value="KE">Kenya</option>
+				<option value="KI">Kiribati</option>
+				<option value="KP">Korea, Democratic People's Republic of</option>
+				<option value="KR">Korea, Republic of</option>
+				<option value="KW">Kuwait</option>
+				<option value="KG">Kyrgyzstan</option>
+				<option value="LA">Lao People's Democratic Republic</option>
+				<option value="LV">Latvia</option>
+				<option value="LB">Lebanon</option>
+				<option value="LS">Lesotho</option>
+				<option value="LR">Liberia</option>
+				<option value="LY">Libya</option>
+				<option value="LI">Liechtenstein</option>
+				<option value="LT">Lithuania</option>
+				<option value="LU">Luxembourg</option>
+				<option value="MO">Macao</option>
+				<option value="MK">Macedonia, the former Yugoslav Republic of</option>
+				<option value="MG">Madagascar</option>
+				<option value="MW">Malawi</option>
+				<option value="MY">Malaysia</option>
+				<option value="MV">Maldives</option>
+				<option value="ML">Mali</option>
+				<option value="MT">Malta</option>
+				<option value="MH">Marshall Islands</option>
+				<option value="MQ">Martinique</option>
+				<option value="MR">Mauritania</option>
+				<option value="MU">Mauritius</option>
+				<option value="YT">Mayotte</option>
+				<option value="MX">Mexico</option>
+				<option value="FM">Micronesia, Federated States of</option>
+				<option value="MD">Moldova, Republic of</option>
+				<option value="MC">Monaco</option>
+				<option value="MN">Mongolia</option>
+				<option value="ME">Montenegro</option>
+				<option value="MS">Montserrat</option>
+				<option value="MA">Morocco</option>
+				<option value="MZ">Mozambique</option>
+				<option value="MM">Myanmar</option>
+				<option value="NA">Namibia</option>
+				<option value="NR">Nauru</option>
+				<option value="NP">Nepal</option>
+				<option value="NL">Netherlands</option>
+				<option value="NC">New Caledonia</option>
+				<option value="NZ">New Zealand</option>
+				<option value="NI">Nicaragua</option>
+				<option value="NE">Niger</option>
+				<option value="NG">Nigeria</option>
+				<option value="NU">Niue</option>
+				<option value="NF">Norfolk Island</option>
+				<option value="MP">Northern Mariana Islands</option>
+				<option value="NO">Norway</option>
+				<option value="OM">Oman</option>
+				<option value="PK">Pakistan</option>
+				<option value="PW">Palau</option>
+				<option value="PS">Palestinian Territory, Occupied</option>
+				<option value="PA">Panama</option>
+				<option value="PG">Papua New Guinea</option>
+				<option value="PY">Paraguay</option>
+				<option value="PE">Peru</option>
+				<option value="PH">Philippines</option>
+				<option value="PN">Pitcairn</option>
+				<option value="PL">Poland</option>
+				<option value="PT">Portugal</option>
+				<option value="PR">Puerto Rico</option>
+				<option value="QA">Qatar</option>
+				<option value="RE">Réunion</option>
+				<option value="RO">Romania</option>
+				<option value="RU">Russian Federation</option>
+				<option value="RW">Rwanda</option>
+				<option value="BL">Saint Barthélemy</option>
+				<option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
+				<option value="KN">Saint Kitts and Nevis</option>
+				<option value="LC">Saint Lucia</option>
+				<option value="MF">Saint Martin (French part)</option>
+				<option value="PM">Saint Pierre and Miquelon</option>
+				<option value="VC">Saint Vincent and the Grenadines</option>
+				<option value="WS">Samoa</option>
+				<option value="SM">San Marino</option>
+				<option value="ST">Sao Tome and Principe</option>
+				<option value="SA">Saudi Arabia</option>
+				<option value="SN">Senegal</option>
+				<option value="RS">Serbia</option>
+				<option value="SC">Seychelles</option>
+				<option value="SL">Sierra Leone</option>
+				<option value="SG">Singapore</option>
+				<option value="SX">Sint Maarten (Dutch part)</option>
+				<option value="SK">Slovakia</option>
+				<option value="SI">Slovenia</option>
+				<option value="SB">Solomon Islands</option>
+				<option value="SO">Somalia</option>
+				<option value="ZA">South Africa</option>
+				<option value="GS">South Georgia and the South Sandwich Islands</option>
+				<option value="SS">South Sudan</option>
+				<option value="ES">Spain</option>
+				<option value="LK">Sri Lanka</option>
+				<option value="SD">Sudan</option>
+				<option value="SR">Suriname</option>
+				<option value="SJ">Svalbard and Jan Mayen</option>
+				<option value="SZ">Swaziland</option>
+				<option value="SE">Sweden</option>
+				<option value="CH">Switzerland</option>
+				<option value="SY">Syrian Arab Republic</option>
+				<option value="TW">Taiwan, Province of China</option>
+				<option value="TJ">Tajikistan</option>
+				<option value="TZ">Tanzania, United Republic of</option>
+				<option value="TH">Thailand</option>
+				<option value="TL">Timor-Leste</option>
+				<option value="TG">Togo</option>
+				<option value="TK">Tokelau</option>
+				<option value="TO">Tonga</option>
+				<option value="TT">Trinidad and Tobago</option>
+				<option value="TN">Tunisia</option>
+				<option value="TR">Turkey</option>
+				<option value="TM">Turkmenistan</option>
+				<option value="TC">Turks and Caicos Islands</option>
+				<option value="TV">Tuvalu</option>
+				<option value="UG">Uganda</option>
+				<option value="UA">Ukraine</option>
+				<option value="AE">United Arab Emirates</option>
+				<option value="GB">United Kingdom</option>
+				<option value="US">United States</option>
+				<option value="UM">United States Minor Outlying Islands</option>
+				<option value="UY">Uruguay</option>
+				<option value="UZ">Uzbekistan</option>
+				<option value="VU">Vanuatu</option>
+				<option value="VE">Venezuela, Bolivarian Republic of</option>
+				<option value="VN">Viet Nam</option>
+				<option value="VG">Virgin Islands, British</option>
+				<option value="VI">Virgin Islands, U.S.</option>
+				<option value="WF">Wallis and Futuna</option>
+				<option value="EH">Western Sahara</option>
+				<option value="YE">Yemen</option>
+				<option value="ZM">Zambia</option>
+				<option value="ZW">Zimbabwe</option>
+			</select>
+			<br>
+
+
+			<label for="country-enculturation">Of the countries you have lived in, which country most accurately represents your musical enculturation?</label>
+		  	<select class="form-control" name='country-enculturation' id="country-enculturation">
+		  		<option value="" selected disabled>Please select an option...</option>
+				<option value="AF">Afghanistan</option>
+				<option value="AX">Åland Islands</option>
+				<option value="AL">Albania</option>
+				<option value="DZ">Algeria</option>
+				<option value="AS">American Samoa</option>
+				<option value="AD">Andorra</option>
+				<option value="AO">Angola</option>
+				<option value="AI">Anguilla</option>
+				<option value="AQ">Antarctica</option>
+				<option value="AG">Antigua and Barbuda</option>
+				<option value="AR">Argentina</option>
+				<option value="AM">Armenia</option>
+				<option value="AW">Aruba</option>
+				<option value="AU">Australia</option>
+				<option value="AT">Austria</option>
+				<option value="AZ">Azerbaijan</option>
+				<option value="BS">Bahamas</option>
+				<option value="BH">Bahrain</option>
+				<option value="BD">Bangladesh</option>
+				<option value="BB">Barbados</option>
+				<option value="BY">Belarus</option>
+				<option value="BE">Belgium</option>
+				<option value="BZ">Belize</option>
+				<option value="BJ">Benin</option>
+				<option value="BM">Bermuda</option>
+				<option value="BT">Bhutan</option>
+				<option value="BO">Bolivia, Plurinational State of</option>
+				<option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+				<option value="BA">Bosnia and Herzegovina</option>
+				<option value="BW">Botswana</option>
+				<option value="BV">Bouvet Island</option>
+				<option value="BR">Brazil</option>
+				<option value="IO">British Indian Ocean Territory</option>
+				<option value="BN">Brunei Darussalam</option>
+				<option value="BG">Bulgaria</option>
+				<option value="BF">Burkina Faso</option>
+				<option value="BI">Burundi</option>
+				<option value="KH">Cambodia</option>
+				<option value="CM">Cameroon</option>
+				<option value="CA">Canada</option>
+				<option value="CV">Cape Verde</option>
+				<option value="KY">Cayman Islands</option>
+				<option value="CF">Central African Republic</option>
+				<option value="TD">Chad</option>
+				<option value="CL">Chile</option>
+				<option value="CN">China</option>
+				<option value="CX">Christmas Island</option>
+				<option value="CC">Cocos (Keeling) Islands</option>
+				<option value="CO">Colombia</option>
+				<option value="KM">Comoros</option>
+				<option value="CG">Congo</option>
+				<option value="CD">Congo, the Democratic Republic of the</option>
+				<option value="CK">Cook Islands</option>
+				<option value="CR">Costa Rica</option>
+				<option value="CI">Côte d'Ivoire</option>
+				<option value="HR">Croatia</option>
+				<option value="CU">Cuba</option>
+				<option value="CW">Curaçao</option>
+				<option value="CY">Cyprus</option>
+				<option value="CZ">Czech Republic</option>
+				<option value="DK">Denmark</option>
+				<option value="DJ">Djibouti</option>
+				<option value="DM">Dominica</option>
+				<option value="DO">Dominican Republic</option>
+				<option value="EC">Ecuador</option>
+				<option value="EG">Egypt</option>
+				<option value="SV">El Salvador</option>
+				<option value="GQ">Equatorial Guinea</option>
+				<option value="ER">Eritrea</option>
+				<option value="EE">Estonia</option>
+				<option value="ET">Ethiopia</option>
+				<option value="FK">Falkland Islands (Malvinas)</option>
+				<option value="FO">Faroe Islands</option>
+				<option value="FJ">Fiji</option>
+				<option value="FI">Finland</option>
+				<option value="FR">France</option>
+				<option value="GF">French Guiana</option>
+				<option value="PF">French Polynesia</option>
+				<option value="TF">French Southern Territories</option>
+				<option value="GA">Gabon</option>
+				<option value="GM">Gambia</option>
+				<option value="GE">Georgia</option>
+				<option value="DE">Germany</option>
+				<option value="GH">Ghana</option>
+				<option value="GI">Gibraltar</option>
+				<option value="GR">Greece</option>
+				<option value="GL">Greenland</option>
+				<option value="GD">Grenada</option>
+				<option value="GP">Guadeloupe</option>
+				<option value="GU">Guam</option>
+				<option value="GT">Guatemala</option>
+				<option value="GG">Guernsey</option>
+				<option value="GN">Guinea</option>
+				<option value="GW">Guinea-Bissau</option>
+				<option value="GY">Guyana</option>
+				<option value="HT">Haiti</option>
+				<option value="HM">Heard Island and McDonald Islands</option>
+				<option value="VA">Holy See (Vatican City State)</option>
+				<option value="HN">Honduras</option>
+				<option value="HK">Hong Kong</option>
+				<option value="HU">Hungary</option>
+				<option value="IS">Iceland</option>
+				<option value="IN">India</option>
+				<option value="ID">Indonesia</option>
+				<option value="IR">Iran, Islamic Republic of</option>
+				<option value="IQ">Iraq</option>
+				<option value="IE">Ireland</option>
+				<option value="IM">Isle of Man</option>
+				<option value="IL">Israel</option>
+				<option value="IT">Italy</option>
+				<option value="JM">Jamaica</option>
+				<option value="JP">Japan</option>
+				<option value="JE">Jersey</option>
+				<option value="JO">Jordan</option>
+				<option value="KZ">Kazakhstan</option>
+				<option value="KE">Kenya</option>
+				<option value="KI">Kiribati</option>
+				<option value="KP">Korea, Democratic People's Republic of</option>
+				<option value="KR">Korea, Republic of</option>
+				<option value="KW">Kuwait</option>
+				<option value="KG">Kyrgyzstan</option>
+				<option value="LA">Lao People's Democratic Republic</option>
+				<option value="LV">Latvia</option>
+				<option value="LB">Lebanon</option>
+				<option value="LS">Lesotho</option>
+				<option value="LR">Liberia</option>
+				<option value="LY">Libya</option>
+				<option value="LI">Liechtenstein</option>
+				<option value="LT">Lithuania</option>
+				<option value="LU">Luxembourg</option>
+				<option value="MO">Macao</option>
+				<option value="MK">Macedonia, the former Yugoslav Republic of</option>
+				<option value="MG">Madagascar</option>
+				<option value="MW">Malawi</option>
+				<option value="MY">Malaysia</option>
+				<option value="MV">Maldives</option>
+				<option value="ML">Mali</option>
+				<option value="MT">Malta</option>
+				<option value="MH">Marshall Islands</option>
+				<option value="MQ">Martinique</option>
+				<option value="MR">Mauritania</option>
+				<option value="MU">Mauritius</option>
+				<option value="YT">Mayotte</option>
+				<option value="MX">Mexico</option>
+				<option value="FM">Micronesia, Federated States of</option>
+				<option value="MD">Moldova, Republic of</option>
+				<option value="MC">Monaco</option>
+				<option value="MN">Mongolia</option>
+				<option value="ME">Montenegro</option>
+				<option value="MS">Montserrat</option>
+				<option value="MA">Morocco</option>
+				<option value="MZ">Mozambique</option>
+				<option value="MM">Myanmar</option>
+				<option value="NA">Namibia</option>
+				<option value="NR">Nauru</option>
+				<option value="NP">Nepal</option>
+				<option value="NL">Netherlands</option>
+				<option value="NC">New Caledonia</option>
+				<option value="NZ">New Zealand</option>
+				<option value="NI">Nicaragua</option>
+				<option value="NE">Niger</option>
+				<option value="NG">Nigeria</option>
+				<option value="NU">Niue</option>
+				<option value="NF">Norfolk Island</option>
+				<option value="MP">Northern Mariana Islands</option>
+				<option value="NO">Norway</option>
+				<option value="OM">Oman</option>
+				<option value="PK">Pakistan</option>
+				<option value="PW">Palau</option>
+				<option value="PS">Palestinian Territory, Occupied</option>
+				<option value="PA">Panama</option>
+				<option value="PG">Papua New Guinea</option>
+				<option value="PY">Paraguay</option>
+				<option value="PE">Peru</option>
+				<option value="PH">Philippines</option>
+				<option value="PN">Pitcairn</option>
+				<option value="PL">Poland</option>
+				<option value="PT">Portugal</option>
+				<option value="PR">Puerto Rico</option>
+				<option value="QA">Qatar</option>
+				<option value="RE">Réunion</option>
+				<option value="RO">Romania</option>
+				<option value="RU">Russian Federation</option>
+				<option value="RW">Rwanda</option>
+				<option value="BL">Saint Barthélemy</option>
+				<option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
+				<option value="KN">Saint Kitts and Nevis</option>
+				<option value="LC">Saint Lucia</option>
+				<option value="MF">Saint Martin (French part)</option>
+				<option value="PM">Saint Pierre and Miquelon</option>
+				<option value="VC">Saint Vincent and the Grenadines</option>
+				<option value="WS">Samoa</option>
+				<option value="SM">San Marino</option>
+				<option value="ST">Sao Tome and Principe</option>
+				<option value="SA">Saudi Arabia</option>
+				<option value="SN">Senegal</option>
+				<option value="RS">Serbia</option>
+				<option value="SC">Seychelles</option>
+				<option value="SL">Sierra Leone</option>
+				<option value="SG">Singapore</option>
+				<option value="SX">Sint Maarten (Dutch part)</option>
+				<option value="SK">Slovakia</option>
+				<option value="SI">Slovenia</option>
+				<option value="SB">Solomon Islands</option>
+				<option value="SO">Somalia</option>
+				<option value="ZA">South Africa</option>
+				<option value="GS">South Georgia and the South Sandwich Islands</option>
+				<option value="SS">South Sudan</option>
+				<option value="ES">Spain</option>
+				<option value="LK">Sri Lanka</option>
+				<option value="SD">Sudan</option>
+				<option value="SR">Suriname</option>
+				<option value="SJ">Svalbard and Jan Mayen</option>
+				<option value="SZ">Swaziland</option>
+				<option value="SE">Sweden</option>
+				<option value="CH">Switzerland</option>
+				<option value="SY">Syrian Arab Republic</option>
+				<option value="TW">Taiwan, Province of China</option>
+				<option value="TJ">Tajikistan</option>
+				<option value="TZ">Tanzania, United Republic of</option>
+				<option value="TH">Thailand</option>
+				<option value="TL">Timor-Leste</option>
+				<option value="TG">Togo</option>
+				<option value="TK">Tokelau</option>
+				<option value="TO">Tonga</option>
+				<option value="TT">Trinidad and Tobago</option>
+				<option value="TN">Tunisia</option>
+				<option value="TR">Turkey</option>
+				<option value="TM">Turkmenistan</option>
+				<option value="TC">Turks and Caicos Islands</option>
+				<option value="TV">Tuvalu</option>
+				<option value="UG">Uganda</option>
+				<option value="UA">Ukraine</option>
+				<option value="AE">United Arab Emirates</option>
+				<option value="GB">United Kingdom</option>
+				<option value="US">United States</option>
+				<option value="UM">United States Minor Outlying Islands</option>
+				<option value="UY">Uruguay</option>
+				<option value="UZ">Uzbekistan</option>
+				<option value="VU">Vanuatu</option>
+				<option value="VE">Venezuela, Bolivarian Republic of</option>
+				<option value="VN">Viet Nam</option>
+				<option value="VG">Virgin Islands, British</option>
+				<option value="VI">Virgin Islands, U.S.</option>
+				<option value="WF">Wallis and Futuna</option>
+				<option value="EH">Western Sahara</option>
+				<option value="YE">Yemen</option>
+				<option value="ZM">Zambia</option>
+				<option value="ZW">Zimbabwe</option>
+			</select>
+			<br>
+
+			<label for="genre">What genre do you like the most?</label>
+		  	<select class="form-control" name='genre' id="genre">
+		  		<option value="" selected disabled>Please select an option...</option>
+		  		<option>Rock</option>
+				<option>Pop</option>
+				<option>Electronic dance music</option>
+				<option>Jazz</option>
+				<option>Dubstep</option>
+				<option>Rhythm and Blues</option>
+				<option>Techno</option>
+				<option>Country</option>
+				<option>Electro</option>
+				<option>Indie Rock</option>
+				<option>Other </option>
+			</select>
+			<br>
+
+			<label for="training">Have you ever received individual formal musical training?</label>
+		  	<select class="form-control" name='training' id="training">
+		  		<option value="" selected disabled>Please select an option...</option>
+		  		<option>Yes</option>
+				<option>No</option>
+			</select>
+			<br>
+
+			<label for="training-duration">If you have received formal musical training, how many years of training did you receive?</label>
+		  	<input class="form-control" id="training-duration" name="training-duration" type="number"/>
+		  	<br>
+
+			<label for="play-instrument">Are you actively playing an instrument?</label>
+		  	<select class="form-control" name='play-instrument' id="play-instrument">
+		  		<option value="" selected disabled>Please select an option...</option>
+		  		<option>Yes</option>
+				<option>No</option>
+			</select>
+			<br>
+
+
+			
+			<p>I understand that this data will be used (anonymously) for research purposes and that I am only allowed to participate once in this listening study. I will only receive reimbursement 1 time.</p>
+			<select class="form-control" name='understood' id="understood">
+			    <option>No</option>
+			    <option>Yes</option>
+			</select>
+			<div class="row justify-content-center">
+			 	<div class='col-auto'>
+			 		<button type="button" id='continue1' class="btn btn-primary my-continue">Continue</button>
+			 	</div>
+			</div>
+  	
+		</div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="container my-page" id='page2'>
+	<div class="jumbotron">
+		<h1 class="display-4">Music and Emotion Study</h1>
+	</div>
+	<h5>There are many trials in this study. On every trial, you will hear a short musical piece. Your task is to indicate the 'valence' and 'arousal' of each song while it is playing. This is done by moving your mouse over the graph. </h4>
+	<!-- <img src="https://s3-ap-southeast-1.amazonaws.com/musicemotion/Pics/Middle.png"> -->
+	<img src="/home/meowyan/Documents/emotion_paper/mTurk_html/pic/Middle.png">
+	<br>
+	<ul>
+	<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+	<br>
+	<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+	</ul>
+	<br>
+
+	<h5>Here is an example of high valence (positive) and high arousal (energized) music: </h5>
+    <audio id='music1' controls>
+    	<source src="${examples/115.mp3}" type="audio/mpeg">
+  		<!-- <source src="${music_high_valence_high_arousal}" type="audio/mpeg"> -->
+  		<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+  	Your browser does not support the audio element.
+	</audio>
+	<!--<img src="https://s3-ap-southeast-1.amazonaws.com/musicemotion/Pics/validated/HighA_HighV.png">-->
+	<img src="/home/meowyan/Documents/emotion_paper/mTurk_html/pic/HighA_HighV.png">
+
+
+	<h5>Here is an example of low valence (negative) and high arousal (energized) music: </h5>
+    <audio id='music2' controls>
+    	<source src="${examples/1334.mp3}" type="audio/mpeg">
+  		<!-- <source src="${music_low_valence_high_arousal}" type="audio/mpeg"> -->
+  		<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+  	Your browser does not support the audio element.
+	</audio>
+	<!-- <img src="https://s3-ap-southeast-1.amazonaws.com/musicemotion/Pics/validated/highA_lowV.png"> -->
+	<img src="/home/meowyan/Documents/emotion_paper/mTurk_html/pic/highA_lowV.png">
+
+
+	<h5>Here is an example of high valence (positive) and low arousal (not energized) music: </h5>
+    <audio id='music3' controls>
+  		<source src="${music_high_valence_low_arousal}" type="audio/mpeg">
+  		<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+  	Your browser does not support the audio element.
+	</audio>
+	<!-- <img src="https://s3-ap-southeast-1.amazonaws.com/musicemotion/Pics/validated/LowA_HighV.png"> -->
+	<img src="/home/meowyan/Documents/emotion_paper/mTurk_html/pic/LowA_HighV.png">
+
+
+	<h5>Here is an example of low valence (negative) and low arousal (not energized) music: </h5>
+
+    <audio id='music4' controls>
+  		<source src="${music_low_valence_low_arousal}" type="audio/mpeg">
+  		<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+  	Your browser does not support the audio element.
+	</audio>
+	<!-- <img src="https://s3-ap-southeast-1.amazonaws.com/musicemotion/Pics/validated/LowA_LowV.png"> -->
+	<img src="/home/meowyan/Documents/emotion_paper/mTurk_html/pic/LowA_LowV.png">
+
+	<p style="color:red"><b>It is important to note that arousal and valence can change over the course of a song. So please make sure that you track arousal and valence as you perceive it at any given point in time. </b> </p>
+	<div class="row justify-content-center">
+	 	<div class='col-auto'>
+	 		<button type="button" id='continue2' class="btn btn-primary my-continue">Continue</button>
+	 	</div>
+	 </div>
+	 
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container my-page" id='page3'>
+	<div class="jumbotron">
+	  	<h1 class="display-4">Music and Emotion Study</h1>
+	  	<hr class="my-4">
+	 	<p> For each question in the study:  </p>
+	 	<ol>
+		  	<li>Click in the center of the graph to start the music</li>
+		  	<li>Your mouse position will be tracked over the graph. So move your mouse to the area (high/low valence / arousal) that corresponds to your perceived emotion.</li>
+		  	<li><b>You can move your mouse during the music, to match current perceived emotions.</b></li>
+		</ol> 
+
+		<p>If you perceive song as high in arousal (energy), you would move towards the top of this interface. Conversely, if you perceive the song as low in arousal (energy), you would move towards the bottom of the interface.</p>
+
+		<p>If you perceive the song as having a positively valenced emotion, you would move towards the right side of the interface. If you perceive the song as having a negatively valenced emotion, you would move towards the left side of the interface. </p>
+
+
+		<p>Please make sure to use the entire interface to accurately reflect of how you perceive the song.</p>
+
+		<p>Let's start with a test song, so you get used to the interface: </p>
+	</div>
+	<div class="container">
+		<div class="row">
+			<audio id='music_trial'>
+				<source src="${music_trial}" type="audio/mpeg">
+				<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+				Your browser does not support the audio element.
+			</audio>
+		</div>
+
+		<div class="row justify-content-center">
+			<canvas id='canvas_trial'></canvas>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col_auto">
+				<progress id='progress_trial' value="0" max="100"></progress>
+			</div>
+			<div class="col_auto">
+				<p id = 'timeleft_trial'>-00:00</p>
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col">
+				<input class="form-control" id="valences_trial" name="valences_trial" size="10" type="text" readonly  />
+				<input class="form-control" id="arousals_trial" name="arousals_trial" size="10" type="text" readonly  />
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+		 	<div class='col-auto'>
+		 		<button type="button" id='continue3' class="btn btn-primary my-continue" hidden>Continue</button>
+		 	</div>
+		 </div>
+
+	</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="container my-page" id='page4'>
+
+
+	<input hidden type='checkbox' id="music_all" name="music_all" value="${music_all}">
+
+
+
+	<h4>Question 1</h4>
+	<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+	<ul>
+	<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+	<br>
+	<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+	</ul>
+	<div class="container">
+		<div class="row">
+			<audio id='music_1'>
+				<source src="${music_deam1}" type="audio/mpeg">
+				<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+				Your browser does not support the audio element.
+			</audio>
+		</div>
+
+		<div class="row justify-content-center">
+			<canvas id='canvas_1'></canvas>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col_auto">
+				<progress id='progress_1' value="0" max="100"></progress>
+			</div>
+			<div class="col_auto">
+				<p id = 'timeleft_1'>-00:00</p>
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col">
+				<input class="form-control" id="valences_1" name="valences_1" size="10" type="text" readonly  />
+				<input class="form-control" id="arousals_1" name="arousals_1" size="10" type="text" readonly  />
+			</div>
+		</div>
+	</div>
+
+
+
+	<br>
+	<h4>Question 2</h4>
+	<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+	<ul>
+	<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+	<br>
+	<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+	</ul>
+	<div class="container">
+		<div class="row">
+			<audio id='music_2'>
+				<source src="${music_deam2}" type="audio/mpeg">
+				<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+				Your browser does not support the audio element.
+			</audio>
+		</div>
+
+		<div class="row justify-content-center">
+			<canvas id='canvas_2'></canvas>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col_auto">
+				<progress id='progress_2' value="0" max="100"></progress>
+			</div>
+			<div class="col_auto">
+				<p id = 'timeleft_2'>-00:00</p>
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col">
+				<input class="form-control" id="valences_2" name="valences_2" size="10" type="text" readonly  />
+				<input class="form-control" id="arousals_2" name="arousals_2" size="10" type="text" readonly  />
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+	<br>
+	<h4>Question 3</h4>
+	<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+	<ul>
+	<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+	<br>
+	<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+	</ul>
+	<div class="container">
+		<div class="row">
+			<audio id='music_3'>
+				<source src="${music_deam3}" type="audio/mpeg">
+				<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+				Your browser does not support the audio element.
+			</audio>
+		</div>
+
+		<div class="row justify-content-center">
+			<canvas id='canvas_3'></canvas>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col_auto">
+				<progress id='progress_3' value="0" max="100"></progress>
+			</div>
+			<div class="col_auto">
+				<p id = 'timeleft_3'>-00:00</p>
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col">
+				<input class="form-control" id="valences_3" name="valences_3" size="10" type="text" readonly  />
+				<input class="form-control" id="arousals_3" name="arousals_3" size="10" type="text" readonly  />
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<br>
+	<h4>Question 4</h4>
+	<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+	<ul>
+	<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+	<br>
+	<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+	</ul>
+	<div class="container">
+		<div class="row">
+			<audio id='music_4'>
+				<source src="${music_deam4}" type="audio/mpeg">
+				<!-- <source src="SampleAudio_0.4mb.mp3" type="audio/mpeg"> -->
+				Your browser does not support the audio element.
+			</audio>
+		</div>
+
+		<div class="row justify-content-center">
+			<canvas id='canvas_4'></canvas>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col_auto">
+				<progress id='progress_4' value="0" max="100"></progress>
+			</div>
+			<div class="col_auto">
+				<p id = 'timeleft_4'>-00:00</p>
+			</div>
+		</div>
+
+		<div class="row justify-content-center">
+			<div class="col">
+				<input class="form-control" id="valences_4" name="valences_4" size="10" type="text" readonly  />
+				<input class="form-control" id="arousals_4" name="arousals_4" size="10" type="text" readonly  />
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<div id="song_5">
+		<br>
+		<h4>Question 5</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>	
+		<div class="container">
+			<div class="row">
+				<audio id='music_5'>
+					<!-- <source id='source_5' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_5' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_5'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_5' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_5'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_5" name="valences_5" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_5" name="arousals_5" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<div id="song_6">
+		<br>
+		<h4>Question 6</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_6'>
+					<!-- <source id='source_6' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_6' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_6'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_6' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_6'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_6" name="valences_6" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_6" name="arousals_6" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_7">
+		<br>
+		<h4>Question 7</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_7'>
+					<!-- <source id='source_7' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_7' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_7'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_7' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_7'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_7" name="valences_7" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_7" name="arousals_7" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_8">
+		<br>
+		<h4>Question 8</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_8'>
+					<!-- <source id='source_8' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_8' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_8'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_8' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_8'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_8" name="valences_8" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_8" name="arousals_8" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_9">
+		<br>
+		<h4>Question 9</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_9'>
+					<!-- <source id='source_9' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_9' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_9'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_9' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_9'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_9" name="valences_9" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_9" name="arousals_9" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_10">
+		<br>
+		<h4>Question 10</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_10'>
+					<!-- <source id='source_10' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_10' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_10'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_10' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_10'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_10" name="valences_10" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_10" name="arousals_10" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_11">
+		<br>
+		<h4>Question 11</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_11'>
+					<!-- <source id='source_11' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_11' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_11'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_11' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_11'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_11" name="valences_11" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_11" name="arousals_11" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_12">
+		<br>
+		<h4>Question 12</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_12'>
+					<!-- <source id='source_12' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_12' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_12'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_12' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_12'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_12" name="valences_12" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_12" name="arousals_12" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_13">
+		<br>
+		<h4>Question 13</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_13'>
+					<!-- <source id='source_13' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_13' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_13'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_13' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_13'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_13" name="valences_13" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_13" name="arousals_13" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_14">
+		<br>
+		<h4>Question 14</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_14'>
+					<!-- <source id='source_14' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_14' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_14'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_14' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_14'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_14" name="valences_14" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_14" name="arousals_14" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_15">
+		<br>
+		<h4>Question 15</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_15'>
+					<!-- <source id='source_15' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_15' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_15'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_15' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_15'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_15" name="valences_15" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_15" name="arousals_15" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_16">
+		<br>
+		<h4>Question 16</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_16'>
+					<!-- <source id='source_16' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_16' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_16'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_16' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_16'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_16" name="valences_16" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_16" name="arousals_16" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_17">
+		<br>
+		<h4>Question 17</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_17'>
+					<!-- <source id='source_17' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_17' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_17'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_17' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_17'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_17" name="valences_17" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_17" name="arousals_17" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_18">
+		<br>
+		<h4>Question 18</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_18'>
+					<!-- <source id='source_18' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_18' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_18'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_18' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_18'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_18" name="valences_18" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_18" name="arousals_18" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_19">
+		<br>
+		<h4>Question 19</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_19'>
+					<!-- <source id='source_19' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_19' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_19'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_19' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_19'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_19" name="valences_19" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_19" name="arousals_19" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_20">
+		<br>
+		<h4>Question 20</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_20'>
+					<!-- <source id='source_20' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_20' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_20'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_20' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_20'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_20" name="valences_20" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_20" name="arousals_20" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_21">
+		<br>
+		<h4>Question 21</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_21'>
+					<!-- <source id='source_21' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_21' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_21'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_21' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_21'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_21" name="valences_21" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_21" name="arousals_21" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_22">
+		<br>
+		<h4>Question 22</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_22'>
+					<!-- <source id='source_22' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_22' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_22'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_22' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_22'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_22" name="valences_22" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_22" name="arousals_22" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_23">
+		<br>
+		<h4>Question 23</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_23'>
+					<!-- <source id='source_23' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_23' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_23'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_23' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_23'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_23" name="valences_23" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_23" name="arousals_23" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div id="song_24">
+		<br>
+		<h4>Question 24</h4>
+		<p>Please click the center of the graph to start the music. Your mouse position will be recorded, so please <b>continuously</b> indicate your perceived emotion in terms of: </p>
+		<ul>
+		<li><b>Valence</b> relates to the emotion conveyed by the music, and falls on a scale from positive to negative. </li>
+		<br>
+		<li><b>Arousal</b> relates to the energy level conveyed by the music, and falls on a scale from high to low.</li>
+		</ul>
+		<div class="container">
+			<div class="row">
+				<audio id='music_24'>
+					<!-- <source id='source_24' src="https://www.sample-videos.com/audio/mp3/crowd-cheering.mp3" type="audio/mpeg"> -->
+					<source id='source_24' src="SampleAudio_0.4mb.mp3" type="audio/mpeg">
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="row justify-content-center">
+				<canvas id='canvas_24'></canvas>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col_auto">
+					<progress id='progress_24' value="0" max="100"></progress>
+				</div>
+				<div class="col_auto">
+					<p id = 'timeleft_24'>-00:00</p>
+				</div>
+			</div>
+
+			<div class="row justify-content-center">
+				<div class="col">
+					<input class="form-control" id="valences_24" name="valences_24" size="10" type="text" readonly  />
+					<input class="form-control" id="arousals_24" name="arousals_24" size="10" type="text" readonly  />
+				</div>
+			</div>
+		</div>
+	</div>
+	<input class="form-control" id="random_indices" name="random_indices" size="10" type="text" readonly  />
+
+
+</div>
+<!-- <input id="submitButton" class="btn btn-primary" type="button" value="submit"/> -->
+
+
+<script>
+var finished = 0;
+var random_indices=[];
+
+
+
+
+class MyCanvas{
+    constructor(indexID, callback) {
+        let _this = this;
+        let canvasid = 'canvas_'+indexID;
+        let musicid = 'music_' +indexID;
+        let progressid = 'progress_' + indexID;
+        let timeleftid = 'timeleft_' +indexID;
+        let valencesid = 'valences_' +indexID;
+        let arousalsid = 'arousals_' +indexID;
+
+        this.canvas      = document.getElementById(canvasid);
+        this.progress    = document.getElementById(progressid);
+        this.timeleft    = document.getElementById(timeleftid);
+        this.ctx         = this.canvas.getContext('2d');
+        this.ctxWidth    = 500;
+        this.ctxHeight   = 500;
+        this.chartWidth  = 360;
+        this.chartHeight = 360;
+        this.marginX = (this.ctxWidth - this.chartWidth)/2
+        this.marginY = (this.ctxHeight - this.chartHeight)/2
+        this.mouseX = this.ctxWidth/2;
+        this.mouseY = this.ctxHeight/2;
+        this.outputX = 0;
+        this.outputY = 0;
+        this.startPlaying = false;
+        this.endPlaying = false;
+        this.music = document.getElementById(musicid);
+        this.recorder = null;
+        this.valences = [0];
+        this.arousals = [0];
+        this.canvas.setAttribute('width', this.ctxWidth);
+        this.canvas.setAttribute('height', this.ctxHeight);
+        document.getElementById(valencesid).style.visibility='hidden';
+        document.getElementById(arousalsid).style.visibility='hidden';
+
+        this.canvas.addEventListener('click', function(evt) {
+            var mousePos = _this.getMousePos(_this.canvas,evt);
+            if (mousePos.x > _this.ctxWidth/2-10 && mousePos.x < _this.ctxWidth/2+10 && mousePos.y < _this.ctxHeight/2+10 && mousePos.y > _this.ctxHeight/2-10 && !_this.startPlaying) {
+              _this.startPlaying=true;
+              _this.startRecord();
+              _this.canvas.addEventListener('mousemove',function(evt){
+                  var mousePos = _this.getMousePos(_this.canvas,evt);
+                  if (mousePos.x >= _this.marginX && mousePos.x <= _this.ctxWidth-_this.marginX && mousePos.y >= _this.marginY && mousePos.y <= _this.ctxHeight-_this.marginY && _this.startPlaying) {
+                      _this.mouseX = mousePos.x;
+                      _this.mouseY = mousePos.y;
+                      _this.outputX = (mousePos.x-_this.ctxWidth/2) / (_this.chartWidth/2);
+                      _this.outputY = -(mousePos.y-_this.ctxHeight/2) / (_this.chartHeight/2);
+                      console.log(_this.outputX,_this.outputY);
+                  }
+                  _this.redraw(_this.ctx, _this.ctxWidth,_this.ctxHeight,_this.marginX,_this.marginY,_this.chartWidth,_this.chartHeight,_this.startPlaying,_this.endPlaying);
+              })
+              _this.redraw(_this.ctx, _this.ctxWidth,_this.ctxHeight,_this.marginX,_this.marginY,_this.chartWidth,_this.chartHeight,_this.startPlaying,_this.endPlaying);
+            }
+            }, true)
+        this.redraw(_this.ctx, _this.ctxWidth,_this.ctxHeight,_this.marginX,_this.marginY,_this.chartWidth,_this.chartHeight,_this.startPlaying,_this.endPlaying);
+
+        this.music.onended = function() {
+            clearInterval(_this.recorder);
+            _this.endPlaying=true;
+            console.log(_this.valences);
+            console.log(_this.arousals);
+            
+            $( "#"+valencesid).attr('value',_this.valences.join(','));
+            $( "#"+arousalsid ).attr('value',_this.arousals.join(','));
+            if (callback !== null) {
+            	callback();
+            }
+
+        };
+
+
+        // Assign an ontimeupdate event to the <video> element, and execute a function if the current playback position has changed
+        this.music.ontimeupdate = function() {_this.changeProgress(_this.music, _this.progress,_this.timeleft)};
+        
+
+    }
+
+
+    drawXaxis(ctx,marginX,marginY,width, height) {
+        ctx.lineWidth=2;
+        ctx.strokeStyle='#01b9f5'
+
+        ctx.beginPath();
+        ctx.moveTo(0+marginX,height/2+marginY);
+        ctx.lineTo(width+marginX, height/2+marginY);
+        ctx.stroke();
+    }
+
+    // Rewrite to handle variable dimensions.
+    drawXscale(ctx,marginX,marginY,width,height) {
+        ctx.lineWidth=1;
+        ctx.strokeStyle='#d2d2d2'
+        let unitLen = height/20
+
+        // Render loop
+        for (var i = 1; i <= 19; i++) {
+            if (i==10) {
+                continue;
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(0+marginX,unitLen*i+marginY);
+            ctx.lineTo(width+marginX,unitLen*i+marginY);
+            ctx.stroke();
+        }
+        // Condition to check scale size to prevent overdraw?
+        
+    }
+
+    drawYaxis(ctx,marginX,marginY,width, height) {
+        ctx.lineWidth=2;
+        ctx.strokeStyle='#01b9f5'
+
+        ctx.beginPath();
+        ctx.moveTo(width/2+marginX,0+marginY);
+        ctx.lineTo(width/2+marginX,height+marginY);
+        ctx.stroke();
+    }
+
+
+    drawYscale(ctx,marginX,marginY,width, height) {
+        ctx.lineWidth=1;
+        ctx.strokeStyle='#d2d2d2'
+        let unitLen = width/20
+
+        // Render loop
+        for (var i = 1; i <= 19; i++) {
+            if (i==10) {
+                continue;
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(unitLen*i+marginX,0+marginY);
+            ctx.lineTo(unitLen*i+marginX,height+marginY);
+            ctx.stroke();
+        }
+    }
+
+    drawLabels(ctx,marginX, marginY, width, height) {
+        ctx.font = "20px Arial";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom'
+        ctx.fillText("Arousal(+)",width/2,marginY-5);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText("Arousal(-)", width/2, height-marginY+5);
+
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'center';
+        ctx.fillText("Valence", width-marginX, height/2-15);
+        ctx.fillText("(+)", width-marginX, height/2+15);
+
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'center';
+        ctx.fillText("Valence", marginX, height/2-15);
+        ctx.fillText("(-)", marginX, height/2+15);
+
+    }
+
+    drawBorder(ctx,marginX,marginY, width, height) {
+        ctx.lineWidth=2;
+        ctx.strokeStyle='#000000';
+        ctx.beginPath();
+        ctx.rect(marginX,marginY,width-marginX*2,height-marginY*2);
+        ctx.stroke();
+    }
+
+    drawPoint(ctx,mouseX,mouseY,outputX,outputY){
+        ctx.strokeStyle='#000000';
+        ctx.textBaseline = 'top';
+        ctx.textAlign = 'center'
+        ctx.fillRect(mouseX-5, mouseY-5, 10, 10);
+        ctx.fillText('V'+outputX.toFixed(1)+',A'+outputY.toFixed(1), mouseX, mouseY+10);
+
+    }
+
+    drawPlayButton(ctx,ctxWidth,ctxHeight) {
+        ctx.lineWidth=2;
+        ctx.strokeStyle='#000000';
+        ctx.beginPath();
+        ctx.moveTo(ctxWidth/2-8,ctxHeight/2+8);
+        ctx.lineTo(ctxWidth/2-8,ctxHeight/2-8);
+        ctx.lineTo(ctxWidth/2+8,ctxHeight/2);
+        ctx.fill();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText("Click the button to start the audio", ctxWidth/2, ctxHeight/2+15);
+    }
+    drawEndMessage(ctx,ctxWidth,ctxHeight) {
+        ctx.lineWidth=2;
+        ctx.strokeStyle='#000000';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText("You have finished this question", ctxWidth/2, ctxHeight/2+15);
+    }
+
+    getMousePos(canvas, evt){
+        var rect = canvas.getBoundingClientRect();
+        return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+        };
+    }
+
+    startRecord(){
+        this.music.play();
+        let _this = this;
+        this.recorder = setInterval(function() {
+            _this.valences.push(_this.outputX);
+            _this.arousals.push(_this.outputY);
+        }, 100)
+    }
+    redraw(ctx, ctxWidth,ctxHeight,marginX,marginY,chartWidth,chartHeight,startPlaying,endPlaying){
+        ctx.clearRect(0,0,ctxWidth,ctxHeight)
+        this.drawXaxis(ctx,marginX,marginY,chartHeight,chartWidth);
+        this.drawYaxis(ctx,marginX,marginY,chartHeight,chartWidth);
+        this.drawXscale(ctx,marginX,marginY,chartHeight,chartWidth);
+        this.drawYscale(ctx,marginX,marginY,chartHeight, chartWidth);
+
+        this.drawLabels(ctx,marginX, marginY, ctxWidth, ctxHeight);
+        this.drawBorder(ctx,marginX, marginY, ctxWidth, ctxHeight);
+        if (!startPlaying && !endPlaying){
+            this.drawPlayButton(ctx,ctxWidth,ctxHeight);
+        } else if (startPlaying && !endPlaying){
+            this.drawPoint(ctx,this.mouseX,this.mouseY,this.outputX,this.outputY);
+        } else{
+        	this.drawEndMessage(ctx,ctxWidth,ctxHeight)
+        }
+
+    }
+
+
+    changeProgress(music, progress,timeleft) {
+    // Display the current position of the video in a <p> element with id="demo"
+        progress.setAttribute('value',music.currentTime/music.duration*100);
+        var min = Math.floor((music.duration - music.currentTime)/60);
+        var seconds = Math.floor(music.duration -  music.currentTime) %60;
+        timeleft.innerHTML= "-"+min.toString()+':'+seconds.toString();
+    }
+}
+
+
+
+function clearPage(){
+	var pages = document.getElementsByClassName("my-page");
+	length = pages.length;
+	var index = 0;
+	for (index=0; index < length; index++) {
+		pages[index].style.display = "none";
+	}
+}
+
+function checkFirstPage(){
+	let e = document.getElementById('age');
+	if(e.value=="") return false;
+	e = document.getElementById("gender");
+	if (e.options[e.selectedIndex].value =="") return false;
+	e = document.getElementById("fav-music-language");
+	if (e.options[e.selectedIndex].value =="") return false;
+	e = document.getElementById("country-live");
+	if (e.options[e.selectedIndex].value =="") return false;
+	e = document.getElementById("country-enculturation");
+	if (e.options[e.selectedIndex].value =="") return false;
+	e = document.getElementById("genre");
+	if (e.options[e.selectedIndex].value =="") return false;
+	e = document.getElementById("training");
+	if (e.options[e.selectedIndex].value =="") return false;
+	e = document.getElementById("play-instrument");
+	if (e.options[e.selectedIndex].value =="") return false;
+	e = document.getElementById("understood");
+	if (e.options[e.selectedIndex].text =="No") return false;
+	return true;
+}
+
+function nextPage(){
+	clearPage();
+	fired = event.target.id;
+	number = fired.substring(fired.length - 1, fired.length);
+	number = parseInt(number);
+	document.getElementById("tag"+number.toString()).className=document.getElementById("tag"+number.toString()).className.replace("active", "");
+	document.getElementById("page"+(number+1).toString()).style.display='block';
+	document.getElementById("tag"+(number+1).toString()).className += ' active';
+	window.scrollTo(0, 0);
+}
+
+function clearCanvas(){
+	for (index=2; index<=24; index++){
+		document.getElementById("canvas_"+index).style.visibility = "hidden";
+	}
+}
+
+
+function getRandom(wanted, total){
+	let result = [];
+	let i = 0;
+	for (i=0; i<wanted;i++){
+		while(true){
+			random = Math.floor(Math.random()*total);
+			if (result.includes(random)== false){
+				result.push(random);
+				break;
+			}
+			
+		}
+	}
+	return result;
+}
+function showSubmit(){
+	let total = random_indices.length + 4
+	finished = finished+1;
+	if (finished<total){
+		document.getElementById("canvas_"+(finished+1)).style.visibility='visible';
+	}
+	if (finished>=toal){
+		document.getElementById("submitButton").style.visibility = "visible";
+	}
+}
+function reduceMusic(){
+	let total = 0;
+	let index = 0;
+	while(index<24){
+		total +=document.getElementById("music_"+(index+1)).duration;
+		console.log(document.getElementById("music_"+(index+1)).duration);
+		if (total>60*30){
+			break;
+		}
+		index = index +1;
+	}
+	let i = 1
+	for (i = index+1; i <= 24; i ++){
+		document.getElementById("song_"+i).style.display='none';
+		random_indices.pop()
+	}
+	console.log(random_indices);
+
+}
+
+$(document).ready(function() {
+	document.getElementById("submitButton").style.visibility = "hidden";
+
+	clearPage();
+	clearCanvas();
+	document.getElementById("page1").style.display='block';
+	$('#continue2').on('click', nextPage);
+	$('#continue3').on('click', nextPage);
+
+	$('#continue1').on('click',function(event){
+		if (!checkFirstPage()){
+			var node = document.createElement("h5");
+			node.style.color='red'                 
+			var textnode = document.createTextNode("You need to answer all questions and confirm yes in the last question.");         // Create a text node
+			node.appendChild(textnode);                              // Append the text to <li>
+			document.getElementById("page1").appendChild(node); 
+		} else{
+			nextPage();
+		}
+	})
+
+	trial = new MyCanvas('trial',function(){
+		$("#continue3").removeAttr('hidden');
+	});
+	var music_all = document.getElementById("music_all").value;
+	// var music_all = 'https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/35.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/145.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/275.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/366.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/661.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/695.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/702.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/839.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/882.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/00/883.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/71.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/139.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/143.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/154.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/175.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/177.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/228.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/333.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/890.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/01/897.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/93.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/130.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/150.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/216.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/243.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/288.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/404.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/487.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/828.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/10/942.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/209.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/411.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/427.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/459.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/505.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/528.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/648.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/693.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/748.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/11/801.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/33.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/46.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/58.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/62.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/80.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/85.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/90.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/102.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/184.mp3;https://s3-ap-southeast-1.amazonaws.com/musicemotion/0505/199.mp3';
+
+
+	var music_list = music_all.split(';');
+	console.log(music_list.length)
+	random_indices = getRandom(20, music_list.length);
+	console.log(random_indices)
+
+	console.log(music_list[random_indices[24-5]])
+	test1 = new MyCanvas('1',showSubmit);
+	test2 = new MyCanvas('2',showSubmit);
+	test3 = new MyCanvas('3',showSubmit);
+	test4 = new MyCanvas('4',showSubmit);
+
+	$('#source_5').attr("src",music_list[random_indices[5-5]]);
+	document.getElementById("music_5").load();
+	test5 = new MyCanvas('5',showSubmit);
+
+	$('#source_6').attr("src",music_list[random_indices[6-5]]);
+	document.getElementById("music_6").load();
+	test6 = new MyCanvas('6',showSubmit);
+	$('#source_7').attr("src",music_list[random_indices[7-5]]);
+	document.getElementById("music_7").load();
+	test7 = new MyCanvas('7',showSubmit);
+
+	$('#source_8').attr("src",music_list[random_indices[8-5]]);
+	document.getElementById("music_8").load();
+	test8 = new MyCanvas('8',showSubmit);
+
+	$('#source_9').attr("src",music_list[random_indices[9-5]]);
+	document.getElementById("music_9").load();
+	test9 = new MyCanvas('9',showSubmit);
+
+	$('#source_10').attr("src",music_list[random_indices[10-5]]);
+	document.getElementById("music_10").load();
+	test10 = new MyCanvas('10',showSubmit);
+
+	$('#source_11').attr("src",music_list[random_indices[11-5]]);
+	document.getElementById("music_11").load();
+	test11 = new MyCanvas('11',showSubmit);
+
+	$('#source_12').attr("src",music_list[random_indices[12-5]]);
+	document.getElementById("music_12").load();
+	test12 = new MyCanvas('12',showSubmit);
+
+	$('#source_13').attr("src",music_list[random_indices[13-5]]);
+	document.getElementById("music_13").load();
+	test13 = new MyCanvas('13',showSubmit);
+
+	$('#source_14').attr("src",music_list[random_indices[14-5]]);
+	document.getElementById("music_14").load();
+	test14 = new MyCanvas('14',showSubmit);
+
+	$('#source_15').attr("src",music_list[random_indices[15-5]]);
+	document.getElementById("music_15").load();
+	test15 = new MyCanvas('15',showSubmit);
+
+	$('#source_16').attr("src",music_list[random_indices[16-5]]);
+	document.getElementById("music_16").load();
+	test16 = new MyCanvas('16',showSubmit);
+
+	$('#source_17').attr("src",music_list[random_indices[17-5]]);
+	document.getElementById("music_17").load();
+	test17 = new MyCanvas('17',showSubmit);
+
+	$('#source_18').attr("src",music_list[random_indices[18-5]]);
+	document.getElementById("music_18").load();
+	test18 = new MyCanvas('18',showSubmit);
+
+	$('#source_19').attr("src",music_list[random_indices[19-5]]);
+	document.getElementById("music_19").load();
+	test19 = new MyCanvas('19',showSubmit);
+
+	$('#source_20').attr("src",music_list[random_indices[20-5]]);
+	document.getElementById("music_20").load();
+	test20 = new MyCanvas('20',showSubmit);
+
+	$('#source_21').attr("src",music_list[random_indices[21-5]]);
+	document.getElementById("music_21").load();
+	test21 = new MyCanvas('21',showSubmit);
+
+	$('#source_22').attr("src",music_list[random_indices[22-5]]);
+	document.getElementById("music_22").load();
+	test22 = new MyCanvas('22',showSubmit);
+
+	$('#source_23').attr("src",music_list[random_indices[23-5]]);
+	document.getElementById("music_23").load();
+	test23 = new MyCanvas('23',showSubmit);
+
+	$('#source_24').attr("src",music_list[random_indices[24-5]]);
+	document.getElementById("music_24").load();
+	test24 = new MyCanvas('24',showSubmit);
+
+	setTimeout(reduceMusic, 120000);
+
+	$( "#random_indices").attr('value',random_indices.join(','));
+	document.getElementById("random_indices").style.visibility='hidden';
+
+
+});
+
+</script>
+
