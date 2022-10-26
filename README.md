@@ -4,6 +4,14 @@ Welcome to the repository for MERP.
 
 We use MERP to train a baseline emotion prediction model and evaluate the influence of the different profile features. We provide a thorough description of the dataset collection process, together with statistics and visualisations
 
+## Citation
+
+If you find this dataset useful, please cite our [original paper](https://www.preprints.org/manuscript/202210.0301/v1): 
+
+Koh, E.; Cheuk, K.W.; Heung, K.Y.; Agres, K.R.; Herremans, D. MERP: A Dataset of Emotion Ratings for Full-Length Musical Songs with Profile Information of Raters. Preprints 2022, 2022100301 (doi: 10.20944/preprints202210.0301.v1).
+
+
+
 ## Dataset
 
 MERP contains copyright-free full-length musical tracks with dynamic ratings on Russell's two-dimensional valence and arousal mode. 
