@@ -6,9 +6,9 @@ We use MERP to train a baseline emotion prediction model and evaluate the influe
 
 ## Citation
 
-If you find this dataset useful, please cite our [original paper](https://www.preprints.org/manuscript/202210.0301/v1): 
+If you find this dataset useful, please cite our [original paper](https://doi.org/10.3390/s23010382): 
 
-Koh, E.; Cheuk, K.W.; Heung, K.Y.; Agres, K.R.; Herremans, D. MERP: A Dataset of Emotion Ratings for Full-Length Musical Songs with Profile Information of Raters. Preprints 2022, 2022100301 (doi: 10.20944/preprints202210.0301.v1).
+Koh, E.Y.; Cheuk, K.W.; Heung, K.Y.; Agres, K.R.; Herremans, D. MERP: A Music Dataset with Emotion Ratings and Raters’ Profile Information. Sensors 2023, 23, 382. https://doi.org/10.3390/s23010382
 
 
 
