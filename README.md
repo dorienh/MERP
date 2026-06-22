@@ -11,7 +11,7 @@
 
 **The cleaned dataset (Parquet + audio) is on [HuggingFace](https://huggingface.co/datasets/amaai-lab/MERP).**
 
-![MERP dataset](merp.png "MERP Dataset")
+![MERP dataset](https://github.com/dorienh/MERP/blob/master/merp.png?raw=true "MERP Dataset")
 
 | Property | Value |
 | --- | --- |
