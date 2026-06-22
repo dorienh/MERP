@@ -11,6 +11,8 @@
 
 **The cleaned dataset (Parquet + audio) is on [HuggingFace](https://huggingface.co/datasets/amaai-lab/MERP).**
 
+![MERP dataset](merp.png "MERP Dataset")
+
 | Property | Value |
 | --- | --- |
 | Songs | 54 full-length tracks (50 × FMA + 4 × DEAM) |
